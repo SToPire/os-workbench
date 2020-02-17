@@ -92,16 +92,17 @@ int main(int argc, char* argv[])
                 else
                     parent = Tgid;
                 assert(parent < pid);
+                add_node(parent, Pid, name);
             }
         }
     }
 
-    add_node(0, 1, "BEGIN");
-    add_node(1, 2, "a");
-    add_node(1, 3, "b");
+    // add_node(0, 1, "BEGIN");
+    // add_node(1, 2, "a");
+    // add_node(1, 3, "b");
 
-    printf("%s\n", root->children->next->name);
-    printf("%s\n", root->children->next->next->name);
+    // printf("%s\n", root->children->next->name);
+    // printf("%s\n", root->children->next->next->name);
 
     return 0;
 }
