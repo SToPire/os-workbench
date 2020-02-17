@@ -18,9 +18,9 @@ int main(int argc, char* argv[])
         printf("argv[%d] = %s\n", i, argv[i]);
     }
     assert(!argv[argc]);
-    
-    strcpy("00000", head.name);
-    strcpy("zzzzz", tail.name);
+
+    //strcpy("00000", head.name);
+    //strcpy("zzzzz", tail.name);
     head.pid = 0;
     tail.pid = 2148473647;
     printf("%d\n", tail.pid);
