@@ -32,7 +32,7 @@ struct Node* new_node(const char* name, pid_t pid)
     ptr->children = head;
     head->next = tail;
 
-    struct NodeList[NodeListCnt++] = ptr;
+    NodeList[NodeListCnt++] = ptr;
     return ptr;
 }
 
