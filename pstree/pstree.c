@@ -60,6 +60,14 @@ void add_node(pid_t parent, pid_t child, const char* child_name)
     pre->next = cld;
 }
 
+void Print(struct Node* cur, int level)
+{
+    for (int i = 1; i < level; i++) printf("\t");
+    printf("%s\n", cur->name);
+    for (struct Node* it = cur->children->next; it->pid != __INT_MAX__;it = it->next)
+        Print(it, level + 1);
+}
+
 int main(int argc, char* argv[])
 {
     for (int i = 0; i < argc; i++) {
@@ -95,5 +103,6 @@ int main(int argc, char* argv[])
         }
     }
 
+    Print(root, 0);
     return 0;
 }
