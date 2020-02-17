@@ -4,7 +4,6 @@
 #include<dirent.h>
 #include<stdlib.h>
 
-#define PROC_BACE "/proc"
 
 int main(int argc, char *argv[]) {
   for (int i = 0; i < argc; i++) {
@@ -13,13 +12,13 @@ int main(int argc, char *argv[]) {
   }
   assert(!argv[argc]);
 
-  DIR* dir = opendir(PROC_BACE);
+  DIR* dir = opendir("/proc");
   struct dirent* dir_entry;
   while ((dir_entry = readdir(dir)) != NULL) {
       pid_t pid;
       if((pid = (pid_t)atoi(dir_entry->d_name)) != 0){
           char path[32];
-          sprintf(path, "%s/%d/status", PROC_BACE, pid);
+          sprintf(path, "/proc/%d/status", pid);
           FILE* file;
           if((file = fopen(path,"r")) != NULL){
               int Tgid, Pid, PPid;
