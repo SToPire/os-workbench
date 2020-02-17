@@ -2,7 +2,7 @@
 #include <assert.h>
 #include<sys/types.h>
 #include<dirent.h>
-
+#include<stdlib.h>
 
 #define PROC_BACE "/proc"
 
@@ -14,6 +14,13 @@ int main(int argc, char *argv[]) {
   assert(!argv[argc]);
 
   DIR* dir = opendir(PROC_BACE);
+  struct dirent* dir_entry;
+  while ((dir_entry = readdir(dir)) != NULL) {
+      pid_t pid;
+      if((pid = (pid_t)atoi(dir_entry->d_name)) != 0){
+          printf("%d\n", pid);
+      }
+  }
 
   return 0;
 }
