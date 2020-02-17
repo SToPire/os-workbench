@@ -23,8 +23,8 @@ int main(int argc, char* argv[])
     strcpy( tail.name,"zzzzz");
     head.pid = 0;
     tail.pid = __INT_MAX__;
-    printf("%d\n", tail.pid);
-
+    head.children = &tail;
+    print("%d\n", head.children->pid);
 
     // DIR* dir = opendir("/proc");
     // struct dirent* dir_entry;
