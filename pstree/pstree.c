@@ -5,50 +5,62 @@
 #include <stdlib.h>
 #include <string.h>
 
-// #define MAX_PROC 10000
-// typedef struct {
-//     Node* next;
+#define MAX_PROC 10000
+typedef struct {
+    Node* next;
 
-//     char name[32];
-//     pid_t pid;
-//     Node* children;
-// } Node;
+    char name[32];
+    pid_t pid;
+    Node* children;
+} Node;
 
-// Node* root;
-// Node* NodeList[MAX_PROC];
-// int NodeListCnt = 0;
-// Node* new_node(const char* name, pid_t pid)
-// {
-//     Node* ptr = malloc(sizeof(Node));
-//     strcpy(ptr->name, name);
-//     ptr->pid = pid;
+Node* root;
+Node* NodeList[MAX_PROC];
+int NodeListCnt = 0;
+Node* new_node(const char* name, pid_t pid)
+{
+    Node* ptr = malloc(sizeof(Node));
+    strcpy(ptr->name, name);
+    ptr->pid = pid;
 
-//     Node* head = malloc(sizeof(Node));
-//     Node* tail = malloc(sizeof(Node));
-//     strcpy(head->name, "");
-//     strcpy(tail->name, "");
-//     head->pid = tail->pid = -1;
+    Node* head = malloc(sizeof(Node));
+    Node* tail = malloc(sizeof(Node));
+    strcpy(head->name, "");
+    strcpy(tail->name, "");
+    head->pid = -1;
+    tail->pid = __INT_MAX__;
 
-//     ptr->children = head;
-//     head->next = tail;
+    ptr->children = head;
+    head->next = tail;
 
-//     NodeList[NodeListCnt++] = ptr;
-//     return ptr;
-// }
+    NodeList[NodeListCnt++] = ptr;
+    return ptr;
+}
 
-// Node* find_node(pid_t p){
-//     for (int i = 0; i < NodeListCnt;++i)
-//         if (NodeList[i]->pid == p) return NodeList[i];
-//     return NULL;
-// }
-// void add_proc(pid_t parent, pid_t child, const char* child_name)
-// {
-//     if(parent == 0){
-//         root = new_node(child_name, child);
-//     }
-//     Node* ptr = find_proc(parent);
-//     if (!ptr) ptr = new_node(NULL, parent);
-// }
+Node* find_node(pid_t p){
+    for (int i = 0; i < NodeListCnt;++i)
+        if (NodeList[i]->pid == p) return NodeList[i];
+    return NULL;
+}
+void add_node(pid_t parent, pid_t child, const char* child_name)
+{
+    if(parent == 0){
+        root = new_node(child_name, child);
+    }
+    Node* father = find_node(parent);
+    if (!father) assert(0);
+
+    Node* cld = new_node(child_name, child);
+
+    Node* pre = father->children;
+    Node* cur = pre->next;
+    while(cur->pid<child){
+        cur = cur->next;
+        pre = pre->next;
+    }
+    cld->next = cur;
+    pre->next = cld;
+}
 
 int main(int argc, char* argv[])
 {
@@ -84,5 +96,6 @@ int main(int argc, char* argv[])
         }
     }
 
+    add_node(0, 1, "BEGIN");
     return 0;
 }
