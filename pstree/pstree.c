@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include<sys/types.h>
 #include<dirent.h>
 
 
@@ -12,7 +13,7 @@ int main(int argc, char *argv[]) {
   }
   assert(!argv[argc]);
 
-  //DIR* opendir(PROC_BACE);
+  DIR* opendir(PROC_BACE);
 
   return 0;
 }
