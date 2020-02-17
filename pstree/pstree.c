@@ -2,9 +2,6 @@
 #include <assert.h>
 #include<dirent.h>
 
-
-#define PROC_BACE "/proc"
-
 int main(int argc, char *argv[]) {
   for (int i = 0; i < argc; i++) {
     assert(argv[i]);
@@ -12,7 +9,7 @@ int main(int argc, char *argv[]) {
   }
   assert(!argv[argc]);
 
-  DIR* opendir(PROC_BACE);
+  DIR* opendir("/proc");
 
   return 0;
 }
