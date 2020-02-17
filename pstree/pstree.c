@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
           char path[32];
           FILE* file;
           sprintf(path, "%s/%d/stat", PROC_BACE, pid);
-          if((file = fopen(path,"r")) == NULL){
+          if((file = fopen(path,"r")) != NULL){
               printf("%s\n", path);
           }
       }
