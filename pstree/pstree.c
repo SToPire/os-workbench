@@ -93,6 +93,7 @@ int main(int argc, char* argv[])
                     parent = Tgid;
                 assert(parent < pid);
                 add_node(parent, Pid, name);
+                printf("%d\n", NodeListCnt);
             }
         }
     }
