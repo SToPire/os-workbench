@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
               char BUF[128*8],name[32];
               fread(BUF, 1, 128, file);
               sscanf(BUF, "Name:%s\n", name);
-              printf("%s\n\n", name);
+              printf("%s\n\n", BUF);
           }
       }
   }
