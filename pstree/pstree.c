@@ -6,14 +6,33 @@
 #include <string.h>
 
 struct Node {
+    struct Node* next;
+
     char name[32];
     pid_t pid;
     struct Node* children;
-} head, tail;
+}root;
 
-void add_proc(pid_t parent, pid_t child)
+struct Node* new_node(const char* name, pid_t pid){
+    struct Node* ptr = malloc(sizeof(struct Node));
+    
+}
+
+struct Node* find_proc(pid_t p){
+    return NULL;
+}
+void add_proc(pid_t parent, pid_t child, const char* child_name)
 {
+    if(parent == 0){
+        root.pid = child;
+        strcpy(root.name,child_name);
+    }
+    struct Node* ptr = find_proc(parent);
+    if(!ptr){
 
+    }else{
+
+    }
 }
 
 int main(int argc, char* argv[])
@@ -24,12 +43,8 @@ int main(int argc, char* argv[])
     }
     assert(!argv[argc]);
 
-    strcpy(head.name, "00000");
-    strcpy(tail.name, "zzzzz");
-    head.pid = 0;
-    tail.pid = __INT_MAX__;
-    head.children = &tail;
-    printf("%d\n", head.children->pid);
+    printf("%d\n", sizeof(struct Node));
+
 
     DIR* dir = opendir("/proc");
     struct dirent* dir_entry;
