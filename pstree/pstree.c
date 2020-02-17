@@ -99,6 +99,6 @@ int main(int argc, char* argv[])
     add_node(0, 1, "BEGIN");
     add_node(1, 2, "a");
 
-    printf("%s\n", root->name);
+    printf("%s\n", root->children->next->name);
     return 0;
 }
