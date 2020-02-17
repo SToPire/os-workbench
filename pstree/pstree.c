@@ -6,25 +6,24 @@
 #include <string.h>
 
 #define MAX_PROC 10000
-typedef struct {
-    Node* next;
+struct Node{
+    struct Node* next;
 
     char name[32];
     pid_t pid;
-    Node* children;
-} Node;
+    struct Node* children;
+} *root;
 
-Node* root;
-Node* NodeList[MAX_PROC];
+struct Node* NodeList[MAX_PROC];
 int NodeListCnt = 0;
-Node* new_node(const char* name, pid_t pid)
+struct Node* new_node(const char* name, pid_t pid)
 {
-    Node* ptr = malloc(sizeof(Node));
+    struct Node* ptr = malloc(sizeof(struct Node));
     strcpy(ptr->name, name);
     ptr->pid = pid;
 
-    Node* head = malloc(sizeof(Node));
-    Node* tail = malloc(sizeof(Node));
+    struct Node* head = malloc(sizeof(struct Node));
+    struct Node* tail = malloc(sizeof(struct Node));
     strcpy(head->name, "");
     strcpy(tail->name, "");
     head->pid = -1;
@@ -33,11 +32,11 @@ Node* new_node(const char* name, pid_t pid)
     ptr->children = head;
     head->next = tail;
 
-    NodeList[NodeListCnt++] = ptr;
+    struct NodeList[NodeListCnt++] = ptr;
     return ptr;
 }
 
-Node* find_node(pid_t p){
+struct Node* find_node(pid_t p){
     for (int i = 0; i < NodeListCnt;++i)
         if (NodeList[i]->pid == p) return NodeList[i];
     return NULL;
@@ -47,13 +46,13 @@ void add_node(pid_t parent, pid_t child, const char* child_name)
     if(parent == 0){
         root = new_node(child_name, child);
     }
-    Node* father = find_node(parent);
+    struct Node* father = find_node(parent);
     if (!father) assert(0);
 
-    Node* cld = new_node(child_name, child);
+    struct Node* cld = new_node(child_name, child);
 
-    Node* pre = father->children;
-    Node* cur = pre->next;
+    struct Node* pre = father->children;
+    struct Node* cur = pre->next;
     while(cur->pid<child){
         cur = cur->next;
         pre = pre->next;
