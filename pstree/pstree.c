@@ -45,6 +45,7 @@ void add_node(pid_t parent, pid_t child, const char* child_name)
 {
     if(parent == 0){
         root = new_node(child_name, child);
+        return;
     }
     struct Node* father = find_node(parent);
     if (!father) assert(0);
