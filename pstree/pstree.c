@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    printf("%d\n", root->pid);
+    printf("%s\n", root->name);
     // add_node(0, 1, "BEGIN");
     // add_node(1, 2, "a");
     // add_node(1, 3, "b");
