@@ -9,7 +9,7 @@
 struct Node{
     struct Node* next;
 
-    char name[320];
+    char name[64];
     pid_t pid;
     struct Node* children;
 } *root;
@@ -77,12 +77,12 @@ int main(int argc, char* argv[])
     while ((dir_entry = readdir(dir)) != NULL) {
         pid_t pid;
         if ((pid = (pid_t)atoi(dir_entry->d_name)) != 0) {
-            char path[320];
+            char path[64];
             sprintf(path, "/proc/%d/status", pid);
             FILE* file;
             if ((file = fopen(path, "r")) != NULL) {
                 pid_t Tgid, Pid, PPid, parent;
-                char BUF[128 * 8], name[320];
+                char BUF[128 * 8], name[64];
                 fread(BUF, 1, 128, file);
                 sscanf(BUF, "Name: %[^\n]\nUmask:%*s\nState:%*[^\n]\nTgid:%d\nNgid:%*s\nPid:%d\nPPid:%d\n", name, &Tgid, &Pid, &PPid);
                // printf("%s %d %d %d\n", name, Tgid, Pid, PPid);
@@ -93,11 +93,11 @@ int main(int argc, char* argv[])
                     parent = Tgid;
                 assert(parent < pid);
                 add_node(parent, Pid, name);
-                printf("%d\n", NodeListCnt);
             }
         }
     }
 
+    printf("%d\n", root->pid);
     // add_node(0, 1, "BEGIN");
     // add_node(1, 2, "a");
     // add_node(1, 3, "b");
