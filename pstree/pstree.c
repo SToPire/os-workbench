@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
                     parent = PPid;
                 else
                     parent = Tgid;
-                assert(parent < pid);
+                assert(parent > pid);
             }
         }
     }
