@@ -97,5 +97,6 @@ int main(int argc, char* argv[])
     }
 
     add_node(0, 1, "BEGIN");
+    add_node(1, 2, "a");
     return 0;
 }
