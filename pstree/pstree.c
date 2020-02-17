@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
           if((file = fopen(path,"r")) != NULL){
               char BUF[640*8];
               fread(BUF, 1, 640, file);
-              printf("%s\n", BUF);
+              printf("%s\n\n", BUF);
           }
       }
   }
