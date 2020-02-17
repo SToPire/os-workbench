@@ -13,27 +13,27 @@ struct Node {
     struct Node* children;
 }root;
 
-struct Node* new_node(const char* name, pid_t pid){
-    struct Node* ptr = malloc(sizeof(struct Node));
+// struct Node* new_node(const char* name, pid_t pid){
+//     struct Node* ptr = malloc(sizeof(struct Node));
     
-}
+// }
 
-struct Node* find_proc(pid_t p){
-    return NULL;
-}
-void add_proc(pid_t parent, pid_t child, const char* child_name)
-{
-    if(parent == 0){
-        root.pid = child;
-        strcpy(root.name,child_name);
-    }
-    struct Node* ptr = find_proc(parent);
-    if(!ptr){
+// struct Node* find_proc(pid_t p){
+//     return NULL;
+// }
+// void add_proc(pid_t parent, pid_t child, const char* child_name)
+// {
+//     if(parent == 0){
+//         root.pid = child;
+//         strcpy(root.name,child_name);
+//     }
+//     struct Node* ptr = find_proc(parent);
+//     if(!ptr){
 
-    }else{
+//     }else{
 
-    }
-}
+//     }
+// }
 
 int main(int argc, char* argv[])
 {
