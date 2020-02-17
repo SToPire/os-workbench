@@ -22,9 +22,10 @@ int main(int argc, char *argv[]) {
           sprintf(path, "%s/%d/status", PROC_BACE, pid);
           FILE* file;
           if((file = fopen(path,"r")) != NULL){
-              char BUF[128*8];
+              char BUF[128*8],name[32];
               fread(BUF, 1, 128, file);
               printf("%s\n\n", BUF);
+              sscanf(BUF, "Name:%s\n", name);
           }
       }
   }
