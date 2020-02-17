@@ -23,9 +23,9 @@ int main(int argc, char *argv[]) {
           FILE* file;
           if((file = fopen(path,"r")) != NULL){
               int Tgid, Pid, PPid;
-              char BUF[128*8],name[32],unused[32];
+              char BUF[128*8],name[32],unused[32],unused1[32],unused2[32];
               fread(BUF, 1, 128, file);
-              sscanf(BUF, "Name:%s\nUmask:%s\nState:%s\nTgid:%d\nNgid:%s\nPid:%d\nPPid:%d\n", name,unused,unused,&Tgid,unused,&Pid,&PPid);
+              sscanf(BUF, "Name:%s\nUmask:%s\nState:%s\nTgid:%d\nNgid:%s\nPid:%d\nPPid:%d\n", name,unused,unused1,&Tgid,unused2,&Pid,&PPid);
               //printf("%s:%d %d %d\n", name, Tgid, Pid, PPid);
               printf("%s %s\n", name, unused);
               printf("%s\n\n", BUF);
