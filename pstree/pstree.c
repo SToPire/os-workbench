@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
     }
     assert(!argv[argc]);
 
-
+    root = new_node("", 0);
 
     DIR* dir = opendir("/proc");
     struct dirent* dir_entry;
