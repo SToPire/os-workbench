@@ -43,7 +43,8 @@ struct Node* find_node(pid_t p){
 }
 void add_node(pid_t parent, pid_t child, const char* child_name)
 {
-    if(parent == 0){
+    printf("parent:%d child:%d childname:%s\n", parent, child, child_name);
+    if (parent == 0) {
         root = new_node(child_name, child);
         return;
     }
