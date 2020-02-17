@@ -5,34 +5,49 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Node {
-    struct Node* next;
+// #define MAX_PROC 10000
+// typedef struct {
+//     Node* next;
 
-    char name[32];
-    pid_t pid;
-    struct Node* children;
-}root;
+//     char name[32];
+//     pid_t pid;
+//     Node* children;
+// } Node;
 
-// struct Node* new_node(const char* name, pid_t pid){
-//     struct Node* ptr = malloc(sizeof(struct Node));
-    
+// Node* root;
+// Node* NodeList[MAX_PROC];
+// int NodeListCnt = 0;
+// Node* new_node(const char* name, pid_t pid)
+// {
+//     Node* ptr = malloc(sizeof(Node));
+//     strcpy(ptr->name, name);
+//     ptr->pid = pid;
+
+//     Node* head = malloc(sizeof(Node));
+//     Node* tail = malloc(sizeof(Node));
+//     strcpy(head->name, "");
+//     strcpy(tail->name, "");
+//     head->pid = tail->pid = -1;
+
+//     ptr->children = head;
+//     head->next = tail;
+
+//     NodeList[NodeListCnt++] = ptr;
+//     return ptr;
 // }
 
-// struct Node* find_proc(pid_t p){
+// Node* find_node(pid_t p){
+//     for (int i = 0; i < NodeListCnt;++i)
+//         if (NodeList[i]->pid == p) return NodeList[i];
 //     return NULL;
 // }
 // void add_proc(pid_t parent, pid_t child, const char* child_name)
 // {
 //     if(parent == 0){
-//         root.pid = child;
-//         strcpy(root.name,child_name);
+//         root = new_node(child_name, child);
 //     }
-//     struct Node* ptr = find_proc(parent);
-//     if(!ptr){
-
-//     }else{
-
-//     }
+//     Node* ptr = find_proc(parent);
+//     if (!ptr) ptr = new_node(NULL, parent);
 // }
 
 int main(int argc, char* argv[])
@@ -43,7 +58,6 @@ int main(int argc, char* argv[])
     }
     assert(!argv[argc]);
 
-    printf("%d\n",(int) sizeof(struct Node));
 
 
     DIR* dir = opendir("/proc");
@@ -55,12 +69,17 @@ int main(int argc, char* argv[])
             sprintf(path, "/proc/%d/status", pid);
             FILE* file;
             if ((file = fopen(path, "r")) != NULL) {
-                pid_t Tgid, Pid, PPid;
+                pid_t Tgid, Pid, PPid, parent;
                 char BUF[128 * 8], name[32];
                 fread(BUF, 1, 128, file);
                 sscanf(BUF, "Name: %[^\n]\nUmask:%*s\nState:%*[^\n]\nTgid:%d\nNgid:%*s\nPid:%d\nPPid:%d\n", name, &Tgid, &Pid, &PPid);
                // printf("%s %d %d %d\n", name, Tgid, Pid, PPid);
                // printf("%s\n\n", BUF);
+                if (Tgid == Pid) 
+                    parent = PPid;
+                else
+                    parent = Tgid;
+                assert(parent < pid);
             }
         }
     }
