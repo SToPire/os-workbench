@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
           if((file = fopen(path,"r")) != NULL){
               char BUF[64];
               fread(BUF, 1, 64, file);
+              print("%s\n", BUF);
           }
       }
   }
