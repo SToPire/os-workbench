@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     //strcpy("00000", head.name);
     //strcpy("zzzzz", tail.name);
     head.pid = 0;
-    tail.pid = 2148473647;
+    tail.pid = __INT_MAX__;
     printf("%d\n", tail.pid);
 
 
