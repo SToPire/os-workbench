@@ -43,8 +43,8 @@ struct Node* find_node(pid_t p){
 }
 void add_node(pid_t parent, pid_t child, const char* child_name)
 {
-    printf("parent:%d child:%d childname:%s\n", parent, child, child_name);
-   
+    //printf("parent:%d child:%d childname:%s\n", parent, child, child_name);
+
     struct Node* father = find_node(parent);
     if (!father) assert(0);
 
@@ -94,14 +94,6 @@ int main(int argc, char* argv[])
             }
         }
     }
-
-    printf("%s\n", root->name);
-    // add_node(0, 1, "BEGIN");
-    // add_node(1, 2, "a");
-    // add_node(1, 3, "b");
-
-    // printf("%s\n", root->children->next->name);
-    // printf("%s\n", root->children->next->next->name);
 
     return 0;
 }
