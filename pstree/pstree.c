@@ -9,7 +9,7 @@
 struct Node{
     struct Node* next;
 
-    char name[32];
+    char name[320];
     pid_t pid;
     struct Node* children;
 } *root;
@@ -77,12 +77,12 @@ int main(int argc, char* argv[])
     while ((dir_entry = readdir(dir)) != NULL) {
         pid_t pid;
         if ((pid = (pid_t)atoi(dir_entry->d_name)) != 0) {
-            char path[32];
+            char path[320];
             sprintf(path, "/proc/%d/status", pid);
             FILE* file;
             if ((file = fopen(path, "r")) != NULL) {
                 pid_t Tgid, Pid, PPid, parent;
-                char BUF[128 * 8], name[32];
+                char BUF[128 * 8], name[320];
                 fread(BUF, 1, 128, file);
                 sscanf(BUF, "Name: %[^\n]\nUmask:%*s\nState:%*[^\n]\nTgid:%d\nNgid:%*s\nPid:%d\nPPid:%d\n", name, &Tgid, &Pid, &PPid);
                // printf("%s %d %d %d\n", name, Tgid, Pid, PPid);
