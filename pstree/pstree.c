@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
               fread(BUF, 1, 128, file);
               sscanf(BUF, "Name:%s\nUmask:%s\nState:%s\nTgid:%d\nNgid:%s\nPid:%d\nPPid:%d\n", name,unused,unused1,&Tgid,unused2,&Pid,&PPid);
               //printf("%s:%d %d %d\n", name, Tgid, Pid, PPid);
-              printf("%s %s\n", name, unused);
+              printf("%s %s %s %s\n", name, unused,unused1,unused2);
               printf("%s\n\n", BUF);
           }
       }
