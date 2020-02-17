@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
     }
     assert(!argv[argc]);
 
-    printf("%d\n", sizeof(struct Node));
+    printf("%ld\n", sizeof(struct Node));
 
 
     DIR* dir = opendir("/proc");
