@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     strcpy("zzzzz", tail.name);
     head.pid = 0;
     tail.pid = 2148473647;
-    print("%d\n", tail.pid);
+    printf("%d\n", tail.pid);
 
 
     // DIR* dir = opendir("/proc");
