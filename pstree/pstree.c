@@ -22,8 +22,8 @@ int main(int argc, char *argv[]) {
           sprintf(path, "%s/%d/status", PROC_BACE, pid);
           FILE* file;
           if((file = fopen(path,"r")) != NULL){
-              char BUF[64*8];
-              fread(BUF, 1, 64, file);
+              char BUF[640*8];
+              fread(BUF, 1, 640, file);
               printf("%s\n", BUF);
           }
       }
