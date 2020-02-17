@@ -19,10 +19,11 @@ int main(int argc, char *argv[]) {
       pid_t pid;
       if((pid = (pid_t)atoi(dir_entry->d_name)) != 0){
           char path[32];
+          sprintf(path, "%s/%d/status", PROC_BACE, pid);
           FILE* file;
-          sprintf(path, "%s/%d/stat", PROC_BACE, pid);
           if((file = fopen(path,"r")) != NULL){
-              printf("%s\n", path);
+              char BUF[64];
+              fread(BUF, 1, 64, file);
           }
       }
   }
