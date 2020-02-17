@@ -18,7 +18,9 @@ int main(int argc, char *argv[]) {
   while ((dir_entry = readdir(dir)) != NULL) {
       pid_t pid;
       if((pid = (pid_t)atoi(dir_entry->d_name)) != 0){
-          printf("%d\n", pid);
+          char path[32];
+          sprintf(path, "%s/%d/stat", PROC_BACE, pid);
+          printf("%s\n", path);
       }
   }
 
