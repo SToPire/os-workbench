@@ -19,8 +19,8 @@ int main(int argc, char* argv[])
     }
     assert(!argv[argc]);
 
-    //strcpy("00000", head.name);
-    //strcpy("zzzzz", tail.name);
+    strcpy(head.name,"00000");
+    strcpy( tail.name,"zzzzz");
     head.pid = 0;
     tail.pid = __INT_MAX__;
     printf("%d\n", tail.pid);
