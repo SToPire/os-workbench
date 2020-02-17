@@ -13,8 +13,7 @@ int main(int argc, char *argv[]) {
   }
   assert(!argv[argc]);
 
-  printf(PROC_BACE);
-  //DIR* opendir(PROC_BACE);
+  DIR* dir = opendir(PROC_BACE);
 
   return 0;
 }
