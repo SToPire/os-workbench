@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
           if((file = fopen(path,"r")) != NULL){
               char BUF[128*8],name[32];
               fread(BUF, 1, 128, file);
-              printf("%s\n\n", BUF);
               sscanf(BUF, "Name:%s\n", name);
+              printf("%s\n\n", name);
           }
       }
   }
