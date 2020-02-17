@@ -22,9 +22,10 @@ int main(int argc, char *argv[]) {
           sprintf(path, "%s/%d/status", PROC_BACE, pid);
           FILE* file;
           if((file = fopen(path,"r")) != NULL){
-              char BUF[128*8],name[32];
+              char BUF[128*8],name[32],unused[32];
+              int Tgid, Pid, PPid;
               fread(BUF, 1, 128, file);
-              sscanf(BUF, "Name:%s\n", name);
+              sscanf(BUF, "Name:%s\nUmask:%s\nState:%s\nTgid:%d\nNgid:%s\nPid:%d\nPPid:%d\n", name,unused,unused,&Tgid,unused,&Pid,&PPid);
               printf("%s\n\n", BUF);
           }
       }
