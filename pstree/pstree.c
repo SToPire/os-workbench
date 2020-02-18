@@ -6,7 +6,9 @@
 #include <string.h>
 
 #define MAX_PROC 10000
-struct Node{
+
+int VERSION = 0;
+struct Node {
     struct Node* next;
 
     char name[64];
@@ -72,7 +74,11 @@ int main(int argc, char* argv[])
 {
     for (int i = 0; i < argc; i++) {
         assert(argv[i]);
-        printf("argv[%d] = %s\n", i, argv[i]);
+        if(i!=0){
+            if(strcmp(argv[i],"-v") == 0){
+                VERSION = 1;
+            }
+        }
     }
     assert(!argv[argc]);
 
@@ -103,6 +109,9 @@ int main(int argc, char* argv[])
         }
     }
 
-    //Print(root, 0);
+    if(!VERSION) Print(root, 0);
+    else{
+        printf("Miaow\n");
+    }
     return 0;
 }
