@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MIN_STRING ""
+#define MAX_STRING "zzzzzzzzzz"
+
 int SHOWPID = 0;
 int NUMERICSORT = 0;
 
@@ -14,7 +17,7 @@ struct Node {
     char name[64];
     pid_t pid;
     struct Node* children;
-} *root;
+} * root;
 
 struct Node* new_node(const char* name, pid_t pid)
 {
@@ -24,8 +27,8 @@ struct Node* new_node(const char* name, pid_t pid)
 
     struct Node* head = malloc(sizeof(struct Node));
     struct Node* tail = malloc(sizeof(struct Node));
-    strcpy(head->name, "");
-    strcpy(tail->name, "");
+    strcpy(head->name, MIN_STRING);
+    strcpy(tail->name, MAX_STRING);
     head->pid = -1;
     tail->pid = __INT_MAX__;
 
@@ -40,15 +43,14 @@ struct Node* find_node(struct Node* cur, pid_t pid)
     if (cur == NULL) return NULL;
     if (cur->pid == pid) return cur;
     struct Node* ret;
-    if ((ret = find_node(cur->children,pid)) != NULL)
+    if ((ret = find_node(cur->children, pid)) != NULL)
         return ret;
     else
-        return find_node(cur->next,pid);
+        return find_node(cur->next, pid);
 }
 
 void add_node(pid_t parent, pid_t child, const char* child_name)
 {
-
     struct Node* father = find_node(root, parent);
     if (!father) assert(0);
 
@@ -56,9 +58,18 @@ void add_node(pid_t parent, pid_t child, const char* child_name)
 
     struct Node* pre = father->children;
     struct Node* cur = pre->next;
-    while(cur->pid<child){
-        cur = cur->next;
-        pre = pre->next;
+
+    if (NUMERICSORT) {
+        while (cur->pid < child) {
+            cur = cur->next;
+            pre = pre->next;
+        }
+    }
+    else{
+        while(strcmp(cur->name,child_name) < 0 || (strcmp(cur->name,child_name)==0 && cur->pid < child)){
+            cur = cur->next;
+            pre = pre->next;
+        }
     }
     cld->next = cur;
     pre->next = cld;
@@ -93,11 +104,11 @@ void ScanDir()
 void Print(struct Node* cur, int level)
 {
     for (int i = 1; i < level; i++) printf("\t");
-    if(SHOWPID)
-        printf("%s(%d)\n", cur->name,cur->pid);
+    if (SHOWPID)
+        printf("%s(%d)\n", cur->name, cur->pid);
     else
         printf("%s\n", cur->name);
-    for (struct Node* it = cur->children->next; it->pid != __INT_MAX__;it = it->next)
+    for (struct Node* it = cur->children->next; it->pid != __INT_MAX__; it = it->next)
         Print(it, level + 1);
 }
 
@@ -105,15 +116,15 @@ int main(int argc, char* argv[])
 {
     for (int i = 0; i < argc; i++) {
         assert(argv[i]);
-        if(i!=0){
-            if(strcmp(argv[i],"-V") == 0 || strcmp(argv[i],"--version")==0){
+        if (i != 0) {
+            if (strcmp(argv[i], "-V") == 0 || strcmp(argv[i], "--version") == 0) {
                 fprintf(stderr, "pstree\nCopyright (C) 2020 Yifan Zhao\n\nFree Software\n");
                 return 0;
-            } else if (strcmp(argv[i], "-p") == 0|| strcmp(argv[i], "--show-pids") == 0) {
+            } else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--show-pids") == 0) {
                 SHOWPID = 1;
-            } else if (strcmp(argv[i],"-n")==0 || strcmp(argv[i],"--numeric-sort") == 0){
+            } else if (strcmp(argv[i], "-n") == 0 || strcmp(argv[i], "--numeric-sort") == 0) {
                 NUMERICSORT = 1;
-            }else{
+            } else {
                 fprintf(stderr, "Illegal parameter!\n");
                 return -1;
             }
