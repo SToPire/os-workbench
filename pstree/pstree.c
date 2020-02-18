@@ -66,6 +66,32 @@ void add_node(pid_t parent, pid_t child, const char* child_name)
     pre->next = cld;
 }
 
+void ScanDir()
+{
+    DIR* dir = opendir("/proc");
+    struct dirent* dir_entry;
+    while ((dir_entry = readdir(dir)) != NULL) {
+        pid_t pid;
+        if ((pid = (pid_t)atoi(dir_entry->d_name)) != 0) {
+            char path[64];
+            sprintf(path, "/proc/%d/status", pid);
+            FILE* file;
+            if ((file = fopen(path, "r")) != NULL) {
+                pid_t Tgid, Pid, PPid, parent;
+                char BUF[128 * 8], name[64];
+                fread(BUF, 1, 128, file);
+                sscanf(BUF, "Name: %[^\n]\nUmask:%*s\nState:%*[^\n]\nTgid:%d\nNgid:%*s\nPid:%d\nPPid:%d\n", name, &Tgid, &Pid, &PPid);
+                if (Tgid == Pid)
+                    parent = PPid;
+                else
+                    parent = Tgid;
+                assert(parent < pid);
+                add_node(parent, Pid, name);
+            }
+        }
+    }
+}
+
 void Print(struct Node* cur, int level)
 {
     for (int i = 1; i < level; i++) printf("\t");
@@ -99,28 +125,7 @@ int main(int argc, char* argv[])
 
     root = new_node("", 0);
 
-    DIR* dir = opendir("/proc");
-    struct dirent* dir_entry;
-    while ((dir_entry = readdir(dir)) != NULL) {
-        pid_t pid;
-        if ((pid = (pid_t)atoi(dir_entry->d_name)) != 0) {
-            char path[64];
-            sprintf(path, "/proc/%d/status", pid);
-            FILE* file;
-            if ((file = fopen(path, "r")) != NULL) {
-                pid_t Tgid, Pid, PPid, parent;
-                char BUF[128 * 8], name[64];
-                fread(BUF, 1, 128, file);
-                sscanf(BUF, "Name: %[^\n]\nUmask:%*s\nState:%*[^\n]\nTgid:%d\nNgid:%*s\nPid:%d\nPPid:%d\n", name, &Tgid, &Pid, &PPid);
-                if (Tgid == Pid) 
-                    parent = PPid;
-                else
-                    parent = Tgid;
-                assert(parent < pid);
-                add_node(parent, Pid, name);
-            }
-        }
-    }
+    ScanDir();
 
     Print(root, 0);
     return 0;
