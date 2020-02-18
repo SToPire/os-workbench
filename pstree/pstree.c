@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < argc; i++) {
         assert(argv[i]);
         if(i!=0){
-            if(strcmp(argv[i],"-v") == 0){
+            if(strcmp(argv[i],"-V") == 0 || strcmp(argv[i],"--version")==0){
                 VERSION = 1;
             }
         }
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
     if(!VERSION) Print(root, 0);
     else{
-        printf("Miaow\n");
+        fprintf(stderr,"Miaow\n");
     }
     return 0;
 }
