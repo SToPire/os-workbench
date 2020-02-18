@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_PROC 10000
-
 int SHOWPID = 0;
 int NUMERICSORT = 0;
 
@@ -128,5 +126,6 @@ int main(int argc, char* argv[])
     ScanDir();
 
     Print(root, 0);
+
     return 0;
 }
