@@ -50,10 +50,10 @@ struct Node* find_node(const struct Node* cur, pid_t pid)
 {
     if (cur->pid == pid) return cur;
     struct Node* ret;
-    if ((ret = find_node(cur->children)) != NULL)
+    if ((ret = find_node(cur->children,pid)) != NULL)
         return ret;
     else
-        return find_node(cur->next);
+        return find_node(cur->next,pid);
 }
 
 void add_node(pid_t parent, pid_t child, const char* child_name)
