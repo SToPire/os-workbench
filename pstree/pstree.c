@@ -83,6 +83,8 @@ int main(int argc, char* argv[])
                 SHOWPID = 1;
             } else if (strcmp(argv[i],"-n")==0 || strcmp(argv[i],"--numeric-sort") == 0){
                 NUMERICSORT = 1;
+            }else{
+                fprintf(stderr, "Illegal parameter!\n");
             }
         }
     }
