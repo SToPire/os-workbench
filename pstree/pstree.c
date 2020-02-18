@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
         if(i!=0){
             if(strcmp(argv[i],"-V") == 0 || strcmp(argv[i],"--version")==0){
                 fprintf(stderr, "pstree\nCopyright (C) 2020 Yifan Zhao\n\nFree Software\n");
-                return;
+                return 0;
             } else if (strcmp(argv[i], "-p") == 0|| strcmp(argv[i], "--show-pids") == 0) {
                 SHOWPID = 1;
             } else if (strcmp(argv[i],"-n")==0 || strcmp(argv[i],"--numeric-sort") == 0){
