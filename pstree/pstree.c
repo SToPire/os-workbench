@@ -103,6 +103,6 @@ int main(int argc, char* argv[])
         }
     }
 
-    Print(root, 0);
+    //Print(root, 0);
     return 0;
 }
