@@ -7,7 +7,8 @@
 
 #define MAX_PROC 10000
 
-int VERSION = 0;
+int SHOWPID = 0;
+
 struct Node {
     struct Node* next;
 
@@ -45,7 +46,6 @@ struct Node* find_node(pid_t p){
 }
 void add_node(pid_t parent, pid_t child, const char* child_name)
 {
-    //printf("parent:%d child:%d childname:%s\n", parent, child, child_name);
 
     struct Node* father = find_node(parent);
     if (!father) assert(0);
@@ -76,7 +76,11 @@ int main(int argc, char* argv[])
         assert(argv[i]);
         if(i!=0){
             if(strcmp(argv[i],"-V") == 0 || strcmp(argv[i],"--version")==0){
-                VERSION = 1;
+                fprintf(stderr, "pstree\nCopyright (C) 2020 Yifan Zhao\n\nFree Software\n");
+                return;
+            } else if (strcmp(argv[i], "-p") || strcmp(argv[i], "--show-pids")) {
+                SHOWPID = 1;
+            } else if {
             }
         }
     }
@@ -97,8 +101,6 @@ int main(int argc, char* argv[])
                 char BUF[128 * 8], name[64];
                 fread(BUF, 1, 128, file);
                 sscanf(BUF, "Name: %[^\n]\nUmask:%*s\nState:%*[^\n]\nTgid:%d\nNgid:%*s\nPid:%d\nPPid:%d\n", name, &Tgid, &Pid, &PPid);
-               // printf("%s %d %d %d\n", name, Tgid, Pid, PPid);
-               // printf("%s\n\n", BUF);
                 if (Tgid == Pid) 
                     parent = PPid;
                 else
