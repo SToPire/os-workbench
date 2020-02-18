@@ -18,8 +18,6 @@ struct Node {
     struct Node* children;
 } *root;
 
-struct Node* NodeList[MAX_PROC];
-int NodeListCnt = 0;
 struct Node* new_node(const char* name, pid_t pid)
 {
     struct Node* ptr = malloc(sizeof(struct Node));
@@ -36,15 +34,8 @@ struct Node* new_node(const char* name, pid_t pid)
     ptr->children = head;
     head->next = tail;
 
-    NodeList[NodeListCnt++] = ptr;
     return ptr;
 }
-
-// struct Node* find_node(pid_t p){
-//     for (int i = 0; i < NodeListCnt;++i)
-//         if (NodeList[i]->pid == p) return NodeList[i];
-//     return NULL;
-// }
 
 struct Node* find_node(struct Node* cur, pid_t pid)
 {
