@@ -46,7 +46,7 @@ struct Node* new_node(const char* name, pid_t pid)
 //     return NULL;
 // }
 
-struct Node* find_node(const struct Node* cur, pid_t pid)
+struct Node* find_node(struct Node* cur, pid_t pid)
 {
     if (cur->pid == pid) return cur;
     struct Node* ret;
