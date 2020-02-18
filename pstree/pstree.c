@@ -59,18 +59,15 @@ void add_node(pid_t parent, pid_t child, const char* child_name)
     struct Node* pre = father->children;
     struct Node* cur = pre->next;
 
-    if (NUMERICSORT) {
+    if (NUMERICSORT)
         while (cur->pid < child) {
             cur = cur->next;
             pre = pre->next;
-        }
-    }
-    else{
-        while(strcmp(cur->name,child_name) < 0 || (strcmp(cur->name,child_name)==0 && cur->pid < child)){
+        } 
+    else while(strcmp(cur->name,child_name) < 0 || (strcmp(cur->name,child_name)==0 && cur->pid < child)){
             cur = cur->next;
             pre = pre->next;
         }
-    }
     cld->next = cur;
     pre->next = cld;
 }
