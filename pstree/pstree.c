@@ -85,6 +85,7 @@ int main(int argc, char* argv[])
                 NUMERICSORT = 1;
             }else{
                 fprintf(stderr, "Illegal parameter!\n");
+                return -1;
             }
         }
     }
