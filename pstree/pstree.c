@@ -40,15 +40,26 @@ struct Node* new_node(const char* name, pid_t pid)
     return ptr;
 }
 
-struct Node* find_node(pid_t p){
-    for (int i = 0; i < NodeListCnt;++i)
-        if (NodeList[i]->pid == p) return NodeList[i];
-    return NULL;
+// struct Node* find_node(pid_t p){
+//     for (int i = 0; i < NodeListCnt;++i)
+//         if (NodeList[i]->pid == p) return NodeList[i];
+//     return NULL;
+// }
+
+struct Node* find_node(const struct Node* cur, pid_t pid)
+{
+    if (cur->pid == pid) return cur;
+    struct Node* ret;
+    if ((ret = find_node(cur->children)) != NULL)
+        return ret;
+    else
+        return find_node(cur->next);
 }
+
 void add_node(pid_t parent, pid_t child, const char* child_name)
 {
 
-    struct Node* father = find_node(parent);
+    struct Node* father = find_node(root, parent);
     if (!father) assert(0);
 
     struct Node* cld = new_node(child_name, child);
