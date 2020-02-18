@@ -111,9 +111,6 @@ int main(int argc, char* argv[])
         }
     }
 
-    if(!VERSION) Print(root, 0);
-    else{
-        fprintf(stderr,"pstree\nCopyright (C) 2020 Yifan Zhao\n\nFree Software\n");
-    }
+    Print(root, 0);
     return 0;
 }
