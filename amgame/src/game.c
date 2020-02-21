@@ -9,7 +9,6 @@ int main(const char *args) {
   puts("\"\n");
 
   splash();
-
   puts("Press any key to see its key code...\n");
   while (1) {
       print_key();
