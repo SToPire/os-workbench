@@ -40,10 +40,15 @@ void splash()
     }
 }
 
+void screen_clear()
+{
+  
+}
+
 void screen_update()
 {
     init();
-    draw_tile(0, 0, w, h, 0x000000);
+    draw_tile(0, 0, w, h, 0xffffff);
     draw_tile(x + w / 2, y + h / 2, 1, 1, 0xff00ff);
 }
 
