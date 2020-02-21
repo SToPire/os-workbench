@@ -36,5 +36,5 @@ void splash() {
 void screen_update()
 {
     init();
-    draw_tile(w / 2, h / 2, 10, 10, 0xff00ff);
+    draw_tile(w / 2, h / 2, 1, 1, 0xff00ff);
 }
