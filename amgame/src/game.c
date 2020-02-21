@@ -3,13 +3,10 @@
 
 #define FPS 30
 
-void kbd_event(int keycode);
-
 // Operating system is a C program!
 int main(const char* args)
 {
     _ioe_init();
-
     // puts("mainargs = \"");
     // puts(args); // make run mainargs=xxx
     // puts("\"\n");
@@ -28,8 +25,8 @@ int main(const char* args)
         while ((key = read_key()) != _KEY_NONE) {
             kbd_event(key);  // 处理键盘事件
         }
-        //game_progress();           // 处理一帧游戏逻辑，更新物体的位置等
-        //screen_update();           // 重新绘制屏幕
+        game_progress();           // 处理一帧游戏逻辑，更新物体的位置等
+        screen_update();           // 重新绘制屏幕
         next_frame += 1000 / FPS;  // 计算下一帧的时间
     }
 
@@ -47,3 +44,9 @@ void kbd_event(int keycode)
         printf("You have just pressed key: %s %d\n", key_names[keycode], keycode);
     }
 }
+
+void game_progress()
+{
+    
+}
+
