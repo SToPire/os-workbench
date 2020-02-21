@@ -1,5 +1,5 @@
 #include <game.h>
-
+#include<klib.h>
 // Operating system is a C program!
 int main(const char *args) {
   _ioe_init();
@@ -9,6 +9,7 @@ int main(const char *args) {
   puts("\"\n");
 
   splash();
+  printf("sad");
   puts("Press any key to see its key code...\n");
   while (1) {
       print_key();
