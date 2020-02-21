@@ -1,5 +1,5 @@
 #include <game.h>
-
+#include<klib.h>
 #define SIDE 16
 static int w, h;
 extern int x, y, vx, vy, FPS;
@@ -48,7 +48,8 @@ void screen_clear()
 void screen_update()
 {
     init();
-    draw_tile(0, 0, w, h, 0xffffff);
+   // draw_tile(0, 0, w, h, 0xffffff);
+    printf("%d %d\n", w, h);
     draw_tile(x + w / 2, y + h / 2, 1, 1, 0xff00ff);
 }
 
