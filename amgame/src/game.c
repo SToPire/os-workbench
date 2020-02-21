@@ -2,6 +2,7 @@
 #include <klib.h>
 
 #define FPS 30
+int x = 0, y = 0, vx = 30, vy = 0;
 
 // Operating system is a C program!
 int main(const char* args)
@@ -26,7 +27,7 @@ int main(const char* args)
             kbd_event(key);  // 处理键盘事件
         }
         game_progress();           // 处理一帧游戏逻辑，更新物体的位置等
-        screen_update();           // 重新绘制屏幕
+        screen_update(x,y);           // 重新绘制屏幕
         next_frame += 1000 / FPS;  // 计算下一帧的时间
     }
 
@@ -47,6 +48,6 @@ void kbd_event(int keycode)
 
 void game_progress()
 {
-    
+    x += vx / FPS;
+    y += vy / FPS;
 }
-

@@ -2,12 +2,13 @@
 
 #define SIDE 16
 static int w, h;
-
-static void init() {
-  _DEV_VIDEO_INFO_t info = {0};
-  _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));
-  w = info.width;
-  h = info.height;
+extern int x, y, vx, vy,FPS;
+static void init()
+{
+    _DEV_VIDEO_INFO_t info = {0};
+    _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));
+    w = info.width;
+    h = info.height;
 }
 
 static void draw_tile(int x, int y, int w, int h, uint32_t color) {
@@ -37,4 +38,11 @@ void screen_update()
 {
     init();
     draw_tile(w / 2, h / 2, 1, 1, 0xff00ff);
+}
+
+void game_progress()
+{
+    x += vx / FPS;
+    y += vy / FPS;
+    if (x == w / 2) vx = -vx;
 }
