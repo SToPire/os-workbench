@@ -42,5 +42,5 @@ void kbd_event(int keycode)
     [_KEY_##key] = #key,
     static const char* key_names[] = {
         _KEYS(KEYNAME)};
-    printf("You have just pressed key: %s\n", key_names[keycode]);
+    printf("You have just pressed key: %s %d\n", key_names[keycode],keycode);
 }
