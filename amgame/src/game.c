@@ -1,7 +1,7 @@
 #include <game.h>
 #include <klib.h>
 
-#define FPS 30
+int FPS = 30;
 int x = 0, y = 0, vx = 30, vy = 0;
 
 // Operating system is a C program!
@@ -46,8 +46,3 @@ void kbd_event(int keycode)
     }
 }
 
-void game_progress()
-{
-    x += vx / FPS;
-    y += vy / FPS;
-}
