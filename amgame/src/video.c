@@ -3,6 +3,7 @@
 #define SIDE 16
 static int w, h;
 extern int x, y, vx, vy, FPS;
+int prex, prey;
 static void init()
 {
     _DEV_VIDEO_INFO_t info = {0};
@@ -48,13 +49,14 @@ void screen_clear()
 void screen_update()
 {
     init();
-   // draw_tile(0, 0, w, h, 0xffffff);
-    printf("%d %d\n", w, h);
+    draw_tile(prex + w / 2, prey + h / 2, 1, 1, 0x000000);
     draw_tile(x + w / 2, y + h / 2, 1, 1, 0xff00ff);
 }
 
 void game_progress()
 {
+    prex = x;
+    prey = y;
     x += vx / FPS;
     y += vy / FPS;
     if (x == w / 2) vx = -vx;
