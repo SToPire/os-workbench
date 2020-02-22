@@ -39,8 +39,8 @@ void draw_bdr(int bdr_w, int bdr_h)
     int beg_x = (w - bdr_w) / 2;
     int beg_y = (h - bdr_h) / 2;
     //draw_tile(beg_x, beg_y, bdr_w, 1, bdr_color);
-    draw_tile(beg_x, beg_y, 1, bdr_h, bdr_color);
-    draw_tile(beg_x + bdr_w, beg_y, 1, bdr_h, bdr_color);
+    draw_tile(beg_x, beg_y, 1, bdr_h+10, bdr_color);
+    draw_tile(beg_x + bdr_w, beg_y, 1, bdr_h+10, bdr_color);
     //draw_tile(beg_x, beg_y + bdr_h, bdr_w, 1, bdr_color);
 }
 
