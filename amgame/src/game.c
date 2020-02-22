@@ -5,6 +5,8 @@ int FPS = 30;
 int x = 0, y = 0, vx = 30, vy = 0;
 int prex, prey;
 int w, h;
+
+int bdr_w, bdr_h;
 // Operating system is a C program!
 int main(const char* args)
 {
@@ -42,6 +44,8 @@ void global_initial()
     init_screen();
     w = screen_width();
     h = screen_height();
+    bdr_w = 320, bdr_h = 200;
+    draw_bdr(bdr_w, bdr_h);
 }
 
 void kbd_event(int keycode)
@@ -58,15 +62,15 @@ void kbd_event(int keycode)
 
 void screen_update()
 {
-    draw_tile(prex + w / 2, prey + h / 2, 1, 1, 0x000000);
-    draw_tile(x + w / 2, y + h / 2, 1, 1, 0xff00ff);
+    // draw_tile(prex + w / 2, prey + h / 2, 1, 1, 0x000000);
+    // draw_tile(x + w / 2, y + h / 2, 1, 1, 0xff00ff);
 }
 
 void game_progress()
 {
-    prex = x;
-    prey = y;
-    x += vx / FPS;
-    y += vy / FPS;
-    if (x == w / 2) vx = -vx;
+    // prex = x;
+    // prey = y;
+    // x += vx / FPS;
+    // y += vy / FPS;
+    // if (x == w / 2) vx = -vx;
 }
