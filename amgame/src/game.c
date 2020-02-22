@@ -19,7 +19,7 @@ struct carPosition {
 } carPositions[5];
 
 int speed[6] = {0, 1, 2, 3, 4, 5};
-
+int new_car;
 // Operating system is a C program!
 int main(const char* args)
 {
@@ -47,7 +47,7 @@ void global_initial()
     init_screen();
     _DEV_TIMER_DATE_t curtime;
     get_timeofday(&curtime);
-    srand(curtime.second);
+    srand(curtime.second + 60 * curtime.minute + 3600 * curtime.hour);
     w = screen_width();
     h = screen_height();
     bdr_w = 300, bdr_h = 180;
@@ -90,12 +90,22 @@ void screen_update()
     draw_car(carPositions[0].prex, carPositions[0].prey, 0x000000);
     draw_car(carPositions[0].x, carPositions[0].y, 0xff0000);
 
+    if(new_car==1){
+        new_car = 0;
+        for (int i = 1; i <= 4;i++){
+            if(carPositions[i].x==0){
+                carPositions[i].prex = carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
+                carPositions[i].prey = carPositions[i].y = beg_y + 1;
+                draw_car(carPositions[i].x, carPositions[i].y, 0x00ff00);
+            }
+        }
+    }
 }
 
 void game_progress()
 {
     bias += speed[Gear/20];
     if(rand()%100==0){
-        printf("h");
+        new_car = 1;
     }
 }
