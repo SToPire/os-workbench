@@ -65,7 +65,7 @@ void kbd_event(int keycode)
     if (keycode == _KEY_W || (keycode ^ 0x8000) == _KEY_W) if(Gear != 100) Gear += 1;
     if (keycode == _KEY_S || (keycode ^ 0x8000) == _KEY_S) if (Gear != 0) Gear -= 1;
     if (keycode == _KEY_D || (keycode ^ 0x8000) == _KEY_D) if(carPositions[0].x != beg_x+bdr_w-15) carPositions[0].x += speed[Gear/20];
-    if (keycode == _KEY_A || (keycode ^ 0x8000) == _KEY_A) if(carPositions[0].x != beg_x) carPositions[0].x -= speed[Gear/20];
+    if (keycode == _KEY_A || (keycode ^ 0x8000) == _KEY_A) if(carPositions[0].x != beg_x + 1) carPositions[0].x -= speed[Gear/20];
 }
 
 void screen_update()
