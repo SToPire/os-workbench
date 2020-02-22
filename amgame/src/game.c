@@ -50,7 +50,7 @@ void global_initial()
 
     draw_bdr(bdr_w, bdr_h);
     draw_line(bdr_w, bdr_h);
-    draw_car(beg_x + bdr_w / 4 - 5, beg_y + bdr_h - 25, 0x0000ff);
+    draw_car(beg_x + bdr_w / 4 - 5, beg_y + bdr_h - 25, 0xff0000);
 }
 
 void kbd_event(int keycode)
