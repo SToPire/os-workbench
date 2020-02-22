@@ -1,5 +1,5 @@
 #include <game.h>
-#include<klib.h>
+#include <klib.h>
 #define SIDE 16
 extern int w, h;
 extern struct carPosition {
@@ -44,28 +44,30 @@ void draw_bdr(int bdr_w, int bdr_h)
     draw_tile(beg_x, beg_y + bdr_h, bdr_w, 1, bdr_color);
 }
 
-void draw_line(int bdr_w,int bdr_h)
+void draw_line(int bdr_w, int bdr_h)
 {
     uint32_t line_color = 0xffffff;
     int beg_x = (w - bdr_w) / 2;
     int beg_y = (h - bdr_h) / 2;
     int unit_length = bdr_h / 10;
-    for (int i = 1; i <= 9;i+=2){
-        draw_tile(beg_x + bdr_w / 4, beg_y + unit_length * i, 1, unit_length,line_color);
+    for (int i = 1; i <= 9; i += 2) {
+        draw_tile(beg_x + bdr_w / 4, beg_y + unit_length * i, 1, unit_length, line_color);
         draw_tile(beg_x + bdr_w / 2, beg_y + unit_length * i, 1, unit_length, line_color);
         draw_tile(beg_x + 3 * bdr_w / 4, beg_y + unit_length * i, 1, unit_length, line_color);
     }
 }
 
-void draw_car(int car_x,int car_y, uint32_t color,int i)
+void draw_car(int car_x, int car_y, uint32_t color, int i)
 {
     draw_tile(car_x + 2, car_y, 10, 20, color);
     draw_tile(car_x, car_y + 4, 2, 2, color);
     draw_tile(car_x, car_y + 15, 2, 2, color);
-    draw_tile(car_x + 12, car_y +4, 2, 2, color);
+    draw_tile(car_x + 12, car_y + 4, 2, 2, color);
     draw_tile(car_x + 12, car_y + 15, 2, 2, color);
-    carPositions[i].prex = carPositions[i].x;
-    carPositions[i].prey = carPositions[i].y;
-    carPositions[i].x = car_x;
-    carPositions[i].y = car_y;
+    if (color != 0x000000) {
+        carPositions[i].prex = carPositions[i].x;
+        carPositions[i].prey = carPositions[i].y;
+        carPositions[i].x = car_x;
+        carPositions[i].y = car_y;
+    }
 }
