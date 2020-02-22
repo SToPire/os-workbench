@@ -1,6 +1,8 @@
 #include <game.h>
 #include <klib.h>
 
+#define MAXCAR 10
+
 int FPS = 30;
 int x = 0, y = 0, vx = 30, vy = 0;
 int prex, prey;
@@ -16,7 +18,7 @@ struct carPosition {
     int prey;
     int x;
     int y;
-} carPositions[5];
+} carPositions[MAXCAR];
 
 int speed[6] = {0, 1, 2, 3, 4, 5};
 int new_car;
@@ -92,7 +94,7 @@ void screen_update()
 
     if (new_car == 1) {
         new_car = 0;
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i < MAXCAR; i++) {
             if (carPositions[i].x == 0) {
                 carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
                 carPositions[i].y = beg_y + 1;
@@ -102,7 +104,7 @@ void screen_update()
         }
     }
 
-    for (int i = 1; i <= 4; i++) {
+    for (int i = 1; i < MAXCAR; i++) {
         if (carPositions[i].x != 0) {
             draw_car(carPositions[i].prex, carPositions[i].prey, 0x000000, i);
             draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
@@ -113,10 +115,10 @@ void screen_update()
 void game_progress()
 {
     bias += speed[Gear/20];
-    if(rand()%30==0 && speed[Gear/20] != 0){
+    if(rand()%10==0 && speed[Gear/20] != 0){
         new_car = 1;
     }
-    for (int i = 1; i <= 4;i++){
+    for (int i = 1; i < MAXCAR;i++){
         if(carPositions[i].x != 0){
             int new_y = carPositions[i].y + speed[Gear / 20] - 1;
             if (new_y <= beg_y + bdr_h - 1 && new_y >= beg_y)
