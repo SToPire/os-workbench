@@ -10,7 +10,6 @@ int bdr_w, bdr_h;
 int bias;
 int Gear;
 
-int new_enemy;
 struct carPosition {
     int prex;
     int prey;
@@ -45,7 +44,6 @@ void global_initial()
 {
     _ioe_init();
     init_screen();
-    srand(uptime());
     w = screen_width();
     h = screen_height();
     bdr_w = 300, bdr_h = 180;
@@ -90,25 +88,9 @@ void screen_update()
     draw_car(carPositions[0].prex, carPositions[0].prey, 0x000000);
     draw_car(carPositions[0].x, carPositions[0].y, 0xff0000);
 
-    if(new_enemy){
-        for (int i = 1; i <= 4;i++){
-            if(carPositions[i].x==0){
-                carPositions[i].prex = carPositions[i].x = beg_x + rand() % (bdr_w - 15);
-                carPositions[i].prey = carPositions[i].y = beg_y + 1;
-                draw_car(carPositions[i].x, carPositions[i].y, rand() % 0x10000);
-            }
-        }
-        new_enemy = 0;
-    }
 }
 
 void game_progress()
 {
     bias += speed[Gear/20];
-    if(rand()%200==33){
-        for (int i = 1; i <= 4;i++){
-            if(carPositions[i].x == 0)
-                new_enemy = 1;
-        }
-    }
 }
