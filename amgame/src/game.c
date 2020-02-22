@@ -61,7 +61,7 @@ void kbd_event(int keycode)
     [_KEY_##key] = #key,
     static const char* key_names[] = {
         _KEYS(KEYNAME)};
-    if(!(keycode & 0x8000)){
+    if(1){
         if (keycode == _KEY_ESCAPE) _halt(0);
         if (keycode == _KEY_W || (keycode ^ 0x8000) == _KEY_W) Gear += 1;
         if (keycode == _KEY_S) Gear -= 1;
