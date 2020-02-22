@@ -93,7 +93,7 @@ void screen_update()
     for (int i = 1; i <= 4;i++){
         if(carPositions[i].x!=0){
             draw_car(carPositions[i].prex, carPositions[i].prey, 0x000000);
-            draw_car(carPositions[i].x, carPositions[i].y + bias, 0x0000ff);
+            draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff);
         }
     }
         if (new_car == 1) {
@@ -114,5 +114,12 @@ void game_progress()
     bias += speed[Gear/20];
     if(rand()%100==0){
         new_car = 1;
+    }
+    for (int i = 1; i <= 4;i++){
+        if(carPositions[i].x != 0){
+            carPositions[i].prex = x;
+            carPositions[i].prey = y;
+            carPositions[i].y += bias;
+        }
     }
 }
