@@ -86,6 +86,19 @@ void kbd_event(int keycode)
     }
 }
 
+int crash(int i, int j)
+{
+    if (carPositions[j].x >= carPositions[i].x && carPositions[j].x <= carPositions[i].x + 14 && carPositions[0].y >= carPositions[i].y && carPositions[0].y <= carPositions[i].y + 20)
+        return 1;
+    if (carPositions[j].x + 14 >= carPositions[i].x && carPositions[j].x + 14 <= carPositions[i].x + 14 && carPositions[0].y >= carPositions[i].y && carPositions[0].y <= carPositions[i].y + 20)
+        return 1;
+    if (carPositions[j].x >= carPositions[i].x && carPositions[j].x <= carPositions[i].x + 14 && carPositions[0].y + 20 >= carPositions[i].y && carPositions[0].y + 20 <= carPositions[i].y + 20)
+        return 1;
+    if (carPositions[j].x + 14 >= carPositions[i].x && carPositions[j].x + 14 <= carPositions[i].x + 14 && carPositions[0].y + 20 >= carPositions[i].y && carPositions[0].y + 20 <= carPositions[i].y + 20)
+        return 1;
+    return 0;
+}
+
 void screen_update()
 {
     if (GAME_OVER) {
@@ -116,6 +129,15 @@ void screen_update()
                 if (carPositions[i].x == 0) {
                     carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
                     carPositions[i].y = beg_y + 1;
+                    int RECHOOSE = 0;
+                    for (int j = 1; j < MAXCAR && i != j; j++) {
+                        if(crash(i,j)){
+                            carPositions[i].x = 0;
+                            carPositions[i].y = 0;
+                            RECHOOSE = 1;
+                        }
+                    }
+                    if (RECHOOSE) continue;
                     draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
                     break;
                 }
@@ -131,18 +153,6 @@ void screen_update()
     }
 }
 
-int crash(int i)
-{
-    if (carPositions[0].x >= carPositions[i].x && carPositions[0].x <= carPositions[i].x + 14 && carPositions[0].y >= carPositions[i].y && carPositions[0].y <= carPositions[i].y + 20)
-        return 1;
-    if (carPositions[0].x + 14 >= carPositions[i].x && carPositions[0].x + 14 <= carPositions[i].x + 14 && carPositions[0].y >= carPositions[i].y && carPositions[0].y <= carPositions[i].y + 20)
-        return 1;
-    if (carPositions[0].x >= carPositions[i].x && carPositions[0].x <= carPositions[i].x + 14 && carPositions[0].y + 20 >= carPositions[i].y && carPositions[0].y + 20 <= carPositions[i].y + 20)
-        return 1;
-    if (carPositions[0].x + 14 >= carPositions[i].x && carPositions[0].x + 14 <= carPositions[i].x + 14 && carPositions[0].y + 20 >= carPositions[i].y && carPositions[0].y + 20 <= carPositions[i].y + 20)
-        return 1;
-    return 0;
-}
 
 void game_progress()
 {
@@ -152,20 +162,20 @@ void game_progress()
     }
     for (int i = 1; i < MAXCAR; i++) {
         if (carPositions[i].x != 0) {
-            if (crash(i)) {
+            if (crash(i,0)) {
                 GAME_OVER = 1;
                 break;
             }
-            int new_y = carPositions[i].y + speed[Gear / 20] - 1;
-            if (new_y <= beg_y + bdr_h - 1 && new_y >= beg_y)
-                carPositions[i].y = new_y;
-            else {
-                draw_car(carPositions[i].x, carPositions[i].y, 0x000000, i);
-                carPositions[i].x = 0;
-                carPositions[i].y = 0;
-                carPositions[i].prex = 0;
-                carPositions[i].prey = 0;
-            }
+        int new_y = carPositions[i].y + speed[Gear / 20] - 1;
+        if (new_y <= beg_y + bdr_h - 1 && new_y >= beg_y)
+            carPositions[i].y = new_y;
+        else {
+            draw_car(carPositions[i].x, carPositions[i].y, 0x000000, i);
+            carPositions[i].x = 0;
+            carPositions[i].y = 0;
+            carPositions[i].prex = 0;
+            carPositions[i].prey = 0;
+        }
         }
     }
 }
