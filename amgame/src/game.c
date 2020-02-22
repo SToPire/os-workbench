@@ -119,7 +119,7 @@ void game_progress()
     for (int i = 1; i <= 4;i++){
         if(carPositions[i].x != 0){
             if(carPositions[i].y + speed[Gear/20] <= beg_y+bdr_h - 1)
-                if(speed[Gear/20] != 0)
+                if(1)
                     carPositions[i].y += speed[Gear/20] - 1;
                 else
                     carPositions[i].y += speed[Gear / 20];
