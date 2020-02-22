@@ -2,8 +2,6 @@
 #include<klib.h>
 #define SIDE 16
 extern int w, h;
-extern int x, y, vx, vy, FPS;
-extern int prex, prey;
 void init_screen()
 {
     _DEV_VIDEO_INFO_t info = {0};
