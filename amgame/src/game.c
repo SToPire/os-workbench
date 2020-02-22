@@ -92,7 +92,7 @@ void screen_update()
 
     for (int i = 1; i <= 4;i++){
         if(carPositions[i].x!=0){
-            draw_car(carPositions[i].prex, carPositions[i].prey, 0xff0000);
+            draw_car(carPositions[i].prex, carPositions[i].prey, 0x0f0000);
             draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff);
         }
     }
