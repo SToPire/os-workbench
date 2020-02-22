@@ -64,3 +64,12 @@ void draw_line(int bdr_w,int bdr_h)
     for (int i = 1; i <= 9;i+=2)
         draw_tile(beg_x + bdr_w / 2, beg_y + unit_length * i, 1, unit_length,line_color);
 }
+
+void draw_car(int car_x,int car_y, uint32_t color)
+{
+    draw_tile(car_x + 1, car_y, 10, 20, color);
+    draw_tile(car_x, car_y + 5, 1, 1, color);
+    draw_tile(car_x, car_y + 14, 1, 1, color);
+    draw_tile(car_x + 11, car_y + 5, 1, 1, color);
+    draw_tile(car_x + 11, car_y + 14, 1, 1, color);
+}

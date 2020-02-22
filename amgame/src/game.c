@@ -45,8 +45,12 @@ void global_initial()
     w = screen_width();
     h = screen_height();
     bdr_w = 300, bdr_h = 180;
+    int beg_x = (w - bdr_w) / 2;
+    int beg_y = (h - bdr_h) / 2;
+
     draw_bdr(bdr_w, bdr_h);
     draw_line(bdr_w, bdr_h);
+    draw_car(beg_x + bdr_w / 4 - 5, beg_y + bdr_h - 25, 0x0000ff);
 }
 
 void kbd_event(int keycode)
