@@ -38,10 +38,10 @@ void draw_bdr(int bdr_w, int bdr_h)
     uint32_t bdr_color = 0xffff00;
     int beg_x = (w - bdr_w) / 2;
     int beg_y = (h - bdr_h) / 2;
-    //draw_tile(beg_x, beg_y, bdr_w, 1, bdr_color);
-    draw_tile(beg_x, beg_y, 1, bdr_h+10, bdr_color);
-    draw_tile(beg_x + bdr_w, beg_y, 1, bdr_h+10, bdr_color);
-    //draw_tile(beg_x, beg_y + bdr_h, bdr_w, 1, bdr_color);
+    draw_tile(beg_x, beg_y, 1, bdr_h + 10, bdr_color);
+    draw_tile(beg_x - 2, beg_y, 1, bdr_h + 10, bdr_color);
+    draw_tile(beg_x + bdr_w, beg_y, 1, bdr_h + 10, bdr_color);
+    draw_tile(beg_x + bdr_w + 2, beg_y, 1, bdr_h + 10, bdr_color);
 }
 
 void draw_line(int bdr_w, int bdr_h)
