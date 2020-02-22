@@ -9,19 +9,16 @@ int w, h;
 int bdr_w, bdr_h;
 int bias;
 int Gear;
+
+struct carPosition{
+    int x;
+    int y;
+} carPositions[5];
+
+
 // Operating system is a C program!
 int main(const char* args)
 {
-    // _ioe_init();
-    // puts("mainargs = \"");
-    // puts(args); // make run mainargs=xxx
-    // puts("\"\n");
-
-    // splash();
-    // puts("Press any key to see its key code...\n");
-    // while (1) {
-    //     print_key();
-    // }
     global_initial();
 
     int next_frame = 0;
