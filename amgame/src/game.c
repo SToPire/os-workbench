@@ -72,8 +72,10 @@ void screen_update()
     int beg_y = (h - bdr_h) / 2;
     int unit_length = bdr_h / 10;
     draw_tile(beg_x + bdr_w / 2, beg_y, 1, bdr_h+unit_length, 0x000000);
-    for (int i = 1; i <= 9;i+=2)
+    for (int i = 1; i <= 9;i+=2){
         draw_tile(beg_x + bdr_w / 2, beg_y + (bias + unit_length * i) % bdr_h, 1, unit_length, 0xffffff);
+        draw_tile(beg_x + bdr_w / 2, beg_y + bdr_h, 1, unit_length, 0x000000);
+    }
 }
 
 void game_progress()
