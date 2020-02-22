@@ -50,8 +50,11 @@ void draw_line(int bdr_w,int bdr_h)
     int beg_x = (w - bdr_w) / 2;
     int beg_y = (h - bdr_h) / 2;
     int unit_length = bdr_h / 10;
-    for (int i = 1; i <= 9;i+=2)
-        draw_tile(beg_x + bdr_w / 2, beg_y + unit_length * i, 1, unit_length,line_color);
+    for (int i = 1; i <= 9;i+=2){
+        draw_tile(beg_x + bdr_w / 4, beg_y + unit_length * i, 1, unit_length,line_color);
+        draw_tile(beg_x + bdr_w / 2, beg_y + unit_length * i, 1, unit_length, line_color);
+        draw_tile(beg_x + 3 * bdr_w / 4, beg_y + unit_length * i, 1, unit_length, line_color);
+    }
 }
 
 void draw_car(int car_x,int car_y, uint32_t color)
