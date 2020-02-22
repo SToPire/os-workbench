@@ -13,6 +13,8 @@ int beg_x, beg_y;
 int bias;
 int Gear;
 
+int GAME_OVER;
+
 struct carPosition {
     int prex;
     int prey;
@@ -78,39 +80,45 @@ void kbd_event(int keycode)
 
 void screen_update()
 {
-    int unit_length = bdr_h / 10;
-    draw_tile(beg_x + bdr_w / 4, beg_y, 1, bdr_h + unit_length, 0x000000);
-    draw_tile(beg_x + bdr_w / 2, beg_y, 1, bdr_h + unit_length, 0x000000);
-    draw_tile(beg_x + 3 * bdr_w / 4, beg_y, 1, bdr_h + unit_length, 0x000000);
+    if (GAME_OVER) {
+        for (int i = 0; i < w;i+=10)
+            for (int j = 0; j < h;j+=10)
+                draw_tile(i, j, 10, 10, 0xff0000);
+    } else {
+        int unit_length = bdr_h / 10;
+        draw_tile(beg_x + bdr_w / 4, beg_y, 1, bdr_h + unit_length, 0x000000);
+        draw_tile(beg_x + bdr_w / 2, beg_y, 1, bdr_h + unit_length, 0x000000);
+        draw_tile(beg_x + 3 * bdr_w / 4, beg_y, 1, bdr_h + unit_length, 0x000000);
 
-    for (int i = 1; i <= 9; i += 2) {
-        draw_tile(beg_x + bdr_w / 4, beg_y + (bias + unit_length * i) % bdr_h, 1, unit_length, 0xffffff);
-        draw_tile(beg_x + bdr_w / 4, beg_y + bdr_h, 1, unit_length, 0x000000);
-        draw_tile(beg_x + bdr_w / 2, beg_y + (bias + unit_length * i) % bdr_h, 1, unit_length, 0xffffff);
-        draw_tile(beg_x + bdr_w / 2, beg_y + bdr_h, 1, unit_length, 0x000000);
-        draw_tile(beg_x + 3 * bdr_w / 4, beg_y + (bias + unit_length * i) % bdr_h, 1, unit_length, 0xffffff);
-        draw_tile(beg_x + 3 * bdr_w / 4, beg_y + bdr_h, 1, unit_length, 0x000000);
-    }
+        for (int i = 1; i <= 9; i += 2) {
+            draw_tile(beg_x + bdr_w / 4, beg_y + (bias + unit_length * i) % bdr_h, 1, unit_length, 0xffffff);
+            draw_tile(beg_x + bdr_w / 4, beg_y + bdr_h, 1, unit_length, 0x000000);
+            draw_tile(beg_x + bdr_w / 2, beg_y + (bias + unit_length * i) % bdr_h, 1, unit_length, 0xffffff);
+            draw_tile(beg_x + bdr_w / 2, beg_y + bdr_h, 1, unit_length, 0x000000);
+            draw_tile(beg_x + 3 * bdr_w / 4, beg_y + (bias + unit_length * i) % bdr_h, 1, unit_length, 0xffffff);
+            draw_tile(beg_x + 3 * bdr_w / 4, beg_y + bdr_h, 1, unit_length, 0x000000);
+        }
 
-    draw_car(carPositions[0].prex, carPositions[0].prey, 0x000000, 0);
-    draw_car(carPositions[0].x, carPositions[0].y, 0xff0000, 0);
+        draw_car(carPositions[0].prex, carPositions[0].prey, 0x000000, 0);
+        draw_car(carPositions[0].x, carPositions[0].y, 0xff0000, 0);
 
-    if (new_car == 1) {
-        new_car = 0;
-        for (int i = 1; i < MAXCAR; i++) {
-            if (carPositions[i].x == 0) {
-                carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
-                carPositions[i].y = beg_y + 1;
-                draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
-                break;
+        if (new_car == 1) {
+            new_car = 0;
+            for (int i = 1; i < MAXCAR; i++) {
+                if (carPositions[i].x == 0) {
+                    carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
+                    carPositions[i].y = beg_y + 1;
+                    draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
+                    break;
+                }
             }
         }
-    }
 
-    for (int i = 1; i < MAXCAR; i++) {
-        if (carPositions[i].x != 0) {
-            draw_car(carPositions[i].prex, carPositions[i].prey, 0x000000, i);
-            draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
+        for (int i = 1; i < MAXCAR; i++) {
+            if (carPositions[i].x != 0) {
+                draw_car(carPositions[i].prex, carPositions[i].prey, 0x000000, i);
+                draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
+            }
         }
     }
 }
@@ -137,7 +145,7 @@ void game_progress()
     for (int i = 1; i < MAXCAR; i++) {
         if (carPositions[i].x != 0) {
             if (crash(i)) {
-                printf("ssss\n");
+                GAME_OVER = 1;
                 break;
             }
             int new_y = carPositions[i].y + speed[Gear / 20] - 1;
