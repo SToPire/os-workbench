@@ -67,9 +67,9 @@ void draw_line(int bdr_w,int bdr_h)
 
 void draw_car(int car_x,int car_y, uint32_t color)
 {
-    draw_tile(car_x + 1, car_y, 10, 20, color);
-    draw_tile(car_x, car_y + 5, 1, 1, color);
-    draw_tile(car_x, car_y + 14, 1, 1, color);
-    draw_tile(car_x + 11, car_y + 5, 1, 1, color);
-    draw_tile(car_x + 11, car_y + 14, 1, 1, color);
+    draw_tile(car_x + 2, car_y, 10, 20, color);
+    draw_tile(car_x, car_y + 4, 2, 2, color);
+    draw_tile(car_x, car_y + 15, 2, 2, color);
+    draw_tile(car_x + 12, car_y +4, 2, 2, color);
+    draw_tile(car_x + 12, car_y + 15, 2, 2, color);
 }
