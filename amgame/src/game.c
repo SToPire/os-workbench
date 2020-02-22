@@ -67,8 +67,9 @@ void kbd_event(int keycode)
 
 void screen_update()
 {
-    // draw_tile(prex + w / 2, prey + h / 2, 1, 1, 0x000000);
-    // draw_tile(x + w / 2, y + h / 2, 1, 1, 0xff00ff);
+    int beg_x = (w - bdr_w) / 2;
+    int beg_y = (h - bdr_h) / 2;
+    draw_tile(beg_x + bdr_w / 2, beg_y, 1, bdr_h, 0x000000);
 }
 
 void game_progress()
