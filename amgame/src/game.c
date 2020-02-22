@@ -81,5 +81,5 @@ void screen_update()
 void game_progress()
 {
     
-    bias += 4;
+    bias += 5;
 }
