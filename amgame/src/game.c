@@ -11,6 +11,8 @@ int bias;
 int Gear;
 
 struct carPosition{
+    int prex;
+    int prey;
     int x;
     int y;
 } carPositions[5];
@@ -57,6 +59,8 @@ void kbd_event(int keycode)
     if (keycode == _KEY_ESCAPE) _halt(0);
     if (keycode == _KEY_W || (keycode ^ 0x8000) == _KEY_W) if(Gear != 100) Gear += 1;
     if (keycode == _KEY_S || (keycode ^ 0x8000) == _KEY_S) if (Gear != 0) Gear -= 1;
+    if (keycode == _KEY_D || (keycode ^ 0x8000) == _KEY_D) carPositions[0].x += 1;
+    if (keycode == _KEY_A || (keycode ^ 0x8000) == _KEY_A) carPositions[0].x -= 1;
 }
 
 void screen_update()
@@ -69,6 +73,9 @@ void screen_update()
         draw_tile(beg_x + bdr_w / 2, beg_y + (bias + unit_length * i) % bdr_h, 1, unit_length, 0xffffff);
         draw_tile(beg_x + bdr_w / 2, beg_y + bdr_h, 1, unit_length, 0x000000);
     }
+
+    draw_car(carPositions[0].prex, carPositions[0].prey, 0x000000);
+    draw_car(carPositions[0].x, carPositions[0].y, 0xff0000);
 }
 
 void game_progress()

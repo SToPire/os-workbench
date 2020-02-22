@@ -3,6 +3,8 @@
 #define SIDE 16
 extern int w, h;
 extern struct carPosition {
+    int prex;
+    int prey;
     int x;
     int y;
 } carPositions[5];
