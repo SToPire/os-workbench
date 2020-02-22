@@ -157,15 +157,24 @@ void game_progress()
                 GAME_OVER = 1;
                 break;
             }
-        int new_y = carPositions[i].y + speed[Gear / 20] - 1;
-        if (new_y <= beg_y + bdr_h - 1 && new_y >= beg_y)
-            carPositions[i].y = new_y;
-        else {
-            draw_car(carPositions[i].x, carPositions[i].y, 0x000000, i);
-            carPositions[i].x = 0;
-            carPositions[i].y = 0;
-            carPositions[i].prex = 0;
-            carPositions[i].prey = 0;
+            int KILLCAR = 0;
+            int new_x = carPositions[i].x + rand() % 3 - 1;
+            if(new_x <=beg_x+bdr_w-1 && new_x <=beg_x)
+                carPositions[i].x = new_x;
+            else
+                KILLCAR = 1;
+            int new_y = carPositions[i].y + speed[Gear / 20] - 1;
+            if (new_y <= beg_y + bdr_h - 1 && new_y >= beg_y)
+                carPositions[i].y = new_y;
+            else
+                KILLCAR = 1;
+            if(KILLCAR)
+            {
+                draw_car(carPositions[i].x, carPositions[i].y, 0x000000, i);
+                carPositions[i].x = 0;
+                carPositions[i].y = 0;
+                carPositions[i].prex = 0;
+                carPositions[i].prey = 0;
         }
         }
     }
