@@ -1,6 +1,7 @@
 #include <am.h>
 #include <amdev.h>
 
+void global_initial();
 void kbd_event(int keycode);
 void game_progress();
 void screen_update();

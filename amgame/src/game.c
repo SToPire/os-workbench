@@ -18,6 +18,7 @@ int main(const char* args)
     // while (1) {
     //     print_key();
     // }
+    global_initial();
 
     int next_frame = 0;
     int key;
