@@ -1,6 +1,6 @@
 #include <game.h>
 #include<klib.h>
-#define SIDE 64
+#define SIDE 40
 static int w, h;
 extern int x, y, vx, vy, FPS;
 int prex, prey;
