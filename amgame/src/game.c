@@ -8,6 +8,7 @@ int w, h;
 
 int bdr_w, bdr_h;
 int bias;
+int Gear;
 // Operating system is a C program!
 int main(const char* args)
 {
@@ -62,6 +63,7 @@ void kbd_event(int keycode)
         _KEYS(KEYNAME)};
     if(!(keycode & 0x8000)){
         if (keycode == _KEY_ESCAPE) _halt(0);
+        if (keycode == _KEY_W) Gear += 1;else Gear -= 1;
         printf("You have just pressed key: %s %d\n", key_names[keycode], keycode);
     }
 }
@@ -80,6 +82,6 @@ void screen_update()
 
 void game_progress()
 {
-    
-    bias += 5;
+    int speed[6] = {0, 1, 2, 3, 4, 5};
+    bias += speed[Gear];
 }
