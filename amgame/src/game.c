@@ -17,6 +17,7 @@ struct carPosition{
     int y;
 } carPositions[5];
 
+int speed[6] = {0, 1, 2, 3, 4, 5};
 
 // Operating system is a C program!
 int main(const char* args)
@@ -62,8 +63,8 @@ void kbd_event(int keycode)
     if (keycode == _KEY_ESCAPE) _halt(0);
     if (keycode == _KEY_W || (keycode ^ 0x8000) == _KEY_W) if(Gear != 100) Gear += 1;
     if (keycode == _KEY_S || (keycode ^ 0x8000) == _KEY_S) if (Gear != 0) Gear -= 1;
-    if (keycode == _KEY_D || (keycode ^ 0x8000) == _KEY_D) carPositions[0].x += 1;
-    if (keycode == _KEY_A || (keycode ^ 0x8000) == _KEY_A) carPositions[0].x -= 1;
+    if (keycode == _KEY_D || (keycode ^ 0x8000) == _KEY_D) carPositions[0].x += speed[Gear/20];
+    if (keycode == _KEY_A || (keycode ^ 0x8000) == _KEY_A) carPositions[0].x -= speed[Gear/20];
 }
 
 void screen_update()
@@ -83,6 +84,5 @@ void screen_update()
 
 void game_progress()
 {
-    int speed[6] = {0, 1, 2, 3, 4, 5};
     bias += speed[Gear/20];
 }
