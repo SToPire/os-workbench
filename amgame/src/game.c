@@ -119,7 +119,7 @@ void game_progress()
         if(carPositions[i].x != 0){
             carPositions[i].prex = x;
             carPositions[i].prey = y;
-            carPositions[i].y += bias;
+            carPositions[i].y += 1;
         }
     }
 }
