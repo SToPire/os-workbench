@@ -129,18 +129,6 @@ void screen_update()
                 if (carPositions[i].x == 0) {
                     carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
                     carPositions[i].y = beg_y + 1;
-                    int RECHOOSE = 0;
-                    for (int j = 1; j < MAXCAR && i != j; j++) {
-                        if(crash(i,j)){
-                            carPositions[i].x = 0;
-                            carPositions[i].y = 0;
-                            RECHOOSE = 1;
-                        }
-                    }
-                    if (RECHOOSE){
-                        i--;
-                        continue;
-                    }
                     draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
                     break;
                 }
