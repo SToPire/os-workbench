@@ -57,17 +57,15 @@ void draw_line(int bdr_w,int bdr_h)
     }
 }
 
-void draw_car(int car_x,int car_y, uint32_t color)
+void draw_car(int car_x,int car_y, uint32_t color,int i)
 {
     draw_tile(car_x + 2, car_y, 10, 20, color);
     draw_tile(car_x, car_y + 4, 2, 2, color);
     draw_tile(car_x, car_y + 15, 2, 2, color);
     draw_tile(car_x + 12, car_y +4, 2, 2, color);
     draw_tile(car_x + 12, car_y + 15, 2, 2, color);
-    if(color==0xff0000){
-        carPositions[0].prex = carPositions[0].x;
-        carPositions[0].prey = carPositions[0].y;
-        carPositions[0].x = car_x;
-        carPositions[0].y = car_y;
-    }
+    carPositions[i].prex = carPositions[i].x;
+    carPositions[i].prey = carPositions[i].y;
+    carPositions[i].x = car_x;
+    carPositions[i].y = car_y;
 }
