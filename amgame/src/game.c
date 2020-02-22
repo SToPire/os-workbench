@@ -158,7 +158,7 @@ void game_progress()
                 break;
             }
             int new_x = carPositions[i].x  + rand() % 3 - 1;
-            if(new_x <=beg_x+bdr_w-1 && new_x <=beg_x)
+            if(new_x <=beg_x+bdr_w-1 && new_x >=beg_x)
                 carPositions[i].x = new_x;
             int new_y = carPositions[i].y + speed[Gear / 20] - 1;
             if (new_y <= beg_y + bdr_h - 1 && new_y >= beg_y)
