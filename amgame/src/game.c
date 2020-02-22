@@ -45,6 +45,9 @@ void global_initial()
 {
     _ioe_init();
     init_screen();
+    _DEV_TIMER_DATE_t curtime;
+    get_timeofday(&curtime);
+    srand(curtime.second);
     w = screen_width();
     h = screen_height();
     bdr_w = 300, bdr_h = 180;
@@ -92,4 +95,7 @@ void screen_update()
 void game_progress()
 {
     bias += speed[Gear/20];
+    if(rand()%100==0){
+        printf("h");
+    }
 }
