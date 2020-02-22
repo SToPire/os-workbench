@@ -46,7 +46,7 @@ void splash()
 
 void draw_bdr(int bdr_w, int bdr_h)
 {
-    uint32_t bdr_color = 0xff0000;
+    uint32_t bdr_color = 0x00ff00;
     int beg_x = (w - bdr_w) / 2;
     int beg_y = (h - bdr_h) / 2;
     draw_tile(beg_x, beg_y, bdr_w, 1, bdr_color);
