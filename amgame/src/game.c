@@ -45,7 +45,7 @@ void global_initial()
 {
     _ioe_init();
     init_screen();
-    //srand(uptime());
+    srand(uptime());
     w = screen_width();
     h = screen_height();
     bdr_w = 300, bdr_h = 180;
