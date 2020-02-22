@@ -97,6 +97,7 @@ void screen_update()
                 carPositions[i].prex = carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
                 carPositions[i].prey = carPositions[i].y = beg_y + 1;
                 draw_car(carPositions[i].x, carPositions[i].y, 0x00ff00);
+                break;
             }
         }
     }
