@@ -44,7 +44,7 @@ void global_initial()
     init_screen();
     w = screen_width();
     h = screen_height();
-    bdr_w = 320, bdr_h = 200;
+    bdr_w = 300, bdr_h = 180;
     draw_bdr(bdr_w, bdr_h);
 }
 
