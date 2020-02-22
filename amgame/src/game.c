@@ -92,5 +92,11 @@ void screen_update()
 
 void game_progress()
 {
+    int beg_x = (w - bdr_w) / 2;
+    int beg_y = (h - bdr_h) / 2;
+
     bias += speed[Gear/20];
+    if(rand()%10==0){
+        draw_car(beg_x + 50, beg_y, rand() % 0x10000);
+    }
 }
