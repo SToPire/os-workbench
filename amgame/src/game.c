@@ -118,7 +118,7 @@ void game_progress()
     }
     for (int i = 1; i <= 4;i++){
         if(carPositions[i].x != 0){
-            carPositions[i].y += 1;
+            carPositions[i].y += speed[Gear/20];
         }
     }
 }
