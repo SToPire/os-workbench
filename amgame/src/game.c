@@ -7,6 +7,7 @@ int prex, prey;
 int w, h;
 
 int bdr_w, bdr_h;
+int bias;
 // Operating system is a C program!
 int main(const char* args)
 {
@@ -69,14 +70,13 @@ void screen_update()
 {
     int beg_x = (w - bdr_w) / 2;
     int beg_y = (h - bdr_h) / 2;
+    int unit_length = bdr_h / 10;
     draw_tile(beg_x + bdr_w / 2, beg_y, 1, bdr_h, 0x000000);
+    for (int i = 1; i <= 9;i+=2)
+        draw_tile(beg_x + bdr_w / 2, beg_y + (bias + unit_length * i) % bdr_h, 1, unit_length, 0xffffff);
 }
 
 void game_progress()
 {
-    // prex = x;
-    // prey = y;
-    // x += vx / FPS;
-    // y += vy / FPS;
-    // if (x == w / 2) vx = -vx;
+    bias += 1;
 }
