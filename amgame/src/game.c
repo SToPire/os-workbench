@@ -84,5 +84,5 @@ void screen_update()
 void game_progress()
 {
     int speed[6] = {0, 1, 2, 3, 4, 5};
-    bias += speed[Gear/50];
+    bias += speed[Gear/10];
 }
