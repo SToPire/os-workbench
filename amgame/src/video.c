@@ -46,13 +46,21 @@ void splash()
 
 void draw_bdr(int bdr_w, int bdr_h)
 {
-    uint32_t bdr_color = 0xffffff;
+    uint32_t bdr_color = 0xff0000;
     int beg_x = (w - bdr_w) / 2;
     int beg_y = (h - bdr_h) / 2;
     draw_tile(beg_x, beg_y, bdr_w, 1, bdr_color);
     draw_tile(beg_x, beg_y, 1, bdr_h, bdr_color);
     draw_tile(beg_x + bdr_w, beg_y, 1, bdr_h, bdr_color);
     draw_tile(beg_x, beg_y + bdr_h, bdr_w, 1, bdr_color);
+}
 
-    draw_tile(beg_x + 20, beg_y + bdr_h - 40, 10, 30, 0x00ff00);
+void draw_line(int bdr_w,int bdr_h)
+{
+    uint32_t line_color = 0xffffff;
+    int beg_x = (w - bdr_w) / 2;
+    int beg_y = (h - bdr_h) / 2;
+    int unit_length = bdr_h / 10;
+    for (int i = 1; i <= 9;i+=2)
+        draw_tile(beg_x + bdr_w / 2, beg_y + unit_length * i, 1, unit_length,line_color);
 }
