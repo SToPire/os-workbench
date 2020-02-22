@@ -118,8 +118,6 @@ void game_progress()
     }
     for (int i = 1; i <= 4;i++){
         if(carPositions[i].x != 0){
-            carPositions[i].prex = x;
-            carPositions[i].prey = y;
             carPositions[i].y += 1;
         }
     }
