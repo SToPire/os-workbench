@@ -53,4 +53,6 @@ void draw_bdr(int bdr_w, int bdr_h)
     draw_tile(beg_x, beg_y, 1, bdr_h, bdr_color);
     draw_tile(beg_x + bdr_w, beg_y, 1, bdr_h, bdr_color);
     draw_tile(beg_x, beg_y + bdr_h, bdr_w, 1, bdr_color);
+
+    draw_tile(beg_x + 20, beg_y + bdr_h - 40, 10, 30, 0x00ff00);
 }
