@@ -113,7 +113,7 @@ void screen_update()
 void game_progress()
 {
     bias += speed[Gear/20];
-    if(rand()%50==0 && speed[Gear/20] != 0){
+    if(rand()%30==0 && speed[Gear/20] != 0){
         new_car = 1;
     }
     for (int i = 1; i <= 4;i++){
