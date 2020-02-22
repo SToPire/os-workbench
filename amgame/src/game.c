@@ -96,17 +96,17 @@ void screen_update()
             draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff);
         }
     }
-        if (new_car == 1) {
-            new_car = 0;
-            for (int i = 1; i <= 4; i++) {
-                if (carPositions[i].x == 0) {
-                    carPositions[i].prex = carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
-                    carPositions[i].prey = carPositions[i].y = beg_y + 1;
-                    draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff);
-                    break;
-                }
+    if (new_car == 1) {
+        new_car = 0;
+        for (int i = 1; i <= 4; i++) {
+            if (carPositions[i].x == 0) {
+                carPositions[i].prex = carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
+                carPositions[i].prey = carPositions[i].y = beg_y + 1;
+                draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff);
+                break;
             }
         }
+    }
 }
 
 void game_progress()
