@@ -72,17 +72,25 @@ void kbd_event(int keycode)
         if (Gear != 100) Gear += 1;
     if (keycode == _KEY_S || (keycode ^ 0x8000) == _KEY_S)
         if (Gear != 0) Gear -= 1;
-    if (keycode == _KEY_D || (keycode ^ 0x8000) == _KEY_D)
-        if (carPositions[0].x + speed[Gear / 20] <= beg_x + bdr_w - 15) carPositions[0].x += speed[Gear / 20];
-    if (keycode == _KEY_A || (keycode ^ 0x8000) == _KEY_A)
-        if (carPositions[0].x - speed[Gear / 20] >= beg_x + 1) carPositions[0].x -= speed[Gear / 20];
+    if (keycode == _KEY_D || (keycode ^ 0x8000) == _KEY_D) {
+        if (carPositions[0].x + speed[Gear / 20] <= beg_x + bdr_w - 15)
+            carPositions[0].x += speed[Gear / 20];
+        else
+            GAME_OVER = 1;
+    }
+    if (keycode == _KEY_A || (keycode ^ 0x8000) == _KEY_A) {
+        if (carPositions[0].x - speed[Gear / 20] >= beg_x + 1)
+            carPositions[0].x -= speed[Gear / 20];
+        else
+            GAME_OVER = 1;
+    }
 }
 
 void screen_update()
 {
     if (GAME_OVER) {
-        for (int i = 0; i < w;i+=10)
-            for (int j = 0; j < h;j+=10)
+        for (int i = 0; i < w; i += 10)
+            for (int j = 0; j < h; j += 10)
                 draw_tile(i, j, 10, 10, 0xff0000);
     } else {
         int unit_length = bdr_h / 10;
