@@ -52,7 +52,10 @@ void global_initial()
     draw_bdr(bdr_w, bdr_h);
     draw_line(bdr_w, bdr_h);
     draw_car(beg_x + bdr_w / 4 - 5, beg_y + bdr_h - 25, 0xff0000);
+    carPositions[0].prex = carPositions[0].x;
+    carPositions[0].prey = carPositions[0].y;
 }
+
 
 void kbd_event(int keycode)
 {

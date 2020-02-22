@@ -62,6 +62,8 @@ void draw_car(int car_x,int car_y, uint32_t color)
     draw_tile(car_x + 12, car_y +4, 2, 2, color);
     draw_tile(car_x + 12, car_y + 15, 2, 2, color);
     if(color==0xff0000){
+        carPositions[0].prex = carPositions[0].x;
+        carPositions[0].prey = carPositions[0].y;
         carPositions[0].x = car_x;
         carPositions[0].y = car_y;
     }
