@@ -90,12 +90,6 @@ void screen_update()
     draw_car(carPositions[0].prex, carPositions[0].prey, 0x000000,0);
     draw_car(carPositions[0].x, carPositions[0].y, 0xff0000,0);
 
-    for (int i = 1; i <= 4;i++){
-        if(carPositions[i].x!=0){
-            draw_car(carPositions[i].prex, carPositions[i].prey, 0x000000,i);
-            draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff,i);
-        }
-    }
     if (new_car == 1) {
         new_car = 0;
         for (int i = 1; i <= 4; i++) {
@@ -105,6 +99,13 @@ void screen_update()
                 draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
                 break;
             }
+        }
+    }
+
+    for (int i = 1; i <= 4; i++) {
+        if (carPositions[i].x != 0) {
+            draw_car(carPositions[i].prex, carPositions[i].prey, 0x000000, i);
+            draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
         }
     }
 }
