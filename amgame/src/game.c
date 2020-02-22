@@ -7,6 +7,7 @@ int prex, prey;
 int w, h;
 
 int bdr_w, bdr_h;
+int beg_x, beg_y;
 int bias;
 int Gear;
 
@@ -47,8 +48,8 @@ void global_initial()
     w = screen_width();
     h = screen_height();
     bdr_w = 300, bdr_h = 180;
-    int beg_x = (w - bdr_w) / 2;
-    int beg_y = (h - bdr_h) / 2;
+    beg_x = (w - bdr_w) / 2;
+    beg_y = (h - bdr_h) / 2;
 
     draw_bdr(bdr_w, bdr_h);
     draw_line(bdr_w, bdr_h);
@@ -63,14 +64,12 @@ void kbd_event(int keycode)
     if (keycode == _KEY_ESCAPE) _halt(0);
     if (keycode == _KEY_W || (keycode ^ 0x8000) == _KEY_W) if(Gear != 100) Gear += 1;
     if (keycode == _KEY_S || (keycode ^ 0x8000) == _KEY_S) if (Gear != 0) Gear -= 1;
-    if (keycode == _KEY_D || (keycode ^ 0x8000) == _KEY_D) carPositions[0].x += speed[Gear/20];
-    if (keycode == _KEY_A || (keycode ^ 0x8000) == _KEY_A) carPositions[0].x -= speed[Gear/20];
+    if (keycode == _KEY_D || (keycode ^ 0x8000) == _KEY_D) if(carPositions[0].x != beg_x+bdr_w-15) carPositions[0].x += speed[Gear/20];
+    if (keycode == _KEY_A || (keycode ^ 0x8000) == _KEY_A) if(carPositions[0].x != beg_x) carPositions[0].x -= speed[Gear/20];
 }
 
 void screen_update()
 {
-    int beg_x = (w - bdr_w) / 2;
-    int beg_y = (h - bdr_h) / 2;
     int unit_length = bdr_h / 10;
     draw_tile(beg_x + bdr_w / 4, beg_y, 1, bdr_h+unit_length, 0x000000);
     draw_tile(beg_x + bdr_w / 2, beg_y, 1, bdr_h + unit_length, 0x000000);
