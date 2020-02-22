@@ -1,10 +1,10 @@
 #include <game.h>
 #include<klib.h>
 #define SIDE 16
-static int w, h;
+extern int w, h;
 extern int x, y, vx, vy, FPS;
-int prex, prey;
-static void init()
+extern int prex, prey;
+void init_screen()
 {
     _DEV_VIDEO_INFO_t info = {0};
     _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));
@@ -12,7 +12,7 @@ static void init()
     h = info.height;
 }
 
-static void draw_tile(int x, int y, int w, int h, uint32_t color)
+void draw_tile(int x, int y, int w, int h, uint32_t color)
 {
     uint32_t pixels[w * h];  // careful! stack is limited!
     _DEV_VIDEO_FBCTRL_t event = {
@@ -31,7 +31,7 @@ static void draw_tile(int x, int y, int w, int h, uint32_t color)
 
 void splash()
 {
-    init();
+    init_screen();
     // for (int x = 0; x * SIDE <= w; x++) {
     //     for (int y = 0; y * SIDE <= h; y++) {
     //         if ((x & 1) ^ (y & 1)) {
@@ -44,20 +44,4 @@ void splash()
             draw_tile(x, y, 10, 10, 0xff0000);
         }
     }
-}
-
-void screen_update()
-{
-    init();
-    draw_tile(prex + w / 2, prey + h / 2, 1, 1, 0x000000);
-    draw_tile(x + w / 2, y + h / 2, 1, 1, 0xff00ff);
-}
-
-void game_progress()
-{
-    prex = x;
-    prey = y;
-    x += vx / FPS;
-    y += vy / FPS;
-    if (x == w / 2) vx = -vx;
 }
