@@ -10,8 +10,6 @@ static void init()
     _io_read(_DEV_VIDEO, _DEVREG_VIDEO_INFO, &info, sizeof(info));
     w = info.width;
     h = info.height;
-
-    printf("%d %d", w, h);
 }
 
 static void draw_tile(int x, int y, int w, int h, uint32_t color)
@@ -41,11 +39,6 @@ void splash()
             }
         }
     }
-}
-
-void screen_clear()
-{
-  
 }
 
 void screen_update()
