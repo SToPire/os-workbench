@@ -137,7 +137,10 @@ void screen_update()
                             RECHOOSE = 1;
                         }
                     }
-                    if (RECHOOSE) continue;
+                    if (RECHOOSE){
+                        i--;
+                        continue;
+                    }
                     draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
                     break;
                 }
