@@ -100,8 +100,8 @@ void screen_update()
         new_car = 0;
         for (int i = 1; i <= 4; i++) {
             if (carPositions[i].x == 0) {
-                carPositions[i].prex = carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
-                carPositions[i].prey = carPositions[i].y = beg_y + 1;
+                carPositions[i].x = beg_x + rand() % (bdr_w - 15) + 1;
+                carPositions[i].y = beg_y + 1;
                 draw_car(carPositions[i].x, carPositions[i].y, 0x0000ff, i);
                 break;
             }
