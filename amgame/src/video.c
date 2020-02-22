@@ -35,7 +35,7 @@ void draw_tile(int x, int y, int w, int h, uint32_t color)
 
 void draw_bdr(int bdr_w, int bdr_h)
 {
-    uint32_t bdr_color = 0x00ffff;
+    uint32_t bdr_color = 0xffff00;
     int beg_x = (w - bdr_w) / 2;
     int beg_y = (h - bdr_h) / 2;
     //draw_tile(beg_x, beg_y, bdr_w, 1, bdr_color);
