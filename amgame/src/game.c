@@ -46,6 +46,7 @@ void global_initial()
     h = screen_height();
     bdr_w = 300, bdr_h = 180;
     draw_bdr(bdr_w, bdr_h);
+    draw_line(bdr_w, bdr_h);
 }
 
 void kbd_event(int keycode)
