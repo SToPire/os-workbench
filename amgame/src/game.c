@@ -88,13 +88,13 @@ void kbd_event(int keycode)
 
 int crash(int i, int j)
 {
-    if (carPositions[j].x >= carPositions[i].x && carPositions[j].x <= carPositions[i].x + 14 && carPositions[0].y >= carPositions[i].y && carPositions[0].y <= carPositions[i].y + 20)
+    if (carPositions[j].x >= carPositions[i].x && carPositions[j].x <= carPositions[i].x + 13 && carPositions[0].y >= carPositions[i].y && carPositions[0].y <= carPositions[i].y + 20)
         return 1;
-    if (carPositions[j].x + 14 >= carPositions[i].x && carPositions[j].x + 14 <= carPositions[i].x + 14 && carPositions[0].y >= carPositions[i].y && carPositions[0].y <= carPositions[i].y + 20)
+    if (carPositions[j].x + 13 >= carPositions[i].x && carPositions[j].x + 13 <= carPositions[i].x + 13 && carPositions[0].y >= carPositions[i].y && carPositions[0].y <= carPositions[i].y + 20)
         return 1;
-    if (carPositions[j].x >= carPositions[i].x && carPositions[j].x <= carPositions[i].x + 14 && carPositions[0].y + 20 >= carPositions[i].y && carPositions[0].y + 20 <= carPositions[i].y + 20)
+    if (carPositions[j].x >= carPositions[i].x && carPositions[j].x <= carPositions[i].x + 13 && carPositions[0].y + 20 >= carPositions[i].y && carPositions[0].y + 20 <= carPositions[i].y + 20)
         return 1;
-    if (carPositions[j].x + 14 >= carPositions[i].x && carPositions[j].x + 14 <= carPositions[i].x + 14 && carPositions[0].y + 20 >= carPositions[i].y && carPositions[0].y + 20 <= carPositions[i].y + 20)
+    if (carPositions[j].x + 13 >= carPositions[i].x && carPositions[j].x + 13 <= carPositions[i].x + 13 && carPositions[0].y + 20 >= carPositions[i].y && carPositions[0].y + 20 <= carPositions[i].y + 20)
         return 1;
     return 0;
 }
