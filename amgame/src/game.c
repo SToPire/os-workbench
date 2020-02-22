@@ -105,7 +105,7 @@ void screen_update()
 void game_progress()
 {
     bias += speed[Gear/20];
-    if(rand()%100==33){
+    if(rand()%10000==33){
         for (int i = 1; i <= 4;i++){
             if(carPositions[i].x == 0)
                 new_enemy = 1;
