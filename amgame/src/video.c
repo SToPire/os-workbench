@@ -57,7 +57,7 @@ void draw_bdr(int bdr_w, int bdr_h)
 
 void draw_line(int bdr_w,int bdr_h)
 {
-    uint32_t line_color = 0x0000ff;
+    uint32_t line_color = 0xffffff;
     int beg_x = (w - bdr_w) / 2;
     int beg_y = (h - bdr_h) / 2;
     int unit_length = bdr_h / 10;
