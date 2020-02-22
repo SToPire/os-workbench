@@ -1,6 +1,6 @@
 #include <game.h>
 #include<klib.h>
-#define SIDE 40
+#define SIDE 16
 static int w, h;
 extern int x, y, vx, vy, FPS;
 int prex, prey;
@@ -32,11 +32,16 @@ static void draw_tile(int x, int y, int w, int h, uint32_t color)
 void splash()
 {
     init();
-    for (int x = 0; x * SIDE <= w; x++) {
-        for (int y = 0; y * SIDE <= h; y++) {
-            if ((x & 1) ^ (y & 1)) {
-                draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, 0xffffff);  // white
-            }
+    // for (int x = 0; x * SIDE <= w; x++) {
+    //     for (int y = 0; y * SIDE <= h; y++) {
+    //         if ((x & 1) ^ (y & 1)) {
+    //             draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, 0xffffff);  // white
+    //         }
+    //     }
+    // }
+    for (int x = 0; x <= w;x=x+10){
+        for (int y = 0; y < h;y=y+10){
+            draw_tile(x, y, 10, 10, 0xff0000);
         }
     }
 }
