@@ -63,6 +63,8 @@ void global_initial()
     draw_car(beg_x + bdr_w / 4 - 5, beg_y + bdr_h - 25, 0xff0000, 0);
     carPositions[0].prex = carPositions[0].x;
     carPositions[0].prey = carPositions[0].y;
+
+    printf("Control:WSAD\n");
 }
 
 void kbd_event(int keycode)
@@ -102,6 +104,7 @@ int crash(int i, int j)
 void screen_update()
 {
     if (GAME_OVER) {
+        printf("You die!\n");
         for (int i = 0; i < w; i += 10)
             for (int j = 0; j < h; j += 10)
                 draw_tile(i, j, 10, 10, 0xff0000);
