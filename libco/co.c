@@ -69,6 +69,7 @@ void co_yield()
     int val = setjmp(current->context);
     if (val == 0) {
         int r = rand() % 2;
+        printf("%d\n", r);
         current = colist[r];
         if (colist[r]->status == CO_NEW)
             stack_switch_call(colist[r]->stack, colist[r]->func, (uintptr_t)colist[r]->arg);
