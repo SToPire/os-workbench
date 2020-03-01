@@ -66,9 +66,9 @@ void co_wait(struct co* co)
 
 void co_yield()
 {
+    int val = setjmp(current->context);
     printf("!!!!\n");
 
-    int val = setjmp(current->context);
     if (val == 0) {
         int r = rand() % 2;
         current = colist[r];
