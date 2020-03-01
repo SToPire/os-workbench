@@ -3,6 +3,8 @@
 #include<setjmp.h>
 #include<inttypes.h>
 
+#define STACK_SIZE 64
+
 enum co_status {
     CO_NEW = 1,  // 新创建，还未执行过
     CO_RUNNING,  // 已经执行过
@@ -22,10 +24,12 @@ struct co {
 };
 
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  return NULL;
+    struct co* ptr = malloc(sizeof(struct co));
+    return NULL;
 }
 
 void co_wait(struct co *co) {
+  
 }
 
 void co_yield() {
