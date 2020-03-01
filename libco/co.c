@@ -3,9 +3,23 @@
 #include <setjmp.h>
 #include <inttypes.h>
 #include <string.h>
-#include  <am.h>
-#include  <amdev.h>
-#define STACK_SIZE 64*1024
+
+#define STACK_SIZE 64 * 1024
+
+static inline void stack_switch_call(void* sp, void* entry, uintptr_t arg)
+{
+    asm volatile(
+#if __x86_64__
+        "movq %0, %%rsp; movq %2, %%rdi; jmp *%1"
+        :
+        : "b"((uintptr_t)sp), "d"(entry), "a"(arg)
+#else
+        "movl %0, %%esp; movl %2, 4(%0); jmp *%1"
+        :
+        : "b"((uintptr_t)sp - 8), "d"(entry), "a"(arg)
+#endif
+    );
+}
 
 struct co* current;
 
@@ -27,7 +41,10 @@ struct co {
     uint8_t stack[STACK_SIZE];  // 协程的堆栈
 };
 
-struct co *co_start(const char *name, void (*func)(void *), void *arg) {
+struct co* colist[2];
+int colistcnt;
+struct co* co_start(const char* name, void (*func)(void*), void* arg)
+{
     struct co* ptr = malloc(sizeof(struct co));
     strcpy(ptr->name, name);
     ptr->func = func;
@@ -36,23 +53,31 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg) {
     ptr->status = CO_NEW;
     ptr->waiter = NULL;
 
+    colist[colistcnt++] = ptr;
     return ptr;
 }
 
-void co_wait(struct co *co) {
+void co_wait(struct co* co)
+{
     int val = setjmp(current->context);
-    if(val==0){
-      stack_switch_call
-    }else{
+    if (val == 0) {
+        current = co;
+        stack_switch_call(co->stack, co->func, co->arg);
+    } else {
         free(co);
         return;
     }
 }
 
-void co_yield() {
+void co_yield()
+{
     int val = setjmp(current->context);
     if (val == 0) {
-        // ?
+        int r = rand() % 2;
+        if(colist[r]->status==CO_NEW)
+            stack_switch_call(colist[r]->stack, colist[r]->func, colist[r]->arg);
+        else
+            longjmp(colist[r]->, 1);
     } else {
         return;
     }
