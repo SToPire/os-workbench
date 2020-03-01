@@ -62,6 +62,8 @@ void co_wait(struct co* co)
 {
     int val = setjmp(current->context);
     if (val == 0) {
+        printf("112\n");
+
         current = co;
         stack_switch_call(co->stack, co->func, (uintptr_t)co->arg);
     } else {
