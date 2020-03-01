@@ -62,7 +62,7 @@ void co_wait(struct co* co)
     int val = setjmp(current->context);
     if (val == 0) {
         current = co;
-        stack_switch_call(co->stack, co->func, co->arg);
+        stack_switch_call(co->stack, co->func, (uintptr_t)co->arg);
     } else {
         free(co);
         return;
@@ -75,7 +75,7 @@ void co_yield()
     if (val == 0) {
         int r = rand() % 2;
         if(colist[r]->status==CO_NEW)
-            stack_switch_call(colist[r]->stack, colist[r]->func, colist[r]->arg);
+            stack_switch_call(colist[r]->stack, colist[r]->func, (uintptr_t)colist[r]->arg);
         else
             longjmp(colist[r]->context, 1);
     } else {
