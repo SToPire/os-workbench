@@ -67,11 +67,11 @@ void co_wait(struct co* co)
 void co_yield()
 {
     int val = setjmp(current->context);
-    printf("!!!!\n");
-
     if (val == 0) {
         int r = rand() % 2;
         current = colist[r];
+        printf("!!!!\n");
+
         if (colist[r]->status == CO_NEW)
             stack_switch_call(colist[r]->stack+STACK_SIZE, colist[r]->func, (uintptr_t)colist[r]->arg);
         else
