@@ -60,7 +60,6 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 
 void co_wait(struct co* co)
 {
-    printf("112\n");
     current = co;
     stack_switch_call(co->stack+STACK_SIZE, co->func, (uintptr_t)co->arg);
 }
