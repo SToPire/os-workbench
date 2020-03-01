@@ -45,11 +45,11 @@ struct co* colist[2];
 int colistcnt;
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
 {
+    printf("112\n");
     struct co* ptr = malloc(sizeof(struct co));
     strcpy(ptr->name, name);
     ptr->func = func;
     ptr->arg = arg;
-    printf("112\n");
 
     ptr->status = CO_NEW;
     ptr->waiter = NULL;
