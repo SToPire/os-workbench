@@ -3,7 +3,7 @@
 #include <setjmp.h>
 #include <inttypes.h>
 #include <string.h>
-#include<stdio.h>
+#include <stdio.h>
 #define STACK_SIZE 64 * 1024
 
 static inline void stack_switch_call(void* sp, void* entry, uintptr_t arg)
@@ -61,7 +61,7 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 void co_wait(struct co* co)
 {
     current = co;
-    stack_switch_call(co->stack+STACK_SIZE, co->func, (uintptr_t)co->arg);
+    stack_switch_call(co->stack + STACK_SIZE, co->func, (uintptr_t)co->arg);
 }
 
 void co_yield()
@@ -70,13 +70,14 @@ void co_yield()
     if (val == 0) {
         int r = rand() % 2;
         current = colist[r];
-        if (colist[r]->status == CO_NEW)
-            stack_switch_call(colist[r]->stack+STACK_SIZE, colist[r]->func, (uintptr_t)colist[r]->arg);
-        else
-            longjmp(colist[r]->context, 1);
-    } else {
-        printf("!!!!\n");
+        if (colist[r]->status == CO_NEW) {
+            printf("!!!!\n");
 
+            stack_switch_call(colist[r]->stack + STACK_SIZE, colist[r]->func, (uintptr_t)colist[r]->arg);
+        } else {
+            longjmp(colist[r]->context, 1);
+        }
+    } else {
         return;
     }
 }
