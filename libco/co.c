@@ -61,7 +61,7 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 void co_wait(struct co* co)
 {
     current = co;
-    stack_switch_call(co->stack + STACK_SIZE-8, co->func, (uintptr_t)co->arg);
+    stack_switch_call(co->stack + STACK_SIZE, co->func, (uintptr_t)co->arg);
 }
 
 void co_yield()
@@ -72,7 +72,7 @@ void co_yield()
         current = colist[r];
         if (colist[r]->status == CO_NEW) {
             colist[r]->status = CO_RUNNING;
-            stack_switch_call(colist[r]->stack + STACK_SIZE-8, colist[r]->func, (uintptr_t)colist[r]->arg);
+            stack_switch_call(colist[r]->stack + STACK_SIZE, colist[r]->func, (uintptr_t)colist[r]->arg);
         } else {
             longjmp(colist[r]->context, 1);
         }
