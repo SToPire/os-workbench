@@ -74,8 +74,6 @@ void co_yield()
             colist[r]->status = CO_RUNNING;
             stack_switch_call(colist[r]->stack + STACK_SIZE, colist[r]->func, (uintptr_t)colist[r]->arg);
         } else {
-            printf("!!!!\n");
-
             longjmp(colist[r]->context, 1);
         }
     } else {
