@@ -73,9 +73,10 @@ void co_yield()
         if (colist[r]->status == CO_NEW)
             stack_switch_call(colist[r]->stack+STACK_SIZE, colist[r]->func, (uintptr_t)colist[r]->arg);
         else
-            longjmp(colist[r]->context, 1);
+{            printf("!!!!\n");
+
+            longjmp(colist[r]->context, 1);}
     } else {
-        printf("!!!!\n");
         return;
     }
 }
