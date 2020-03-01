@@ -53,6 +53,7 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
     ptr->status = CO_NEW;
     ptr->waiter = NULL;
 
+    memset(ptr->stack, 0, sizeof(ptr->stack));
     colist[colistcnt++] = ptr;
     return ptr;
 }
