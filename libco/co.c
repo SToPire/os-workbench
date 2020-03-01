@@ -62,7 +62,7 @@ void co_wait(struct co* co)
 {
     printf("112\n");
     current = co;
-    stack_switch_call(co->stack, co->func, (uintptr_t)co->arg);
+    stack_switch_call(co->stack+STACK_SIZE, co->func, (uintptr_t)co->arg);
 }
 
 void co_yield()
