@@ -61,16 +61,8 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 void co_wait(struct co* co)
 {
     printf("112\n");
-
-    int val = setjmp(current->context);
-    if (val == 0) {
-
-        current = co;
-        stack_switch_call(co->stack, co->func, (uintptr_t)co->arg);
-    } else {
-        free(co);
-        return;
-    }
+    current = co;
+    stack_switch_call(co->stack, co->func, (uintptr_t)co->arg);
 }
 
 void co_yield()
