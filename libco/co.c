@@ -41,8 +41,12 @@ struct co {
     uint8_t stack[STACK_SIZE];  // 协程的堆栈
 };
 
-struct co* colist[2];
+struct co* colist[3];
 int colistcnt;
+
+__attribute__((constructor)) void test(){
+    printf("hehhehee\n");
+}
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
 {
     struct co* ptr = malloc(sizeof(struct co));
@@ -60,6 +64,7 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 
 void co_wait(struct co* co)
 {
+    co->waiter = current;
     current = co;
     stack_switch_call(co->stack + STACK_SIZE, co->func, (uintptr_t)co->arg);
 }
