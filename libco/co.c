@@ -66,7 +66,6 @@ void co_wait(struct co* co)
 
 void co_yield()
 {
-{
     printf("!!!!\n");
 
     int val = setjmp(current->context);
