@@ -7,7 +7,7 @@
 #include <time.h>
 
 #define STACK_SIZE 64 * 1024
-#define CO_SIZE 128
+#define CO_SIZE 3
 
 static inline void stack_switch_call(void* sp, void* entry, uintptr_t arg)
 {
