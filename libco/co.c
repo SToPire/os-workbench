@@ -75,6 +75,8 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 void co_wait(struct co* co)
 {
     if (co->status == CO_DEAD) {
+        printf("%p has been freed\n", co);
+
         free(co);
         return;
     }
