@@ -92,9 +92,10 @@ void co_wait(struct co* co)
         co_yield();
     printf("%p has been freed\n", co);
     
-    memset(co, 0, sizeof(struct co));
+    //memset(co, 0, sizeof(struct co));
+    co->status = 0;
     free(co);
-    
+    printf("sss:%d\n", co->status);
     for (int i = 0; i < CO_SIZE; i++)
         if(colist[i])
         printf("%d-%p-%d\n", i, colist[i], colist[i]->status);
