@@ -84,6 +84,7 @@ void wrapper(int num)
 {
     colist[num]->status = CO_RUNNING;
     (colist[num]->func)(colist[num]->arg);
+    printf("I return\n");
     colist[num]->status = CO_DEAD;
     if(colist[num]->waiter){
         colist[num]->waiter->status = CO_RUNNING;
