@@ -94,6 +94,7 @@ void wrapper(int num)
         if(colist[num]->waiter->waitcnt == 0)
             colist[num]->waiter->status = CO_RUNNING;
     }
+    printf("%d %d\n", colist[num]->waiter->status, colist[num]->waiter->waitcnt);
     co_yield();
 }
 
