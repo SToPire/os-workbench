@@ -78,10 +78,7 @@ void co_wait(struct co* co)
     current->status = CO_WAITING;
     while(co->status!=CO_DEAD)
         co_yield();
-    printf("freeing!!!\n");
     free(co);
-    printf("0:%p 1:%p 2:%p\n", colist[0], colist[1], colist[2]);
-    printf("%p now pointed to NULL\n", co);
 }
 
 void wrapper(int num)
@@ -92,7 +89,6 @@ void wrapper(int num)
     if(colist[num]->waiter){
         colist[num]->waiter->status = CO_RUNNING;
     }
-    printf("I return\n");
     co_yield();
 }
 
