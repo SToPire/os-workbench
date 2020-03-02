@@ -39,7 +39,6 @@ struct co {
     void* arg;
 
     enum co_status status;      // 协程的状态
-    int waitcnt;
     struct co* waiter;          // 是否有其他协程在等待当前协程
     jmp_buf context;            // 寄存器现场 (setjmp.h)
     uint8_t stack[STACK_SIZE];  // 协程的堆栈
@@ -65,7 +64,6 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
     ptr->arg = arg;
 
     ptr->status = CO_NEW;
-    ptr->waitcnt = 0;
     ptr->waiter = NULL;
 
     memset(ptr->stack, 0, sizeof(ptr->stack));
@@ -77,8 +75,7 @@ void co_wait(struct co* co)
 {
     co->waiter = current;
     current->status = CO_WAITING;
-    current->waitcnt++;
-    while (co->status != CO_DEAD)
+    while(co->status!=CO_DEAD)
         co_yield();
     free(co);
 }
@@ -87,14 +84,11 @@ void wrapper(int num)
 {
     colist[num]->status = CO_RUNNING;
     (colist[num]->func)(colist[num]->arg);
-    printf("I return\n");
     colist[num]->status = CO_DEAD;
+    printf("I return\n");
     if(colist[num]->waiter){
-        colist[num]->waiter->waitcnt--;
-        if(colist[num]->waiter->waitcnt == 0)
-            colist[num]->waiter->status = CO_RUNNING;
+        colist[num]->waiter->status = CO_RUNNING;
     }
-    printf("%d %d\n", colist[num]->waiter->status, colist[num]->waiter->waitcnt);
     co_yield();
 }
 
