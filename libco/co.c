@@ -55,6 +55,8 @@ __attribute__((constructor)) void co_init()
     colistcnt = 1;
     colist[0]->status = CO_RUNNING;
     current = colist[0];
+
+    co_yield();
 }
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
 {
@@ -96,9 +98,9 @@ void co_yield()
 {
     int val = setjmp(current->context);
     if (val == 0) {
-        int r = rand() % 3;
-        while (colist[r]->status == CO_WAITING && colist[r]->status == CO_DEAD)
-            r = rand() % 3;
+        int r = rand() % CO_SIZE;
+        while (colist[r]==NULL && colist[r]->status == CO_WAITING && colist[r]->status == CO_DEAD)
+            r = rand() % CO_SIZE;
         current = colist[r];
         if (current->status == CO_NEW) {
             current->status = CO_RUNNING;
