@@ -79,6 +79,8 @@ void co_wait(struct co* co)
     while(co->status!=CO_DEAD)
         co_yield();
     free(co);
+    for (int i = 0; i < CO_SIZE;i++)
+        printf("%d-%d\n",i,colist[i]->status)
 }
 
 void wrapper(int num)
