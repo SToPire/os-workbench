@@ -101,7 +101,7 @@ void co_yield()
     int val = setjmp(current->context);
     if (val == 0) {
         int r = rand() % CO_SIZE;
-        while (!colist[r] || colist[r]->status == CO_WAITING || colist[r]->status == CO_DEAD)
+        while (colist[r]->status==0 || colist[r]->status == CO_WAITING || colist[r]->status == CO_DEAD)
             r = rand() % CO_SIZE;
         printf("r:%d r.status=%d\n", r,colist[r]->status);
         current = colist[r];
