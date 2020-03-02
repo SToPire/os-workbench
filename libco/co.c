@@ -34,6 +34,8 @@ enum co_status {
 };
 
 struct co {
+    int num;
+
     char* name;
     void (*func)(void*);  // co_start 指定的入口地址和参数
     void* arg;
@@ -63,7 +65,8 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
     //strcpy(ptr->name, name);
     ptr->func = func;
     ptr->arg = arg;
-
+    ptr->num = colistcnt;
+    
     ptr->status = CO_NEW;
     ptr->waiter = NULL;
 
@@ -74,7 +77,8 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 
 void co_wait(struct co* co)
 {
-    if(co->status == CO_DEAD){
+    printf("NOW:%d\n", co->num);
+    if (co->status == CO_DEAD) {
         free(co);
         for (int i = 0; i < CO_SIZE; i++)
             if (colist[i])
