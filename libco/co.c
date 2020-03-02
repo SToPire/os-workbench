@@ -75,29 +75,16 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 void co_wait(struct co* co)
 {
     if (co->status == CO_DEAD) {
-        co->status = 0;
-        printf("%p has been freed\n", co);
-        
         memset(co, 0, sizeof(struct co));
         //free(co);
-        
-        for (int i = 0; i < CO_SIZE; i++)
-            if (colist[i])
-                printf("%d-%d\n", i, colist[i]->status);
         return;
     }
     co->waiter = current;
     current->status = CO_WAITING;
     while(co->status!=CO_DEAD)
         co_yield();
-    printf("%p has been freed\n", co);
-    
     memset(co, 0, sizeof(struct co));
     //free(co);
-    printf("sss:%d\n", co->status);
-    for (int i = 0; i < CO_SIZE; i++)
-        if(colist[i])
-        printf("%d-%p-%d\n", i, colist[i], colist[i]->status);
 }
 
 void wrapper(int num)
