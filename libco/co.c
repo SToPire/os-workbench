@@ -63,7 +63,6 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
     //strcpy(ptr->name, name);
     ptr->func = func;
     ptr->arg = arg;
-    ptr->num = colistcnt;
     
     ptr->status = CO_NEW;
     ptr->waiter = NULL;
