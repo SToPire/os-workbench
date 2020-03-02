@@ -76,9 +76,6 @@ void co_wait(struct co* co)
 {
     if (co->status == CO_DEAD) {
         free(co);
-        for (int i = 0; i < CO_SIZE; i++)
-            if (colist[i])
-                printf("%d-%d\n", i, colist[i]->status);
         return;
     }
     co->waiter = current;
