@@ -91,7 +91,7 @@ void co_wait(struct co* co)
     free(co);
     for (int i = 0; i < CO_SIZE;i++)
         if(colist[i])
-        printf("%d-%d\n", i, colist[i]->status);
+        printf("%d-%p-%d\n", i, colist[i], colist[i]->status);
 }
 
 void wrapper(int num)
