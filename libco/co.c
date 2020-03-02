@@ -72,10 +72,9 @@ void co_wait(struct co* co)
 {
     co->waiter = current;
     current->status = CO_WAITING;
-    co_yield();
-    // while(co->status!=CO_DEAD)
-    //     co_yield();
-    // free(co);
+    while(co->status!=CO_DEAD)
+        co_yield();
+    free(co);
 }
 
 void wrapper(int num)
@@ -94,7 +93,7 @@ void co_yield()
     int val = setjmp(current->context);
     if (val == 0) {
         int r = rand() % 3;
-        while(colist[r]->status==CO_WAITING)
+        while (colist[r]->status == CO_WAITING && colist[r]->status == CO_DEAD)
             r = rand() % 3;
         current = colist[r];
         if (current->status == CO_NEW) {
