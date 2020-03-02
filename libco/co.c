@@ -80,6 +80,7 @@ void co_wait(struct co* co)
         co_yield();
     printf("freeing!!!\n");
     free(co);
+    printf("0:%p 1:%p 2:%p\n", colist[0], colist[1], colist[2]);
     printf("%p now pointed to NULL\n", co);
 }
 
