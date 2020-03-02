@@ -82,6 +82,7 @@ void co_wait(struct co* co)
     current->status = CO_WAITING;
     while(co->status!=CO_DEAD)
         co_yield();
+    printf("%p has been freed\n", co);
     free(co);
     for (int i = 0; i < CO_SIZE;i++)
         if(colist[i])
