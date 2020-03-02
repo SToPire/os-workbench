@@ -48,6 +48,8 @@ int colistcnt;
 
 __attribute__((constructor)) void co_init()
 {
+    printf("here\n");
+
     srand(time(0));
     colistcnt = 1;
     colist[0]->status = CO_RUNNING;
