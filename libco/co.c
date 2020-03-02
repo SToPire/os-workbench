@@ -56,7 +56,7 @@ __attribute__((constructor)) void co_init()
     colist[0]->status = CO_RUNNING;
     current = colist[0];
 
-    co_yield();
+  //  co_yield();
 }
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
 {
