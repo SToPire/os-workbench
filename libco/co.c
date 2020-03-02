@@ -7,6 +7,7 @@
 #include <time.h>
 
 #define STACK_SIZE 64 * 1024
+#define CO_SIZE 3
 
 static inline void stack_switch_call(void* sp, void* entry, uintptr_t arg)
 {
@@ -43,12 +44,15 @@ struct co {
     uint8_t stack[STACK_SIZE];  // 协程的堆栈
 };
 
-struct co* colist[3];
+struct co* colist[CO_SIZE];
 int colistcnt;
 
 __attribute__((constructor)) void co_init()
 {
     srand(time(0));
+
+    for (int i = 0; i < CO_SIZE;++i)
+        colist[i] = malloc(sizeof(struct co));
     colistcnt = 1;
     printf("here\n");
     colist[0]->status = CO_RUNNING;
