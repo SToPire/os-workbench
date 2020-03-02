@@ -4,6 +4,8 @@
 #include <inttypes.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
+
 #define STACK_SIZE 64 * 1024
 
 static inline void stack_switch_call(void* sp, void* entry, uintptr_t arg)
@@ -44,8 +46,12 @@ struct co {
 struct co* colist[3];
 int colistcnt;
 
-__attribute__((constructor)) void test(){
-    printf("hehhehee\n");
+__attribute__((constructor)) void co_init()
+{
+    srand(time(0));
+    colistcnt = 1;
+    colist[0]->status = CO_RUNNING;
+    current = colist[0];
 }
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
 {
@@ -65,21 +71,36 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 void co_wait(struct co* co)
 {
     co->waiter = current;
-    current = co;
-    stack_switch_call(co->stack + STACK_SIZE, co->func, (uintptr_t)co->arg);
+    current->status = CO_WAITING;
+    while(co->status!=CO_DEAD)
+        co_yield();
+    free(co);
+}
+
+void wrapper(int num)
+{
+    colist[num]->status = CO_RUNNING;
+    (colist[num]->func)(colist[num]->arg);
+    colist[num]->status = CO_DEAD;
+    if(colist[num]->waiter){
+        colist[num]->waiter->status = CO_RUNNING;
+    }
+    co_yield();
 }
 
 void co_yield()
 {
     int val = setjmp(current->context);
     if (val == 0) {
-        int r = rand() % 2;
+        int r = rand() % 3;
+        while(colist[r]->status==CO_WAITING)
+            r = rand() % 3;
         current = colist[r];
-        if (colist[r]->status == CO_NEW) {
-            colist[r]->status = CO_RUNNING;
-            stack_switch_call(colist[r]->stack + STACK_SIZE, colist[r]->func, (uintptr_t)colist[r]->arg);
-        } else {
-            longjmp(colist[r]->context, 1);
+        if (current->status == CO_NEW) {
+            current->status = CO_RUNNING;
+            stack_switch_call(current->stack + STACK_SIZE - 8, wrapper, r);
+        }else {
+            longjmp(current->context, 1);
         }
     } else {
         return;
