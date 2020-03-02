@@ -50,9 +50,8 @@ __attribute__((constructor)) void co_init()
 {
     srand(time(0));
     colistcnt = 1;
-
-    colist[0]->status = CO_RUNNING;
     printf("here\n");
+    colist[0]->status = CO_RUNNING;
     current = colist[0];
 }
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
