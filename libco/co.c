@@ -72,9 +72,10 @@ void co_wait(struct co* co)
 {
     co->waiter = current;
     current->status = CO_WAITING;
-    while(co->status!=CO_DEAD)
-        co_yield();
-    free(co);
+    co_yield();
+    // while(co->status!=CO_DEAD)
+    //     co_yield();
+    // free(co);
 }
 
 void wrapper(int num)
