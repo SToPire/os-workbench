@@ -79,6 +79,7 @@ void co_wait(struct co* co)
     current->status = CO_WAITING;
     while(co->status!=CO_DEAD)
         co_yield();
+    printf("freeing!!!\n");
     free(co);
 }
 
