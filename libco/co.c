@@ -81,6 +81,7 @@ void co_wait(struct co* co)
         co_yield();
     printf("freeing!!!\n");
     free(co);
+    co = NULL;
 }
 
 void wrapper(int num)
