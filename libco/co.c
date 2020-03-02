@@ -80,9 +80,9 @@ void co_wait(struct co* co)
         
         memset(co, 0, sizeof(struct co));
         free(co);
-        printf("the address after free:%p\n", co);
 
         co = NULL;
+        printf("the address after free:%p\n", co);
         
         for (int i = 0; i < CO_SIZE; i++)
             if (colist[i])
@@ -97,9 +97,9 @@ void co_wait(struct co* co)
     
     memset(co, 0, sizeof(struct co));
     free(co);
-    printf("the address after free:%p\n", co);
 
     co = NULL;
+    printf("the address after free:%p\n", co);
     
     for (int i = 0; i < CO_SIZE; i++)
         if(colist[i])
