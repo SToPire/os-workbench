@@ -100,14 +100,14 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 void co_wait(struct co* co)
 {
     if (co->status == CO_DEAD) {
-        Free();
+        Free(co);
         return;
     }
     co->waiter = current;
     current->status = CO_WAITING;
     while (co->status != CO_DEAD)
         co_yield();
-    Free();
+    Free(co);
 }
 
 void wrapper(int num)
