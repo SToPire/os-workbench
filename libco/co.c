@@ -131,7 +131,6 @@ void co_yield()
         current = colist[r];
         if (current->status == CO_NEW) {
             current->status = CO_RUNNING;
-            printf("%p\n", current->stack + STACK_SIZE - 8);
             stack_switch_call(current->stack + STACK_SIZE - 8, wrapper, r);
         } else {
             longjmp(current->context, 1);
