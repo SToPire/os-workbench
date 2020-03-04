@@ -7,7 +7,7 @@
 #include <time.h>
 
 #define STACK_SIZE 64 * 1024
-#define CO_SIZE 8
+#define CO_SIZE 128
 
 static inline void stack_switch_call(void* sp, void* entry, uintptr_t arg)
 {
@@ -55,20 +55,22 @@ __attribute__((constructor)) void co_init()
     colist[0]->status = CO_RUNNING;
     current = colist[0];
 
-  //  co_yield();
+    for (int i = 1; i < CO_SIZE;++i){
+        colist[i] = malloc(sizeof(struct co));
+    }
 }
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
 {
-    struct co* ptr = malloc(sizeof(struct co));
-    //strcpy(ptr->name, name);
+    // struct co* ptr = malloc(sizeof(struct co));
+    struct co* ptr = colist[colistcnt];
     ptr->func = func;
     ptr->arg = arg;
-    
+
     ptr->status = CO_NEW;
     ptr->waiter = NULL;
 
     memset(ptr->stack, 0, sizeof(ptr->stack));
-    colist[colistcnt++] = ptr;
+   // colist[colistcnt++] = ptr;
     return ptr;
 }
 
@@ -81,7 +83,7 @@ void co_wait(struct co* co)
     }
     co->waiter = current;
     current->status = CO_WAITING;
-    while(co->status!=CO_DEAD)
+    while (co->status != CO_DEAD)
         co_yield();
     memset(co, 0, sizeof(struct co));
     //free(co);
@@ -92,7 +94,7 @@ void wrapper(int num)
     colist[num]->status = CO_RUNNING;
     (colist[num]->func)(colist[num]->arg);
     colist[num]->status = CO_DEAD;
-    if(colist[num]->waiter){
+    if (colist[num]->waiter) {
         colist[num]->waiter->status = CO_RUNNING;
     }
     co_yield();
@@ -103,13 +105,13 @@ void co_yield()
     int val = setjmp(current->context);
     if (val == 0) {
         int r = rand() % CO_SIZE;
-        while (colist[r]==NULL || colist[r]->status==0 || colist[r]->status == CO_WAITING || colist[r]->status == CO_DEAD)
+        while (colist[r] == NULL || colist[r]->status == 0 || colist[r]->status == CO_WAITING || colist[r]->status == CO_DEAD)
             r = rand() % CO_SIZE;
         current = colist[r];
         if (current->status == CO_NEW) {
             current->status = CO_RUNNING;
             stack_switch_call(current->stack + STACK_SIZE - 8, wrapper, r);
-        }else {
+        } else {
             longjmp(current->context, 1);
         }
     } else {
