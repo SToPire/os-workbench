@@ -56,7 +56,7 @@ struct freeListNode{
 int in_freelist(int num)
 {
     struct freeListNode* p;
-    for (p=head; p->next != STACK_SIZE;p=&freelist[p->next])
+    for (p = head; p->next != STACK_SIZE; p = &freelist[p->next])
         if (num == p->num) return 1;
     return 0;
 }
@@ -127,7 +127,7 @@ void co_yield()
     int val = setjmp(current->context);
     if (val == 0) {
         int r = rand() % CO_SIZE;
-        while (in_freelist(r) || colist[r]->status == CO_WAITING || colist[r]->status == CO_DEAD)
+        while (colist[r] == NULL || colist[r]->status == 0 || colist[r]->status == CO_WAITING || colist[r]->status == CO_DEAD)
             r = rand() % CO_SIZE;
         current = colist[r];
         if (current->status == CO_NEW) {
