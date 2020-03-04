@@ -24,7 +24,7 @@ static inline void stack_switch_call(void* sp, void* entry, uintptr_t arg)
     );
 }
 
-void* x86_64_addr_align(void * addr)
+void* x86_64_addr_align(void * addr) // alignment is required before 'call' instrucion
 {
 #if __x86_64__
     return (void*)(((uintptr_t)addr >> 4 << 4)- 8);
@@ -92,6 +92,9 @@ co_init()
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
 {
     struct co* ptr = malloc(sizeof(struct co));
+
+    ptr->name = malloc(sizeof(name));
+    strcpy(ptr->name, name);
     ptr->func = func;
     ptr->arg = arg;
 
