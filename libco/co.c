@@ -91,16 +91,18 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 void co_wait(struct co* co)
 {
     if (co->status == CO_DEAD) {
-        memset(co, 0, sizeof(struct co));
-        //free(co);
+        freelist[co->num].next = head->num;
+        head = &freelist[co->num];
+        free(co);
         return;
     }
     co->waiter = current;
     current->status = CO_WAITING;
     while (co->status != CO_DEAD)
         co_yield();
-    memset(co, 0, sizeof(struct co));
-    //free(co);
+    freelist[co->num].next = head->num;
+    head = &freelist[co->num];
+    free(co);
 }
 
 void wrapper(int num)
