@@ -37,6 +37,7 @@ struct co {
     char* name;
     void (*func)(void*);  // co_start 指定的入口地址和参数
     void* arg;
+    int num;
 
     enum co_status status;      // 协程的状态
     struct co* waiter;          // 是否有其他协程在等待当前协程
@@ -59,6 +60,7 @@ co_init()
     colistcnt = 1;
     colist[0] = malloc(sizeof(struct co));
     colist[0]->status = CO_RUNNING;
+    colist[0]->num = 0;
     current = colist[0];
 
     freelist[0].next = freelist[0].num = 0;
@@ -77,6 +79,7 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 
     ptr->status = CO_NEW;
     ptr->waiter = NULL;
+    ptr->num = head->num;
 
     memset(ptr->stack, 0, sizeof(ptr->stack));
     colist[head->num] = ptr;
