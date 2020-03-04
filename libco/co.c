@@ -51,12 +51,12 @@ struct co* colist[CO_SIZE];
 struct freeListNode{
     int num;
     int next;
-} freelist[STACK_SIZE], *head;
+} freelist[STACK_SIZE + 1], *head;
 
 int in_freelist(int num)
 {
     struct freeListNode* p;
-    for (p = head; p->next != STACK_SIZE; p = &freelist[p->next])
+    for (p = head; p->next != 0; p = &freelist[p->next])
         if (num == p->num) return 1;
     return 0;
 }
@@ -75,6 +75,7 @@ co_init()
         freelist[i].num = i;
         freelist[i].next = i + 1;
     }
+    freelist[STACK_SIZE].num = freelist[STACK_SIZE].next = 0;
     head = &freelist[1];
 }
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
