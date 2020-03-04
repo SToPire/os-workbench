@@ -24,6 +24,15 @@ static inline void stack_switch_call(void* sp, void* entry, uintptr_t arg)
     );
 }
 
+void* x86_64_addr_align(void * addr)
+{
+#if __x86_64__
+    return (void*)(((uintptr_t)addr >> 4 << 4)- 8);
+#else
+    return addr;
+#endif
+}
+
 struct co* current;
 
 enum co_status {
@@ -131,7 +140,7 @@ void co_yield()
         current = colist[r];
         if (current->status == CO_NEW) {
             current->status = CO_RUNNING;
-            stack_switch_call(current->stack + STACK_SIZE - 8, wrapper, r);
+            stack_switch_call(x86_64_addr_align(current->stack + STACK_SIZE), wrapper, r);
         } else {
             longjmp(current->context, 1);
         }
