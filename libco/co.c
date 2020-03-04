@@ -62,7 +62,7 @@ __attribute__((constructor)) void co_init()
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
 {
     // struct co* ptr = malloc(sizeof(struct co));
-    struct co* ptr = colist[colistcnt];
+    struct co* ptr = colist[colistcnt++];
     ptr->func = func;
     ptr->arg = arg;
 
