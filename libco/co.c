@@ -51,15 +51,9 @@ struct co* colist[CO_SIZE];
 struct freeListNode{
     int num;
     int next;
+    int alloc;
 } freelist[STACK_SIZE + 1], *head;
 
-int in_freelist(int num)
-{
-    struct freeListNode* p;
-    for (p = head; p->next != 0; p = &freelist[p->next])
-        if (num == p->num) return 1;
-    return 0;
-}
 
 __attribute__((constructor)) void
 co_init()
@@ -71,9 +65,11 @@ co_init()
     current = colist[0];
 
     freelist[0].next = freelist[0].num = 0;
-    for (int i = 1; i < STACK_SIZE;++i){
+    freelist[0].alloc = 1;
+    for (int i = 1; i < STACK_SIZE; ++i) {
         freelist[i].num = i;
         freelist[i].next = i + 1;
+        freelist[i].alloc = 0;
     }
     freelist[STACK_SIZE].num = freelist[STACK_SIZE].next = 0;
     head = &freelist[1];
@@ -90,8 +86,8 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 
     memset(ptr->stack, 0, sizeof(ptr->stack));
     colist[head->num] = ptr;
+    freelist[head->num].alloc = 1;
     head = &freelist[head->next];
-
     return ptr;
 }
 
@@ -99,6 +95,7 @@ void co_wait(struct co* co)
 {
     if (co->status == CO_DEAD) {
         freelist[co->num].next = head->num;
+        freelist[co->num].alloc = 0;
         head = &freelist[co->num];
         free(co);
         return;
@@ -108,6 +105,7 @@ void co_wait(struct co* co)
     while (co->status != CO_DEAD)
         co_yield();
     freelist[co->num].next = head->num;
+    freelist[co->num].alloc = 0;
     head = &freelist[co->num];
     free(co);
 }
@@ -128,7 +126,7 @@ void co_yield()
     int val = setjmp(current->context);
     if (val == 0) {
         int r = rand() % CO_SIZE;
-        while (colist[r] == NULL || colist[r]->status == 0 || colist[r]->status == CO_WAITING || colist[r]->status == CO_DEAD)
+        while (freelist[r].alloc == 0 || colist[r]->status == CO_WAITING || colist[r]->status == CO_DEAD)
             r = rand() % CO_SIZE;
         current = colist[r];
         if (current->status == CO_NEW) {
