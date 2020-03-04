@@ -47,13 +47,19 @@ struct co {
 
 struct co* colist[CO_SIZE];
 
-
 struct freeListNode{
     int num;
     int next;
     int alloc;
 } freelist[STACK_SIZE + 1], *head;
 
+void Free(struct co* co)
+{
+    freelist[co->num].next = head->num;
+    freelist[co->num].alloc = 0;
+    head = &freelist[co->num];
+    free(co);
+}
 
 __attribute__((constructor)) void
 co_init()
@@ -94,20 +100,14 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
 void co_wait(struct co* co)
 {
     if (co->status == CO_DEAD) {
-        freelist[co->num].next = head->num;
-        freelist[co->num].alloc = 0;
-        head = &freelist[co->num];
-        free(co);
+        Free();
         return;
     }
     co->waiter = current;
     current->status = CO_WAITING;
     while (co->status != CO_DEAD)
         co_yield();
-    freelist[co->num].next = head->num;
-    freelist[co->num].alloc = 0;
-    head = &freelist[co->num];
-    free(co);
+    Free();
 }
 
 void wrapper(int num)
