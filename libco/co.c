@@ -7,7 +7,7 @@
 #include <time.h>
 
 #define STACK_SIZE 64 * 1024
-#define CO_SIZE 128
+#define CO_SIZE 130
 
 static inline void stack_switch_call(void* sp, void* entry, uintptr_t arg)
 {
@@ -54,15 +54,10 @@ __attribute__((constructor)) void co_init()
     colist[0] = malloc(sizeof(struct co));
     colist[0]->status = CO_RUNNING;
     current = colist[0];
-
-    for (int i = 1; i < CO_SIZE;++i){
-        colist[i] = malloc(sizeof(struct co));
-    }
 }
 struct co* co_start(const char* name, void (*func)(void*), void* arg)
 {
-    // struct co* ptr = malloc(sizeof(struct co));
-    struct co* ptr = colist[colistcnt++];
+    struct co* ptr = malloc(sizeof(struct co));
     ptr->func = func;
     ptr->arg = arg;
 
@@ -70,7 +65,7 @@ struct co* co_start(const char* name, void (*func)(void*), void* arg)
     ptr->waiter = NULL;
 
     memset(ptr->stack, 0, sizeof(ptr->stack));
-   // colist[colistcnt++] = ptr;
+    colist[colistcnt++] = ptr;
     return ptr;
 }
 
