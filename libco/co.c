@@ -56,7 +56,7 @@ struct freeListNode{
 int in_freelist(int num)
 {
     struct freeListNode* p;
-    for (p=head; p->next != STACK_SIZE;p=p->next)
+    for (p=head; p->next != STACK_SIZE;p=&freelist[p->next])
         if (num == p->num) return 1;
     return 0;
 }
