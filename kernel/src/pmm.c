@@ -32,7 +32,7 @@ static void pmm_init()
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
-    cache_t* kmem_cache = (cache_t*)_heap.end - 13;
+    cache_t* kmem_cache = (cache_t*)_heap.end - 13 * sizeof(cache_t);
     printf("%p %p\n", _heap.end,kmem_cache);
 }
 
