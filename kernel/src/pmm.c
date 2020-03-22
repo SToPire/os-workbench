@@ -102,6 +102,8 @@ static void* kalloc(size_t size)
 
 static void kfree(void* ptr)
 {
+    printf("%p\n", ptr);
+    //page_t* curPage =
 }
 
 static void pmm_init()
