@@ -41,7 +41,8 @@ static void pmm_init()
         pages[i].nxt = &pages[i + 1];
         printf("%p\n", pages[i].nxt);
     }
-    printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
+    printf("%p\n", sizeof(page_t));
+    //printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
 }
 
 MODULE_DEF(pmm) = {
