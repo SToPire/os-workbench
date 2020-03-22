@@ -7,12 +7,15 @@ typedef union page {
     struct {
         spinlock_t lock;  // 锁，用于串行化分配和并发的 free
         int obj_cnt;      // 页面中已分配的对象数，减少到 0 时回收页面
-        union page* nxt;
+        int maxUnit;      //  该页最大内存单元数
+        bool full;
+        int unitsize;  // 该页每个内存单元的大小
+
         uint64_t bitmap[112];
         int bitmapcnt;
-        int unitsize; // 该页每个内存单元的大小
-        int maxUnit; //  该页最大内存单元数
-        uintptr_t data_align; // 对齐之后的数据域首地址
+
+        uintptr_t data_align;  // 对齐之后的数据域首地址
+        union page* nxt;
         //list_head list;   // 属于同一个线程的页面的链表
     };  // 匿名结构体
     struct {
@@ -48,16 +51,18 @@ static void* kalloc(size_t size)
         sz <<= 1;
         ++cachenum;
     }
-    if (kmem_cache[cachenum].list == NULL) {  //TODO
-        kmem_cache[cachenum].list = freePageHead;
-        page_t* tmp = kmem_cache[cachenum].list;
+    if (kmem_cache[cachenum].list == NULL || kmem_cache[cachenum].list->full) {
+        page_t* tmp = freePageHead;
         memset(tmp->header, 0, sizeof(tmp->header));
+        tmp->nxt = kmem_cache[cachenum].list;
         tmp->unitsize = sz;
         if (sz == 2048 || sz == 4096)
-            tmp->data_align = (uintptr_t)tmp->header+ sz;
+            tmp->data_align = (uintptr_t)tmp->header + sz;
         else
             tmp->data_align = (uintptr_t)tmp->data;
         tmp->maxUnit = ((uintptr_t)tmp->header + PAGE_SIZE - (uintptr_t)tmp->data_align) / sz;
+        
+        kmem_cache[cachenum].list = tmp;
         freePageHead = freePageHead->nxt;
     }
     page_t* curPage = kmem_cache[cachenum].list;
@@ -68,11 +73,13 @@ static void* kalloc(size_t size)
     else
         oldcnt = curPage->maxUnit - 1;
     while (oldcnt != curPage->bitmapcnt) {
-        if(!isUnitUsing(curPage->bitmap,curPage->bitmapcnt)){
+        if (!isUnitUsing(curPage->bitmap, curPage->bitmapcnt)) {
             setUnit(curPage->bitmap, curPage->bitmapcnt, 1);
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
-            printf("%p\n",ret);
+            ++curPage->obj_cnt;
+            if (curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
+            printf("%p\n", ret);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
