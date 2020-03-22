@@ -47,13 +47,16 @@ static void* kalloc(size_t size)
         sz <<= 1;
         ++cachenum;
     }
-    if(kmem_cache[cachenum].list == NULL){ //TODO
+    if (kmem_cache[cachenum].list == NULL) {  //TODO
         kmem_cache[cachenum].list = freePageHead;
 
         page_t* tmp = kmem_cache[cachenum].list;
         memset(tmp->header, 0, sizeof(tmp->header));
         tmp->unitsize = sz;
-        tmp->data_align = ((uintptr_t)tmp->data + sz) & ~(2 * sz - 1);
+        if (sz == 2048 || sz == 4096)
+            tmp->data_align = (uintptr_t)tmp->data + sz;
+        else
+            tmp->data_align = (uintptr_t)tmp->data;
 
         freePageHead = freePageHead->nxt;
     }
