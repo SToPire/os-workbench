@@ -9,6 +9,7 @@ typedef union page {
         int obj_cnt;      // 页面中已分配的对象数，减少到 0 时回收页面
         union page* nxt;
         uint64_t bitmap[112];
+        int bitmapcnt;
         //list_head list;   // 属于同一个线程的页面的链表
     };  // 匿名结构体
     struct {
@@ -20,6 +21,19 @@ typedef union page {
 typedef struct __pmm_cache {
     page_t* list;
 } cache_t;
+
+bool isUnitValid(uint64_t* bitmap, bool num)
+{
+    return (bitmap[num / 64]) & (1 << (num % 64));
+}
+void setUnit(uint64_t* bitmap, int num, bool b)
+{
+    assert(b == 0 || b == 1);
+    if (b == 0)
+        bitmap[num / 64] |= (1 << (num % 64));
+    else
+        bitmap[num / 64] &= ~(1 << (num % 64));
+}
 static void* kalloc(size_t size)
 {
     return NULL;
