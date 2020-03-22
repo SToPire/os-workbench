@@ -1,7 +1,7 @@
 #include <common.h>
 #include <lock.h>
 
-#define HDR_SIZE 256
+#define HDR_SIZE 257
 #define PAGE_SIZE (8 << 10)
 typedef union page {
     struct {
