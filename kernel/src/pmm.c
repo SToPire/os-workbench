@@ -14,6 +14,10 @@ typedef union page {
         uint8_t data[PAGE_SIZE - HDR_SIZE];
     } __attribute__((packed));
 } page_t;
+
+typedef struct __pmm_cache{
+    page_t* list;
+} cache_t;
 static void* kalloc(size_t size)
 {
     return NULL;
@@ -28,7 +32,7 @@ static void pmm_init()
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
-    printf("%d\n", HDR_SIZE);
+    printf("%p %p\n", _heap.end, _heap.end - 13 * sizeof(cache_t));
 }
 
 MODULE_DEF(pmm) = {
