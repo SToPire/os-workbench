@@ -2,7 +2,7 @@
 #include <lock.h>
 
 #define HDR_SIZE 1024
-#define PAGE_SIZE (8 << 10)
+#define PAGE_SIZE 8192
 typedef union page {
     struct {
         spinlock_t lock;  // 锁，用于串行化分配和并发的 free
@@ -41,10 +41,9 @@ static void pmm_init()
     for (int i = 0; i < PAGE_NUM; ++i) {
         pages[i].nxt = &pages[i + 1];
         spin_init(&pages[i].lock);
-        //printf("%p\n", pages[i].nxt);
+        printf("%p\n", pages[i].nxt);
     }
-    printf("%d\n", sizeof(uint64_t));
-    // printf("%d %d %d\n", HDR_SIZE, PAGE_SIZE, sizeof(page_t));
+    printf("%d %d %d\n", HDR_SIZE, PAGE_SIZE, sizeof(page_t));
     //printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
 }
 
