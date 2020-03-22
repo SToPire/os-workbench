@@ -29,7 +29,7 @@ page_t* freePageHead;
 cache_t* kmem_cache;
 page_t* pages;
 
-bool isUnitValid(uint64_t* bitmap, bool num)
+bool isUnitUsing(uint64_t* bitmap, bool num)
 {
     return (bitmap[num / 64]) & (1 << (num % 64));
 }
@@ -63,7 +63,16 @@ static void* kalloc(size_t size)
     }
     page_t* curPage = kmem_cache[cachenum].list;
     printf("%p %p %p %d\n", curPage->header, curPage->data, curPage->data_align, curPage->maxUnit);
-
+    int oldcnt = curPage->bitmapcnt;
+    curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
+    while (oldcnt != curPage->bitmapcnt) {
+        if(!isUnitUsing(curPage->bitmap,curPage->bitmapcnt)){
+            setUnit(curPage->bitmap, curPage->bitmapcnt, 1);
+            printf("%p\n",(void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt));
+            return (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
+        }
+        curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
+    }
     return NULL;
 }
 
