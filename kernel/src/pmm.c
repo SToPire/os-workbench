@@ -50,7 +50,7 @@ static void* kalloc(size_t size)
     }
     if (kmem_cache[cachenum].list == NULL) {  //TODO
         kmem_cache[cachenum].list = freePageHead;
-
+        printf("sss\n");
         page_t* tmp = kmem_cache[cachenum].list;
         memset(tmp->header, 0, sizeof(tmp->header));
         tmp->unitsize = sz;
