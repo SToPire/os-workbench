@@ -54,7 +54,7 @@ static void* kalloc(size_t size)
         memset(tmp->header, 0, sizeof(tmp->header));
         tmp->unitsize = sz;
         if (sz == 2048 || sz == 4096)
-            tmp->data_align = (uintptr_t)tmp->data + sz;
+            tmp->data_align = (uintptr_t)tmp->header+ sz;
         else
             tmp->data_align = (uintptr_t)tmp->data;
 
