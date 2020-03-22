@@ -67,6 +67,7 @@ static void* kalloc(size_t size)
         freePageHead = fPH_nxt;
     }
     page_t* curPage = kmem_cache[cachenum].list;
+    printf("%d\n", curPage->maxUnit);
     printf("%p %p %p %d\n", curPage->header, curPage->data, curPage->data_align, curPage->maxUnit);
     int oldcnt;
     if (curPage->bitmapcnt != 0)
