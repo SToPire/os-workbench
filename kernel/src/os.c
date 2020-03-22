@@ -8,7 +8,7 @@ static void os_run() {
   for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
     _putc(*s == '*' ? '0' + _cpu() : *s);
   }
-  void* a = pmm->alloc(2048);
+  void* a = pmm->alloc(2);
   pmm->free(a);
   while (1)
       ;
