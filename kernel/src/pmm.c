@@ -10,8 +10,9 @@ typedef union page {
         union page* nxt;
         uint64_t bitmap[112];
         int bitmapcnt;
-        int unitsize;
-        uintptr_t data_align;
+        int unitsize; // 该页每个内存单元的大小
+        int maxUnit; //  该页最大内存单元数
+        uintptr_t data_align; // 对齐之后的数据域首地址
         //list_head list;   // 属于同一个线程的页面的链表
     };  // 匿名结构体
     struct {
@@ -57,11 +58,11 @@ static void* kalloc(size_t size)
             tmp->data_align = (uintptr_t)tmp->header+ sz;
         else
             tmp->data_align = (uintptr_t)tmp->data;
-
+        tmp->maxUnit = ((uintptr_t)tmp->header + PAGE_SIZE - (uintptr_t)tmp->data_align) / sz;
         freePageHead = freePageHead->nxt;
     }
     page_t* curPage = kmem_cache[cachenum].list;
-    printf("%p %p %p\n", curPage->header, curPage->data, curPage->data_align);
+    printf("%p %p %p %d\n", curPage->header, curPage->data, curPage->data_align, curPage->maxUnit);
 
     return NULL;
 }
