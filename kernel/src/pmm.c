@@ -33,6 +33,7 @@ static void pmm_init()
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
     cache_t* kmem_cache = (cache_t*)_heap.end - 13;
+    for (int i = 0; i < 13; i++) kmem_cache[i].list = NULL;
     printf("%p %p\n", _heap.end, kmem_cache);
 }
 
