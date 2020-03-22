@@ -36,7 +36,7 @@ static void pmm_init()
     cache_t* kmem_cache = (cache_t*)_heap.end - 13;
     for (int i = 0; i < 13; i++) kmem_cache[i].list = NULL;
 
-    printf("%p %p %p %p\n", _heap.end, kmem_cache,(uintptr_t)kmem_cache,(2*PAGE_SIZE-1)^(~PAGE_SIZE));
+    printf("%p %p %p %p\n", _heap.end, kmem_cache,((uintptr_t)kmem_cache&((2*PAGE_SIZE-1)^(~PAGE_SIZE))));
 }
 
 MODULE_DEF(pmm) = {
