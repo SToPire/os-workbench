@@ -32,9 +32,11 @@ static void pmm_init()
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
+   // page_t* pages = (page_t*)_heap.start;
     cache_t* kmem_cache = (cache_t*)_heap.end - 13;
     for (int i = 0; i < 13; i++) kmem_cache[i].list = NULL;
-    printf("%p %p\n", _heap.end, kmem_cache);
+
+    printf("%p %p %p\n", _heap.end, kmem_cache,(uintptr_t)kmem_cache&PAGE_SIZE);
 }
 
 MODULE_DEF(pmm) = {
