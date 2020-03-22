@@ -53,7 +53,7 @@ static void* kalloc(size_t size)
         page_t* tmp = kmem_cache[cachenum].list;
         memset(tmp->header, 0, sizeof(tmp->header));
         tmp->unitsize = sz;
-        tmp->data_align = ((uintptr_t)tmp->data + sz) & (2 * sz - 1);
+        tmp->data_align = ((uintptr_t)tmp->data + sz) & ~(2 * sz - 1);
 
         freePageHead = freePageHead->nxt;
     }
