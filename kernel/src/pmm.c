@@ -10,6 +10,7 @@ typedef union page {
         union page* nxt;
         uint64_t bitmap[112];
         int bitmapcnt;
+        int unitsize;
         //list_head list;   // 属于同一个线程的页面的链表
     };  // 匿名结构体
     struct {
@@ -55,10 +56,10 @@ static void pmm_init()
     for (int i = 0; i < PAGE_NUM; ++i) {
         pages[i].nxt = &pages[i + 1];
         spin_init(&pages[i].lock);
-        //printf("%p\n", pages[i].nxt);
+        printf("%p %p\n", pages[i].header,pages[i].data);
     }
     //printf("%d %d %d\n", HDR_SIZE, PAGE_SIZE, sizeof(page_t));
-    printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
+    //printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
 }
 
 MODULE_DEF(pmm) = {
