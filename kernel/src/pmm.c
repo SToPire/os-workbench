@@ -1,13 +1,14 @@
 #include <common.h>
 #include <lock.h>
 
-#define HDR_SIZE 64
+#define HDR_SIZE 1044
 #define PAGE_SIZE (8 << 10)
 typedef union page {
     struct {
         spinlock_t lock;  // 锁，用于串行化分配和并发的 free
         int obj_cnt;      // 页面中已分配的对象数，减少到 0 时回收页面
         union page* nxt;
+        uint64_t bitmap[128];
         //list_head list;   // 属于同一个线程的页面的链表
     };  // 匿名结构体
     struct {
@@ -40,9 +41,9 @@ static void pmm_init()
     for (int i = 0; i < PAGE_NUM; ++i) {
         pages[i].nxt = &pages[i + 1];
         spin_init(&pages[i].lock);
-        printf("%p\n", pages[i].nxt);
+        //printf("%p\n", pages[i].nxt);
     }
-    printf("%d %d %d\n", HDR_SIZE, PAGE_SIZE, sizeof(page_t));
+    //printf("%d %d %d\n", HDR_SIZE, PAGE_SIZE, sizeof(page_t));
     //printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
 }
 
