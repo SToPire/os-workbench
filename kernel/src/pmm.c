@@ -11,6 +11,7 @@ typedef union page {
         uint64_t bitmap[112];
         int bitmapcnt;
         int unitsize;
+        uintptr_t data_align;
         //list_head list;   // 属于同一个线程的页面的链表
     };  // 匿名结构体
     struct {
@@ -22,6 +23,10 @@ typedef union page {
 typedef struct __pmm_cache {
     page_t* list;
 } cache_t;
+
+page_t* freePageHead;
+cache_t* kmem_cache;
+page_t* pages;
 
 bool isUnitValid(uint64_t* bitmap, bool num)
 {
@@ -37,6 +42,22 @@ void setUnit(uint64_t* bitmap, int num, bool b)
 }
 static void* kalloc(size_t size)
 {
+    int sz = 1, cachenum = 0;
+    while (sz < size) {
+        sz <<= 1;
+        ++cachenum;
+    }
+    if(kmem_cache[cachenum].list == NULL){ //TODO
+        kmem_cache[cachenum].list = freePageHead;
+
+        page_t* tmp = kmem_cache[cachenum].list;
+        memset(tmp->header, 0, sizeof(tmp->header));
+        tmp->unitsize = sz;
+        tmp->data_align = ((uintptr_t)tmp->data + sz) & (2 * sz - 1);
+        freePageHead = freePageHead->nxt;
+    }
+    //page_t* curPage = kmem_cache[cachenum].list;
+
     return NULL;
 }
 
@@ -49,15 +70,16 @@ static void pmm_init()
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
-    cache_t* kmem_cache = (cache_t*)_heap.end - 13;
+    kmem_cache = (cache_t*)_heap.end - 13;
     for (int i = 0; i < 13; ++i) kmem_cache[i].list = NULL;
-    page_t* pages = (page_t*)_heap.start;
+    pages = (page_t*)_heap.start;
     const int PAGE_NUM = (((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))) - (uintptr_t)_heap.start) / PAGE_SIZE;
     for (int i = 0; i < PAGE_NUM; ++i) {
         pages[i].nxt = &pages[i + 1];
         spin_init(&pages[i].lock);
-        printf("%p %p\n", pages[i].header,pages[i].data);
+        //printf("%p %p\n", pages[i].header, pages[i].data);
     }
+    freePageHead = pages;
     //printf("%d %d %d\n", HDR_SIZE, PAGE_SIZE, sizeof(page_t));
     //printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
 }
