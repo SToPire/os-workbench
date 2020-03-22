@@ -42,7 +42,6 @@ void setUnit(uint64_t* bitmap, int num, bool b)
 }
 static void* kalloc(size_t size)
 {
-    printf("sssssssss\n");
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
@@ -55,9 +54,11 @@ static void* kalloc(size_t size)
         memset(tmp->header, 0, sizeof(tmp->header));
         tmp->unitsize = sz;
         tmp->data_align = ((uintptr_t)tmp->data + sz) & (2 * sz - 1);
+
         freePageHead = freePageHead->nxt;
     }
-    //page_t* curPage = kmem_cache[cachenum].list;
+    page_t* curPage = kmem_cache[cachenum].list;
+    printf("%p %p %p\n", curPage->header, curPage->data, curPage->data_align);
 
     return NULL;
 }
