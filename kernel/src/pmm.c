@@ -63,8 +63,11 @@ static void* kalloc(size_t size)
     }
     page_t* curPage = kmem_cache[cachenum].list;
     printf("%p %p %p %d\n", curPage->header, curPage->data, curPage->data_align, curPage->maxUnit);
-    int oldcnt = curPage->bitmapcnt;
-    curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
+    int oldcnt;
+    if (curPage->bitmapcnt != 0)
+        oldcnt = curPage->bitmapcnt - 1;
+    else
+        oldcnt = curPage->maxUnit - 1;
     while (oldcnt != curPage->bitmapcnt) {
         if(!isUnitUsing(curPage->bitmap,curPage->bitmapcnt)){
             setUnit(curPage->bitmap, curPage->bitmapcnt, 1);
