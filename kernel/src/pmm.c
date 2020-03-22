@@ -104,7 +104,7 @@ static void kfree(void* ptr)
 {
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
-    printf("%p %p %d\n", ptr, curPage, num);
+    //printf("%p %p %d\n", ptr, curPage, num);
     setUnit(curPage->bitmap, num, 0);
     curPage->full = false;
     if(--curPage->obj_cnt ==0){
