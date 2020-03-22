@@ -70,6 +70,7 @@ static void* kalloc(size_t size)
     if(sz==4096){
         curPage->full = true;
         curPage->obj_cnt = 1;
+        printf("%p\n", curPage->data_align);
         return (void*)curPage->data_align;
     }
     printf("%p %p %p %d\n", curPage->header, curPage->data, curPage->data_align, curPage->maxUnit);
