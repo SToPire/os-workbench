@@ -50,7 +50,6 @@ static void* kalloc(size_t size)
     }
     if (kmem_cache[cachenum].list == NULL) {  //TODO
         kmem_cache[cachenum].list = freePageHead;
-        printf("sss\n");
         page_t* tmp = kmem_cache[cachenum].list;
         memset(tmp->header, 0, sizeof(tmp->header));
         tmp->unitsize = sz;
@@ -62,7 +61,8 @@ static void* kalloc(size_t size)
         freePageHead = freePageHead->nxt;
     }
     page_t* curPage = kmem_cache[cachenum].list;
-    printf("%p %p %p %d\n", curPage->header, curPage->data, curPage->data_align, curPage->maxUnit);
+    //printf("%p %p %p %d\n", curPage->header, curPage->data, curPage->data_align, curPage->maxUnit);
+    printf("%d\n", curPage->bitmapcnt);
     int oldcnt;
     if (curPage->bitmapcnt != 0)
         oldcnt = curPage->bitmapcnt - 1;
