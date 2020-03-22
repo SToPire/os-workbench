@@ -53,6 +53,7 @@ static void* kalloc(size_t size)
     }
     if (kmem_cache[cachenum].list == NULL || kmem_cache[cachenum].list->full) {
         page_t* tmp = freePageHead;
+        page_t* fPH_nxt = freePageHead->nxt;
         memset(tmp->header, 0, sizeof(tmp->header));
         tmp->nxt = kmem_cache[cachenum].list;
         tmp->unitsize = sz;
@@ -63,7 +64,7 @@ static void* kalloc(size_t size)
         tmp->maxUnit = ((uintptr_t)tmp->header + PAGE_SIZE - (uintptr_t)tmp->data_align) / sz;
         
         kmem_cache[cachenum].list = tmp;
-        freePageHead = freePageHead->nxt;
+        freePageHead = fPH_nxt;
     }
     page_t* curPage = kmem_cache[cachenum].list;
     printf("%p %p %p %d\n", curPage->header, curPage->data, curPage->data_align, curPage->maxUnit);
@@ -106,7 +107,7 @@ static void pmm_init()
         //printf("%p %p\n", pages[i].header, pages[i].data);
     }
     freePageHead = &pages[0];
-    printf("%p %p\n", pages[0].nxt, freePageHead);
+    //printf("%p %p\n", pages[0].nxt, freePageHead);
     //printf("%d %d %d\n", HDR_SIZE, PAGE_SIZE, sizeof(page_t));
     //printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
 }
