@@ -105,7 +105,7 @@ static void pmm_init()
         spin_init(&pages[i].lock);
         //printf("%p %p\n", pages[i].header, pages[i].data);
     }
-    freePageHead = pages;
+    freePageHead = &pages[0];
     printf("%p %p\n", pages, freePageHead);
     //printf("%d %d %d\n", HDR_SIZE, PAGE_SIZE, sizeof(page_t));
     //printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
