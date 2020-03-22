@@ -63,7 +63,7 @@ static void* kalloc(size_t size)
         else
             tmp->data_align = (uintptr_t)tmp->data;
         tmp->maxUnit = ((uintptr_t)tmp->header + PAGE_SIZE - (uintptr_t)tmp->data_align) / sz;
-        
+
         kmem_cache[cachenum].list = tmp;
         freePageHead = fPH_nxt;
         spin_unlock(&freePageHead->lock);
@@ -103,8 +103,8 @@ static void* kalloc(size_t size)
 static void kfree(void* ptr)
 {
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
-    int num = (curPage->data_align - (uintptr_t)ptr) / curPage->unitsize;
-    printf("%p %p %d\n", ptr,curPage,num);
+    int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
+    printf("%p %p %d\n", ptr, curPage, num);
 }
 
 static void pmm_init()
