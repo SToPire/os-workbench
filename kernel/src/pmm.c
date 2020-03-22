@@ -1,7 +1,7 @@
 #include <common.h>
 #include <lock.h>
 
-#define HDR_SIZE 64
+#define HDR_SIZE 256
 #define PAGE_SIZE (8 << 10)
 typedef union page {
     struct {
@@ -39,9 +39,8 @@ static void pmm_init()
     const int PAGE_NUM = (((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))) - (uintptr_t)_heap.start) / PAGE_SIZE;
     for (int i = 0; i < PAGE_NUM; ++i) {
         pages[i].nxt = &pages[i + 1];
-        printf("%p\n", pages[i].nxt);
+        spin_init(&pages[i].lock);
     }
-    printf("%d %d %d\n",HDR_SIZE,PAGE_SIZE, sizeof(page_t));
     //printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
 }
 
