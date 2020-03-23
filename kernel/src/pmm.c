@@ -66,7 +66,7 @@ static void* kalloc(size_t size)
         if (freePageHead == NULL) return NULL;
         //spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
-        freePageHead= freePageHead->nxt;
+        freePageHead = freePageHead->nxt;
         //spin_unlock(&tmp->lock);
 
         //printf("%d %d\n", cpu, cachenum);
@@ -91,7 +91,7 @@ static void* kalloc(size_t size)
     if (sz == 4096) {
         curPage->full = true;
         curPage->obj_cnt = 1;
-       //printf("%d:%p\n", _cpu(),curPage->data_align);
+        //printf("%d:%p\n", _cpu(),curPage->data_align);
         //spin_unlock(&curPage->lock);
         return (void*)curPage->data_align;
     }
@@ -133,7 +133,7 @@ static void kfree(void* ptr)
             curPage->pre->nxt = curPage->nxt;
             curPage->nxt->pre = curPage->pre;
         } else {
-            curPage->nxt->pre = NULL;
+            if (curPage->nxt) curPage->nxt->pre = NULL;
             kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
         }
         curPage->nxt = freePageHead;
@@ -147,11 +147,11 @@ static void pmm_init()
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
-    for (int i = CPU_NUM - 1; i >= 0;--i){
-        kmem_cache[i] = (cache_t*)_heap.end - (CPU_NUM-i) * 13;
+    for (int i = CPU_NUM - 1; i >= 0; --i) {
+        kmem_cache[i] = (cache_t*)_heap.end - (CPU_NUM - i) * 13;
         //printf("%p\n", kmem_cache[i]);
     }
-    for (int i = 0; i < CPU_NUM; ++i){
+    for (int i = 0; i < CPU_NUM; ++i) {
         for (int j = 0; j < 13; ++j) {
             kmem_cache[i][j].list = NULL;
             //printf("%d %d %p\n", i, j, &kmem_cache[i][j]);
