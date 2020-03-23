@@ -7,9 +7,9 @@ static void os_init()
 
 static void os_run()
 {
-    // for (const char* s = "Hello World from CPU #*\n"; *s; s++) {
-    //     _putc(*s == '*' ? '0' + _cpu() : *s);
-    // }
+    for (const char* s = "Hello World from CPU #*\n"; *s; s++) {
+        _putc(*s == '*' ? '0' + _cpu() : *s);
+    }
     void* a[200000];
     for (int i = 0; i < 200000; i++) {
         a[i] = pmm->alloc(4096);

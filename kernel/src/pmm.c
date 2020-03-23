@@ -61,8 +61,12 @@ static void* kalloc(size_t size)
     int cpu = _cpu();
     //printf("now_cpu:%d\n", cpu);
     bool new_page;
+
+    spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
     page_t* curPage = kmem_cache[cpu][cachenum].list;
-    if (kmem_cache[cpu][cachenum].list == NULL)
+    spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+
+    if (curPage == NULL)
         new_page = true;
     else {
         while (curPage->full == true) {
@@ -78,12 +82,11 @@ static void* kalloc(size_t size)
         freePageHead = freePageHead->nxt;
         //spin_unlock(&tmp->lock);
 
-        //printf("%d %d\n", cpu, cachenum);
         memset(tmp->header, 0, sizeof(tmp->header));
-        //spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
+        spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
         tmp->nxt = kmem_cache[cpu][cachenum].list;
         if (kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list->pre = tmp;
-        //spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+        spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
         tmp->unitsize = sz;
         tmp->cachenum = cachenum;
@@ -95,12 +98,14 @@ static void* kalloc(size_t size)
             tmp->data_align = (uintptr_t)tmp->data;
         tmp->maxUnit = ((uintptr_t)tmp->header + PAGE_SIZE - (uintptr_t)tmp->data_align) / sz;
 
-        //spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
+        spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
         curPage = kmem_cache[cpu][cachenum].list = tmp;
-        //spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+        spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
     }
 
-    spin_lock(&L);
+    spin_lock(&curPage->lock);
+    //spin_lock(&L);
+
     int oldcnt = curPage->bitmapcnt;
     do {
         if (!isUnitUsing(curPage->bitmap, curPage->bitmapcnt)) {
@@ -115,7 +120,9 @@ static void* kalloc(size_t size)
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     } while (oldcnt != curPage->bitmapcnt);
-    spin_unlock(&L);
+    //spin_unlock(&L);
+    spin_unlock(&curPage->lock);
+
     return NULL;
 }
 
@@ -125,7 +132,6 @@ static void kfree(void* ptr)
     spin_lock(&curPage->lock);
     int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
-    //printf("%p %p %d\n", ptr, curPage, num);
     setUnit(curPage->bitmap, num, 0);
     curPage->full = false;
     if (--curPage->obj_cnt == 0) {
@@ -142,7 +148,6 @@ static void kfree(void* ptr)
         freePageHead = curPage;
     }
     spin_unlock(&curPage->lock);
-    //printf("free:%p\n", ptr);
 }
 
 static void pmm_init()
