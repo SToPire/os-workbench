@@ -137,6 +137,7 @@ static void* kalloc(size_t size)
 
 static void kfree(void* ptr)
 {
+    assert(ptr >= _heap.start && ptr <= _heap.end);
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
     //if (curPage->cpuid != _cpu()) return;
     spin_lock(&curPage->lock);
