@@ -16,9 +16,6 @@ static void os_run()
         //a[i] = pmm->alloc(1);
         //pmm->free(a[i]);
     }
-    for (int i = 0; i < 100; i++) {
-    }
-    
         while (1)
             ;
     }
