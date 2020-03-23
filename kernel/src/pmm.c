@@ -91,7 +91,7 @@ static void* kalloc(size_t size)
     if (sz == 4096) {
         curPage->full = true;
         curPage->obj_cnt = 1;
-        printf("%d:%p\n", _cpu(),curPage->data_align);
+        printf("%d:%p\n", _cpu(), curPage->data_align);
         //spin_unlock(&curPage->lock);
         return (void*)curPage->data_align;
     }
@@ -109,7 +109,7 @@ static void* kalloc(size_t size)
             ++curPage->obj_cnt;
             if (curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
             //spin_unlock(&curPage->lock);
-            printf("%d:%p\n",_cpu(), ret);
+            printf("%d:%p\n", _cpu(), ret);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
@@ -131,7 +131,7 @@ static void kfree(void* ptr)
     if (--curPage->obj_cnt == 0) {
         if (curPage->pre) {
             curPage->pre->nxt = curPage->nxt;
-            curPage->nxt->pre = curPage->pre;
+            if (curPage->nxt) curPage->nxt->pre = curPage->pre;
         } else {
             if (curPage->nxt) curPage->nxt->pre = NULL;
             kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
