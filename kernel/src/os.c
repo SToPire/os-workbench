@@ -11,8 +11,8 @@ static void os_run()
         _putc(*s == '*' ? '0' + _cpu() : *s);
     }
     //void* a[200000];
-    for (int i = 0; i < 20; i++) {
-        pmm->alloc(1);
+    for (int i = 0; i < 2000; i++) {
+        pmm->alloc(64);
         //a[i] = pmm->alloc(1);
         //pmm->free(a[i]);
     }
