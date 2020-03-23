@@ -17,6 +17,7 @@ typedef union page {
 
         uintptr_t data_align;  // 对齐之后的数据域首地址
 
+        int cpuid;
         union page* pre;
         union page* nxt;
         //list_head list;   // 属于同一个线程的页面的链表
@@ -49,6 +50,7 @@ void setUnit(uint64_t* bitmap, int num, bool b)
 }
 static void* kalloc(size_t size)
 {
+    printf("%d\n", _cpu());
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
