@@ -100,7 +100,7 @@ static void* kalloc(size_t size)
         curPage->full = true;
         curPage->obj_cnt = 1;
         void* ret = (void*)curPage->data_align;
-        //printf("%d:%p\n", _cpu(), ret);
+        printf("%d:%p\n", _cpu(), ret);
         spin_unlock(&curPage->lock);
         return ret;
     }
