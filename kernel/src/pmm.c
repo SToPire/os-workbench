@@ -59,7 +59,6 @@ static void* kalloc(size_t size)
         ++cachenum;
     }
     int cpu = _cpu();
-    //printf("now_cpu:%d\n", cpu);
     bool new_page = false;
 
     page_t* curPage = kmem_cache[cpu][cachenum].list;
@@ -101,24 +100,24 @@ static void* kalloc(size_t size)
         spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
     }
 
-    spin_lock(&curPage->lock);
+    //spin_lock(&curPage->lock);
     //spin_lock(&L);
 
     int oldcnt = curPage->bitmapcnt;
     do {
+        printf("%d\n", curPage->bitmapcnt);
         if (!isUnitUsing(curPage->bitmap, curPage->bitmapcnt)) {
             setUnit(curPage->bitmap, curPage->bitmapcnt, 1);
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
-            ++curPage->obj_cnt;
-            if (curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
-            spin_unlock(&curPage->lock);
-            printf("%d:%p\n", _cpu(), ret);
+            if (++curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
+            //spin_unlock(&curPage->lock);
+            //printf("%d:%p\n", _cpu(), ret);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     } while (oldcnt != curPage->bitmapcnt);
-    spin_unlock(&L);
+    //spin_unlock(&L);
     //spin_unlock(&curPage->lock);
 
     return NULL;
@@ -128,7 +127,7 @@ static void kfree(void* ptr)
 {
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
     if (curPage->cpuid != _cpu()) return;
-    spin_lock(&curPage->lock);
+    //spin_lock(&curPage->lock);
     int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
     setUnit(curPage->bitmap, num, 0);
@@ -146,7 +145,7 @@ static void kfree(void* ptr)
         curPage->nxt = freePageHead;
         freePageHead = curPage;
     }
-    spin_unlock(&curPage->lock);
+    //spin_unlock(&curPage->lock);
 }
 
 static void pmm_init()
