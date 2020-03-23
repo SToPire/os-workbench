@@ -12,6 +12,11 @@ static void os_run()
     }
     pmm->alloc(1024);
     pmm->alloc(1024);
+    pmm->alloc(1024);
+    pmm->alloc(1024);
+    pmm->alloc(1024);
+    pmm->alloc(1024);
+
     while (1)
         ;
 }
