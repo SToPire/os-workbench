@@ -59,14 +59,14 @@ static void* kalloc(size_t size)
         ++cachenum;
     }
     int cpu = _cpu();
-    printf("now_cpu:%d\n", cpu);
+    //printf("now_cpu:%d\n", cpu);
     if (kmem_cache[cpu][cachenum].list == NULL || kmem_cache[cpu][cachenum].list->full) {
         spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
         freePageHead= freePageHead->nxt;
         spin_unlock(&tmp->lock);
 
-        printf("%d %d\n", cpu, cachenum);
+        //printf("%d %d\n", cpu, cachenum);
         memset(tmp->header, 0, sizeof(tmp->header));
         tmp->nxt = kmem_cache[cpu][cachenum].list;
         if (kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list->pre = tmp;
