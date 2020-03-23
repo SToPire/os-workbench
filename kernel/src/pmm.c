@@ -10,11 +10,14 @@ typedef union page {
         int maxUnit;      //  该页最大内存单元数
         bool full;
         int unitsize;  // 该页每个内存单元的大小
+        int cachenum;
 
         uint64_t bitmap[112];
         int bitmapcnt;
 
         uintptr_t data_align;  // 对齐之后的数据域首地址
+
+        union page* pre;
         union page* nxt;
         //list_head list;   // 属于同一个线程的页面的链表
     };  // 匿名结构体
@@ -57,9 +60,13 @@ static void* kalloc(size_t size)
         //spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
         page_t* fPH_nxt = freePageHead->nxt;
+        freePageHead = fPH_nxt;
+        //spin_unlock(&tmp->lock);
         memset(tmp->header, 0, sizeof(tmp->header));
         tmp->nxt = kmem_cache[cachenum].list;
+        if (kmem_cache[cachenum].list) kmem_cache[cachenum].list->pre = tmp;
         tmp->unitsize = sz;
+        tmp->cachenum = cachenum;
         if (sz == 2048 || sz == 4096)
             tmp->data_align = (uintptr_t)tmp->header + sz;
         else
@@ -67,8 +74,6 @@ static void* kalloc(size_t size)
         tmp->maxUnit = ((uintptr_t)tmp->header + PAGE_SIZE - (uintptr_t)tmp->data_align) / sz;
 
         kmem_cache[cachenum].list = tmp;
-        freePageHead = fPH_nxt;
-        //spin_unlock(&freePageHead->lock);
     }
     page_t* curPage = kmem_cache[cachenum].list;
     //spin_lock(&curPage->lock);
@@ -111,7 +116,15 @@ static void kfree(void* ptr)
     setUnit(curPage->bitmap, num, 0);
     curPage->full = false;
     if(--curPage->obj_cnt ==0){
-        // TODO
+        if(curPage->pre){
+            curPage->pre->nxt = curPage->nxt;
+            curPage->nxt->pre = curPage->pre;
+        }else{
+            curPage->nxt->pre = NULL;
+            kmem_cache[curPage->cachenum].list = curPage->nxt;
+        }
+        curPage->nxt = freePageHead;
+        freePageHead = curPage;
     }
 }
 
