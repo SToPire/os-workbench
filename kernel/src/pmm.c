@@ -47,10 +47,8 @@ void setUnit(uint64_t* bitmap, int num, bool b)
     else
         bitmap[num / 64] &= ~(1 << (num % 64));
 }
-spinlock_t L;
 static void* kalloc(size_t size)
 {
-    //spin_lock(&L);
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
@@ -81,7 +79,7 @@ static void* kalloc(size_t size)
     if (sz == 4096) {
         curPage->full = true;
         curPage->obj_cnt = 1;
-        printf("%p\n", curPage->data_align);
+        //printf("%p\n", curPage->data_align);
         //spin_unlock(&curPage->lock);
         return (void*)curPage->data_align;
     }
@@ -98,21 +96,20 @@ static void* kalloc(size_t size)
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             ++curPage->obj_cnt;
             if (curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
-            //spin_unlock(&curPage->lock);
-            printf("%p\n", ret);
+            spin_unlock(&curPage->lock);
+            //printf("%p\n", ret);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     }
     spin_unlock(&curPage->lock);
-    //spin_unlock(&L);
     return NULL;
 }
 
 static void kfree(void* ptr)
 {
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
-    spin_lock(&curPage->lock);
+    //spin_lock(&curPage->lock);
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
     //printf("%p %p %d\n", ptr, curPage, num);
     setUnit(curPage->bitmap, num, 0);
@@ -128,7 +125,7 @@ static void kfree(void* ptr)
         curPage->nxt = freePageHead;
         freePageHead = curPage;
     }
-    spin_unlock(&curPage->lock);
+    //spin_unlock(&curPage->lock);
 }
 
 static void pmm_init()
