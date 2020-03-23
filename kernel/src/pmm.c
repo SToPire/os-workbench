@@ -52,6 +52,7 @@ void setUnit(uint64_t* bitmap, int num, bool b)
 }
 static void* kalloc(size_t size)
 {
+    printf("ssssssssssssssssssssssss\n");
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
