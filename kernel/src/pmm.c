@@ -80,12 +80,12 @@ static void* kalloc(size_t size)
     ///spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
+        spin_lock(&L);
         printf("current fPH:%p\n", freePageHead);
         if (freePageHead == NULL) {
             //printf("Failed allocation.\n");
             return NULL;
         }
-        spin_lock(&L);
         page_t* tmp = freePageHead;
         freePageHead = freePageHead->nxt;
         spin_unlock(&L);
