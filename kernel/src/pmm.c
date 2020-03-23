@@ -117,9 +117,9 @@ static void* kalloc(size_t size)
             if (++curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
             spin_unlock(&curPage->lock);
 
-            spin_lock(&G);
+            //spin_lock(&G);
             cnt++;
-            spin_unlock(&G);
+            //spin_unlock(&G);
 
             printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             return ret;
