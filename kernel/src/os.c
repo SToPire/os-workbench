@@ -12,7 +12,8 @@ static void os_run()
     }
     for (int i = 1; i <= 4; i++) {
         void* a = pmm->alloc(1);
-        pmm->free(a);
+        //pmm->free(a);
+        printf("%p", a);
     }
     while (1)
         ;
