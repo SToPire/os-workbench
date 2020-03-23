@@ -16,9 +16,9 @@ static void os_run()
         //a[i] = pmm->alloc(1);
         //pmm->free(a[i]);
     }
-        // while (1)
-        //     ;
-    }
+    // while (1)
+    //     ;
+}
 
 MODULE_DEF(os) = {
     .init = os_init,
