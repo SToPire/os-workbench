@@ -67,7 +67,9 @@ static void* kalloc(size_t size)
         new_page = true;
     else {
         while (curPage->full == true) {
-            if(curPage->nxt) curPage = curPage->nxt;
+            printf("?????\n");
+            if (curPage->nxt)
+                curPage = curPage->nxt;
             else
                 new_page = true;
         }
