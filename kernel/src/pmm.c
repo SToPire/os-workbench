@@ -81,7 +81,7 @@ static void* kalloc(size_t size)
 
     if (new_page) {
         if (freePageHead == NULL){
-            printf("Failed allocation.\n");
+            printf("Failed allocation.11\n");
             return NULL;
         }
         spin_lock(&L);
