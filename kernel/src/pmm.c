@@ -67,11 +67,12 @@ static void* kalloc(size_t size)
         new_page = true;
     else {
         while (curPage->full == true) {
-            printf("?????\n");
             if (curPage->nxt)
                 curPage = curPage->nxt;
-            else
+            else {
                 new_page = true;
+                break;
+            }
         }
     }
     if (new_page) {
@@ -113,7 +114,7 @@ static void* kalloc(size_t size)
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             if (++curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
             //spin_unlock(&curPage->lock);
-            printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", _cpu(), ret,curPage->bitmapcnt,curPage->maxUnit,curPage->obj_cnt,curPage->full);
+            printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
