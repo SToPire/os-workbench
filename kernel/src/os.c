@@ -10,13 +10,13 @@ static void os_run()
     for (const char* s = "Hello World from CPU #*\n"; *s; s++) {
         _putc(*s == '*' ? '0' + _cpu() : *s);
     }
-    void* a = pmm->alloc(4096);
-    pmm->free(a);
-    a = pmm->alloc(4096);
-    pmm->free(a);
+    for (int i = 1; i <= 100000;i++){
+        void* a = pmm->alloc(4096);
+        free(a);
+    }
 
-    while (1)
-        ;
+        while (1)
+            ;
 }
 
 MODULE_DEF(os) = {

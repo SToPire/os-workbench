@@ -53,7 +53,7 @@ void setUnit(uint64_t* bitmap, int num, bool b)
 spinlock_t L;
 static void* kalloc(size_t size)
 {
-    //spin_lock(&L);
+    spin_lock(&L);
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
@@ -63,12 +63,9 @@ static void* kalloc(size_t size)
     //printf("now_cpu:%d\n", cpu);
     if (kmem_cache[cpu][cachenum].list == NULL || kmem_cache[cpu][cachenum].list->full) {
         if (freePageHead == NULL) return NULL;
-        //spin_lock(&freePageHead->lock);
-    spin_lock(&L);
+        spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
         freePageHead = freePageHead->nxt;
-        //spin_unlock(&tmp->lock);
-        spin_unlock(&L);
 
         //printf("%d %d\n", cpu, cachenum);
         memset(tmp->header, 0, sizeof(tmp->header));
@@ -90,16 +87,24 @@ static void* kalloc(size_t size)
         spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
         kmem_cache[cpu][cachenum].list = tmp;
         spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+        spin_unlock(&tmp->lock);
     }
+    // couldn't pass hard test
+    spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
     page_t* curPage = kmem_cache[cpu][cachenum].list;
+    spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+
     spin_lock(&curPage->lock);
+    spin_unlock(&L);
     if (sz == 4096) {
         curPage->full = true;
         curPage->obj_cnt = 1;
-        //printf("%d:%p\n", _cpu(), curPage->data_align);
+        void* ret = (void*)curPage->data_align;
+        //printf("%d:%p\n", _cpu(), ret);
         spin_unlock(&curPage->lock);
-        return (void*)curPage->data_align;
+        return ret;
     }
+        // could pass hard test
     //printf("%p %p %p %d\n", curPage->header, curPage->data, curPage->data_align, curPage->maxUnit);
     int oldcnt;
     if (curPage->bitmapcnt != 0)
