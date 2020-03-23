@@ -51,6 +51,8 @@ void setUnit(uint64_t* bitmap, int num, bool b)
         bitmap[num / 64] &= ~(1 << (num % 64));
 }
 spinlock_t L;
+spinlock_t G;
+int cnt = 0;
 static void* kalloc(size_t size)
 {
     int sz = 1, cachenum = 0;
@@ -114,7 +116,12 @@ static void* kalloc(size_t size)
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             if (++curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
             spin_unlock(&curPage->lock);
-            //printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
+
+            spin_lock(&G);
+            cnt++;
+            spin_unlock(&G);
+
+            printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
