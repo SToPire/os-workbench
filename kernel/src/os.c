@@ -12,7 +12,7 @@ static void os_run()
     }
     for (int i = 1; i <= 100000;i++){
         void* a = pmm->alloc(4096);
-        free(a);
+        pmm->free(a);
     }
 
         while (1)
