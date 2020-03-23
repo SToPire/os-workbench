@@ -144,12 +144,12 @@ static void pmm_init()
 
     for (int i = CPU_NUM - 1; i >= 0;--i){
         kmem_cache[i] = (cache_t*)_heap.end - (CPU_NUM-i) * 13;
-        printf("%p\n", kmem_cache[i]);
+        //printf("%p\n", kmem_cache[i]);
     }
     for (int i = 0; i < CPU_NUM; ++i){
         for (int j = 0; j < 13; ++j) {
             kmem_cache[i][j].list = NULL;
-            printf("%d %d %p\n", i, j, &kmem_cache[i][j]);
+            //printf("%d %d %p\n", i, j, &kmem_cache[i][j]);
         }
     }
     pages = (page_t*)_heap.start;
