@@ -10,8 +10,8 @@ static void os_run()
     for (const char* s = "Hello World from CPU #*\n"; *s; s++) {
         _putc(*s == '*' ? '0' + _cpu() : *s);
     }
-    pmm->alloc(1);
-    pmm->alloc(1);
+    pmm->alloc(1024);
+    pmm->alloc(1024);
     while (1)
         ;
 }
