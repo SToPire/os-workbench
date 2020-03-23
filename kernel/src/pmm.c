@@ -53,7 +53,7 @@ void setUnit(uint64_t* bitmap, int num, bool b)
 spinlock_t L;
 static void* kalloc(size_t size)
 {
-    spin_lock(&L);
+    //spin_lock(&L);
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
@@ -63,10 +63,10 @@ static void* kalloc(size_t size)
     //printf("now_cpu:%d\n", cpu);
     if (kmem_cache[cpu][cachenum].list == NULL || kmem_cache[cpu][cachenum].list->full) {
         if (freePageHead == NULL) return NULL;
-        //spin_lock(&freePageHead->lock);
+        spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
         freePageHead= freePageHead->nxt;
-        //spin_unlock(&tmp->lock);
+        spin_unlock(&tmp->lock);
 
         //printf("%d %d\n", cpu, cachenum);
         memset(tmp->header, 0, sizeof(tmp->header));
@@ -114,7 +114,7 @@ static void* kalloc(size_t size)
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     }
     //spin_unlock(&curPage->lock);
-    spin_unlock(&L);
+    //spin_unlock(&L);
     return NULL;
 }
 
