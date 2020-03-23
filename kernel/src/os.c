@@ -11,7 +11,7 @@ static void os_run()
         _putc(*s == '*' ? '0' + _cpu() : *s);
     }
     for (int i = 1; i <= 100000; i++)
-        pmm->alloc(1);
+        pmm->alloc(1024);
 
     while (1)
         ;
