@@ -50,7 +50,6 @@ void setUnit(uint64_t* bitmap, int num, bool b)
 spinlock_t L;
 static void* kalloc(size_t size)
 {
-    printf("ss\n");
     //spin_lock(&L);
     int sz = 1, cachenum = 0;
     while (sz < size) {
