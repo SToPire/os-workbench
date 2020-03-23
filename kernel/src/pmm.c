@@ -57,8 +57,8 @@ static void* kalloc(size_t size)
         sz <<= 1;
         ++cachenum;
     }
-   // int cpu = _cpu();
-    //printf("now_cpu:%d\n", cpu);
+    int cpu = _cpu();
+    printf("now_cpu:%d\n", cpu);
     if (kmem_cache[cachenum].list == NULL || kmem_cache[cachenum].list->full) {
         spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
@@ -142,10 +142,10 @@ static void pmm_init()
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
-    kmem_cache = (cache_t*)_heap.end - 13 ;
+    kmem_cache = (cache_t*)_heap.end - 13;
 
-        for (int j = 0; j < 13; ++j) 
-            kmem_cache[j].list = NULL;
+    for (int j = 0; j < 13; ++j)
+        kmem_cache[j].list = NULL;
     pages = (page_t*)_heap.start;
     const int PAGE_NUM = (((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))) - (uintptr_t)_heap.start) / PAGE_SIZE;
     for (int i = 0; i < PAGE_NUM; ++i) {
