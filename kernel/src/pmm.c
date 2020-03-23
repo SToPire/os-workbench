@@ -60,7 +60,7 @@ static void* kalloc(size_t size)
     }
     int cpu = _cpu();
     //printf("now_cpu:%d\n", cpu);
-    bool new_page;
+    bool new_page=0;
 
     page_t* curPage = kmem_cache[cpu][cachenum].list;
 
