@@ -63,10 +63,11 @@ static void* kalloc(size_t size)
     bool new_page;
 
     page_t* curPage = kmem_cache[cpu][cachenum].list;
-
+    if (curPage == NULL) printf("tes\n");
     if (curPage == NULL)
         new_page = true;
     else {
+        
         while (curPage->full == true) {
             if(curPage->nxt) curPage = curPage->nxt;
             else
