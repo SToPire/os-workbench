@@ -3,6 +3,7 @@
 
 #define HDR_SIZE 1024
 #define PAGE_SIZE 8192
+#define CPU_NUM 8
 typedef union page {
     struct {
         spinlock_t lock;  // 锁，用于串行化分配和并发的 free
@@ -33,7 +34,7 @@ typedef struct __pmm_cache {
 } cache_t;
 
 page_t* freePageHead;
-cache_t* kmem_cache;
+cache_t** kmem_cache;
 page_t* pages;
 
 bool isUnitUsing(uint64_t* bitmap, bool num)
@@ -50,33 +51,36 @@ void setUnit(uint64_t* bitmap, int num, bool b)
 }
 static void* kalloc(size_t size)
 {
-    printf("%d\n", _cpu());
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
         ++cachenum;
     }
-    if (kmem_cache[cachenum].list == NULL || kmem_cache[cachenum].list->full) {
+    int cpu = _cpu();
+    if (kmem_cache[cpu][cachenum].list == NULL || kmem_cache[cpu][cachenum].list->full) {
         spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
         page_t* fPH_nxt = freePageHead->nxt;
         freePageHead = fPH_nxt;
         spin_unlock(&tmp->lock);
+
         memset(tmp->header, 0, sizeof(tmp->header));
-        tmp->nxt = kmem_cache[cachenum].list;
-        if (kmem_cache[cachenum].list) kmem_cache[cachenum].list->pre = tmp;
+        tmp->nxt = kmem_cache[cpu][cachenum].list;
+        if (kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list->pre = tmp;
         tmp->unitsize = sz;
         tmp->cachenum = cachenum;
+        tmp->cpuid = _cpu();
+
         if (sz == 2048 || sz == 4096)
             tmp->data_align = (uintptr_t)tmp->header + sz;
         else
             tmp->data_align = (uintptr_t)tmp->data;
         tmp->maxUnit = ((uintptr_t)tmp->header + PAGE_SIZE - (uintptr_t)tmp->data_align) / sz;
 
-        kmem_cache[cachenum].list = tmp;
+        kmem_cache[cpu][cachenum].list = tmp;
     }
 
-    page_t* curPage = kmem_cache[cachenum].list;
+    page_t* curPage = kmem_cache[cpu][cachenum].list;
     spin_lock(&curPage->lock);
     if (sz == 4096) {
         curPage->full = true;
@@ -116,13 +120,13 @@ static void kfree(void* ptr)
     //printf("%p %p %d\n", ptr, curPage, num);
     setUnit(curPage->bitmap, num, 0);
     curPage->full = false;
-    if(--curPage->obj_cnt ==0){
-        if(curPage->pre){
+    if (--curPage->obj_cnt == 0) {
+        if (curPage->pre) {
             curPage->pre->nxt = curPage->nxt;
             curPage->nxt->pre = curPage->pre;
-        }else{
+        } else {
             curPage->nxt->pre = NULL;
-            kmem_cache[curPage->cachenum].list = curPage->nxt;
+            kmem_cache[_cpu()][curPage->cachenum].list = curPage->nxt;
         }
         curPage->nxt = freePageHead;
         freePageHead = curPage;
@@ -135,8 +139,10 @@ static void pmm_init()
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
-    kmem_cache = (cache_t*)_heap.end - 13;
-    for (int i = 0; i < 13; ++i) kmem_cache[i].list = NULL;
+    kmem_cache = (cache_t**)_heap.end - 13 * CPU_NUM;
+    for (int i = 0; i < CPU_NUM; i++)
+        for (int j = 0; j < 13; ++j) 
+            kmem_cache[i][j].list = NULL;
     pages = (page_t*)_heap.start;
     const int PAGE_NUM = (((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))) - (uintptr_t)_heap.start) / PAGE_SIZE;
     for (int i = 0; i < PAGE_NUM; ++i) {
