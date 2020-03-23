@@ -61,6 +61,7 @@ static void* kalloc(size_t size)
     int cpu = _cpu();
     //printf("now_cpu:%d\n", cpu);
     if (kmem_cache[cpu][cachenum].list == NULL || kmem_cache[cpu][cachenum].list->full) {
+        if (freePageHead == NULL) return NULL;
         spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
         freePageHead= freePageHead->nxt;
