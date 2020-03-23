@@ -162,7 +162,7 @@ static void pmm_init()
         //printf("%p %p\n", pages[i].header, pages[i].data);
     }
     freePageHead = &pages[0];
-    printf("%d %p %p\n",PAGE_NUM, pages[0].nxt, freePageHead);
+    //printf("%d %p %p\n",PAGE_NUM, pages[0].nxt, freePageHead);
     //printf("%d %d %d\n", HDR_SIZE, PAGE_SIZE, sizeof(page_t));
     //printf("%p %p %p %d\n", _heap.end, kmem_cache, ((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))), PAGE_NUM);
 }
