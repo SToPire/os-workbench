@@ -60,7 +60,7 @@ static void* kalloc(size_t size)
     }
     int cpu = _cpu();
     bool new_page = false;
-
+    spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
     page_t* curPage = kmem_cache[cpu][cachenum].list;
 
     if (curPage == NULL)
@@ -75,6 +75,8 @@ static void* kalloc(size_t size)
             }
         }
     }
+    spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+
     if (new_page) {
         if (freePageHead == NULL) return NULL;
         spin_lock(&freePageHead->lock);
@@ -114,7 +116,7 @@ static void* kalloc(size_t size)
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             if (++curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
             spin_unlock(&curPage->lock);
-            printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
+            //printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
