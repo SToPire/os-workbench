@@ -61,7 +61,6 @@ static void* kalloc(size_t size)
         ++cachenum;
     }
     int cpu = _cpu();
-    printf("%d\n",cpu);
     bool new_page = false;
     //spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
     page_t* curPage = kmem_cache[cpu][cachenum].list;
@@ -79,6 +78,7 @@ static void* kalloc(size_t size)
         }
     }
     ///spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+    printf("%d\n",cpu);
 
     if (new_page) {
         if (freePageHead == NULL) return NULL;
