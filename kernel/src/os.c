@@ -10,7 +10,7 @@ static void os_run()
     for (const char* s = "Hello World from CPU #*\n"; *s; s++) {
         _putc(*s == '*' ? '0' + _cpu() : *s);
     }
-    for (int i = 1; i <= 2000000; i++)
+    for (int i = 1; i <= 100000; i++)
         pmm->alloc(1);
 
     while (1)
