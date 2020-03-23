@@ -143,7 +143,7 @@ static void pmm_init()
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
     for (int i = CPU_NUM - 1; i >= 0;--i){
-        kmem_cache[i] = (cache_t*)_heap.end - i * 13;
+        kmem_cache[i] = (cache_t*)_heap.end - (CPU_NUM-i) * 13;
         printf("%p\n", kmem_cache[i]);
     }
     for (int i = 0; i < CPU_NUM; ++i){
