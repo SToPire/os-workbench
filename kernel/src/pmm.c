@@ -60,11 +60,11 @@ static void* kalloc(size_t size)
     int cpu = _cpu();
     printf("now_cpu:%d\n", cpu);
     if (kmem_cache[cpu][cachenum].list == NULL || kmem_cache[cpu][cachenum].list->full) {
-        spin_lock(&freePageHead->lock);
+        //spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
         page_t* fPH_nxt = freePageHead->nxt;
         freePageHead = fPH_nxt;
-        spin_unlock(&tmp->lock);
+        //spin_unlock(&tmp->lock);
 
         printf("%d %d\n", cpu, cachenum);
         memset(tmp->header, 0, sizeof(tmp->header));
