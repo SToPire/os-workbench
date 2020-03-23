@@ -128,7 +128,7 @@ static void* kalloc(size_t size)
 static void kfree(void* ptr)
 {
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
-    //if (curPage->cpuid != _cpu()) return;
+    if (curPage->cpuid != _cpu()) return;
     spin_lock(&curPage->lock);
     int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
