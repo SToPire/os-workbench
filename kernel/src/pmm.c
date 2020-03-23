@@ -80,7 +80,10 @@ static void* kalloc(size_t size)
     ///spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
-        if (freePageHead == NULL) return NULL;
+        if (freePageHead == NULL){
+            printf("Failed allocation.\n");
+            return NULL;
+        }
         spin_lock(&L);
         page_t* tmp = freePageHead;
         freePageHead = freePageHead->nxt;
@@ -127,7 +130,7 @@ static void* kalloc(size_t size)
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     } while (oldcnt != curPage->bitmapcnt);
     spin_unlock(&curPage->lock);
-
+    printf("Failed allocation.\n");
     return NULL;
 }
 
