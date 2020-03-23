@@ -68,13 +68,14 @@ static void* kalloc(size_t size)
         new_page = true;
     else {
         while (curPage->full == true) {
-        printf("tes\n");
             if(curPage->nxt) curPage = curPage->nxt;
             else
                 new_page = true;
         }
     }
     if (new_page) {
+        printf("tes\n");
+
         if (freePageHead == NULL) return NULL;
         spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
