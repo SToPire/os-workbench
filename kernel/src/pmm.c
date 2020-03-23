@@ -57,7 +57,6 @@ static void* kalloc(size_t size)
         ++cachenum;
     }
     if (kmem_cache[cachenum].list == NULL || kmem_cache[cachenum].list->full) {
-        printf("ss\n");
         //spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
         page_t* fPH_nxt = freePageHead->nxt;
@@ -76,6 +75,8 @@ static void* kalloc(size_t size)
 
         kmem_cache[cachenum].list = tmp;
     }
+    printf("ss\n");
+
     page_t* curPage = kmem_cache[cachenum].list;
     //spin_lock(&curPage->lock);
     if (sz == 4096) {
