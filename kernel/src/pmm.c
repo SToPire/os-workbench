@@ -60,7 +60,7 @@ static void* kalloc(size_t size)
     }
     int cpu = _cpu();
     //printf("now_cpu:%d\n", cpu);
-    bool new_page=0;
+    bool new_page = false;
 
     page_t* curPage = kmem_cache[cpu][cachenum].list;
 
@@ -74,8 +74,6 @@ static void* kalloc(size_t size)
         }
     }
     if (new_page) {
-        printf("tes\n");
-
         if (freePageHead == NULL) return NULL;
         spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
@@ -105,6 +103,7 @@ static void* kalloc(size_t size)
 
     spin_lock(&curPage->lock);
     //spin_lock(&L);
+    printf("tes\n");
 
     int oldcnt = curPage->bitmapcnt;
     do {
