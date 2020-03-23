@@ -31,6 +31,7 @@ typedef union page {
 
 typedef struct __pmm_cache {
     page_t* list;
+    //spinlock_t cache_lock;
 } cache_t;
 
 page_t* freePageHead;
@@ -116,7 +117,8 @@ static void* kalloc(size_t size)
 static void kfree(void* ptr)
 {
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
-    //spin_lock(&curPage->lock);
+    spin_lock(&curPage->lock);
+    int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
     //printf("%p %p %d\n", ptr, curPage, num);
     setUnit(curPage->bitmap, num, 0);
@@ -127,12 +129,12 @@ static void kfree(void* ptr)
             curPage->nxt->pre = curPage->pre;
         } else {
             curPage->nxt->pre = NULL;
-            kmem_cache[_cpu()][curPage->cachenum].list = curPage->nxt;
+            kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
         }
         curPage->nxt = freePageHead;
         freePageHead = curPage;
     }
-    //spin_unlock(&curPage->lock);
+    spin_unlock(&curPage->lock);
 }
 
 static void pmm_init()
