@@ -35,7 +35,7 @@ typedef struct __pmm_cache {
 } cache_t;
 
 page_t* freePageHead;
-cache_t** kmem_cache;
+cache_t* kmem_cache[CPU_NUM];
 page_t* pages;
 
 bool isUnitUsing(uint64_t* bitmap, bool num)
@@ -142,11 +142,12 @@ static void pmm_init()
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
-    kmem_cache = (cache_t**)((uintptr_t)_heap.end - 13 * CPU_NUM*sizeof(cache_t));
-    printf("%p\n",kmem_cache);
+    for (int i = CPU_NUM - 1; i >= 0;--i){
+        kmem_cache[i] = (cache_t*)_heap.end - i * 13;
+        printf("%p\n", kmem_cache[i]);
+    }
     for (int i = 0; i < CPU_NUM; ++i){
         for (int j = 0; j < 13; ++j) {
-            printf("%d %d %p\n", i, j,&kmem_cache[i][j]);
             kmem_cache[i][j].list = NULL;
         }}
     pages = (page_t*)_heap.start;
