@@ -11,8 +11,8 @@ static void os_run()
         _putc(*s == '*' ? '0' + _cpu() : *s);
     }
     for (int i = 1; i <= 4; i++) {
-        void* a = pmm->alloc(1);
-        pmm->free(a);
+        pmm->alloc(1);
+        //pmm->free(a);
     }
     while (1)
         ;
