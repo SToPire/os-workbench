@@ -167,6 +167,7 @@ static void pmm_init()
 
     pages = (page_t*)_heap.start;
     const int PAGE_NUM = (((uintptr_t)(_heap.end - CPU_NUM * 13) & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))) - (uintptr_t)_heap.start) / PAGE_SIZE;
+    printf("PAGENUM = %d\n", PAGE_NUM);
     for (int i = 0; i < PAGE_NUM; ++i) {
         pages[i].nxt = &pages[i + 1];
         spin_init(&pages[i].lock);
