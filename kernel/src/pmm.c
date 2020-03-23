@@ -51,7 +51,7 @@ spinlock_t L;
 static void* kalloc(size_t size)
 {
     printf("ss\n");
-    spin_lock(&L);
+    //spin_lock(&L);
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
@@ -106,7 +106,7 @@ static void* kalloc(size_t size)
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     }
     //spin_unlock(&curPage->lock);
-    spin_unlock(&L);
+    //spin_unlock(&L);
     return NULL;
 }
 
