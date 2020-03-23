@@ -63,6 +63,7 @@ static void* kalloc(size_t size)
         //spin_lock(&freePageHead->lock);
         page_t* tmp = freePageHead;
         freePageHead= freePageHead->nxt;
+        printf("%p\n", freePageHead);
         //spin_unlock(&tmp->lock);
 
         printf("%d %d\n", cpu, cachenum);
