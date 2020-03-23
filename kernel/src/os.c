@@ -12,7 +12,7 @@ static void os_run()
     }
     //void* a[200000];
     for (int i = 0; i < 200; i++) {
-        pmm->alloc(64);
+        pmm->alloc(4096);
         //a[i] = pmm->alloc(1);
         //pmm->free(a[i]);
     }
