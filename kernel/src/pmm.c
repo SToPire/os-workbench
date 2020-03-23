@@ -146,9 +146,12 @@ static void pmm_init()
         kmem_cache[i] = (cache_t*)_heap.end - i * 13;
         printf("%p\n", kmem_cache[i]);
     }
-    for (int i = 0; i < CPU_NUM; ++i)
-        for (int j = 0; j < 13; ++j) 
+    for (int i = 0; i < CPU_NUM; ++i){
+        for (int j = 0; j < 13; ++j) {
             kmem_cache[i][j].list = NULL;
+            printf("%d %d %p\n", i, j, &kmem_cache[i][j]);
+        }
+    }
     pages = (page_t*)_heap.start;
     const int PAGE_NUM = (((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))) - (uintptr_t)_heap.start) / PAGE_SIZE;
     for (int i = 0; i < PAGE_NUM; ++i) {
