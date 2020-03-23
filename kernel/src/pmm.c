@@ -159,7 +159,7 @@ static void pmm_init()
     for (int i = 0; i < PAGE_NUM; ++i) {
         pages[i].nxt = &pages[i + 1];
         spin_init(&pages[i].lock);
-        //printf("%p %p\n", pages[i].header, pages[i].data);
+        printf("%p %p\n", pages[i].header, pages[i].data);
     }
     freePageHead = &pages[0];
     //printf("%p %p\n", pages[0].nxt, freePageHead);
