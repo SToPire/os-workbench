@@ -31,7 +31,7 @@ typedef union page {
 
 typedef struct __pmm_cache {
     page_t* list;
-    //spinlock_t cache_lock;
+    spinlock_t cache_lock;
 } cache_t;
 
 page_t* freePageHead;
@@ -71,8 +71,11 @@ static void* kalloc(size_t size)
 
         //printf("%d %d\n", cpu, cachenum);
         memset(tmp->header, 0, sizeof(tmp->header));
+        spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
         tmp->nxt = kmem_cache[cpu][cachenum].list;
         if (kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list->pre = tmp;
+        spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+
         tmp->unitsize = sz;
         tmp->cachenum = cachenum;
         tmp->cpuid = _cpu();
@@ -83,15 +86,16 @@ static void* kalloc(size_t size)
             tmp->data_align = (uintptr_t)tmp->data;
         tmp->maxUnit = ((uintptr_t)tmp->header + PAGE_SIZE - (uintptr_t)tmp->data_align) / sz;
 
+        spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
         kmem_cache[cpu][cachenum].list = tmp;
+        spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
     }
-    spin_unlock(&L);
     page_t* curPage = kmem_cache[cpu][cachenum].list;
     //spin_lock(&curPage->lock);
     if (sz == 4096) {
         curPage->full = true;
         curPage->obj_cnt = 1;
-        printf("%d:%p\n", _cpu(), curPage->data_align);
+        //printf("%d:%p\n", _cpu(), curPage->data_align);
         //spin_unlock(&curPage->lock);
         return (void*)curPage->data_align;
     }
@@ -109,13 +113,13 @@ static void* kalloc(size_t size)
             ++curPage->obj_cnt;
             if (curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
             //spin_unlock(&curPage->lock);
-            printf("%d:%p\n", _cpu(), ret);
+            //printf("%d:%p\n", _cpu(), ret);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     }
     //spin_unlock(&curPage->lock);
-    //spin_unlock(&L);
+    spin_unlock(&L);
     return NULL;
 }
 
@@ -134,7 +138,9 @@ static void kfree(void* ptr)
             if (curPage->nxt) curPage->nxt->pre = curPage->pre;
         } else {
             if (curPage->nxt) curPage->nxt->pre = NULL;
+            spin_lock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
             kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
+            spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
         }
         curPage->nxt = freePageHead;
         freePageHead = curPage;
