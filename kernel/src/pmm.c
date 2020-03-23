@@ -143,10 +143,10 @@ static void pmm_init()
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
     kmem_cache = (cache_t**)((uintptr_t)_heap.end - 13 * CPU_NUM*sizeof(cache_t));
+    printf("here\n");
     for (int i = 0; i < CPU_NUM; i++)
         for (int j = 0; j < 13; ++j) 
             kmem_cache[i][j].list = NULL;
-    printf("here\n");
     pages = (page_t*)_heap.start;
     const int PAGE_NUM = (((uintptr_t)kmem_cache & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE))) - (uintptr_t)_heap.start) / PAGE_SIZE;
     for (int i = 0; i < PAGE_NUM; ++i) {
