@@ -100,7 +100,6 @@ static void* kalloc(size_t size)
         curPage = kmem_cache[cpu][cachenum].list = tmp;
         spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
     }
-    printf("tes\n");
 
     spin_lock(&curPage->lock);
     //spin_lock(&L);
@@ -113,7 +112,7 @@ static void* kalloc(size_t size)
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             ++curPage->obj_cnt;
             if (curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
-            //spin_unlock(&curPage->lock);
+            spin_unlock(&curPage->lock);
             printf("%d:%p\n", _cpu(), ret);
             return ret;
         }
