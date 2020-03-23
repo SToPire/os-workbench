@@ -113,7 +113,7 @@ static void* kalloc(size_t size)
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             if (++curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
-            //spin_unlock(&curPage->lock);
+            spin_unlock(&curPage->lock);
             printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             return ret;
         }
