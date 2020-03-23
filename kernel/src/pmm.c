@@ -55,6 +55,7 @@ spinlock_t G;
 int cnt = 0;
 static void* kalloc(size_t size)
 {
+    printf("sss\n");
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
