@@ -147,7 +147,7 @@ static void kfree(void* ptr)
         curPage->nxt = freePageHead;
         freePageHead = curPage;
     }
-   spin_unlock(&curPage->lock);
+    spin_unlock(&curPage->lock);
 }
 
 static void pmm_init()
