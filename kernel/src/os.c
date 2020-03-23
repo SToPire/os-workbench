@@ -11,12 +11,13 @@ static void os_run()
         _putc(*s == '*' ? '0' + _cpu() : *s);
     }
     void* a[200000];
+    printf("%p\n", a);
     for (int i = 0; i < 8000; i+=2) {
          a[i+_cpu()] = pmm->alloc(4096);
     }
-    for (int i = 0; i < 8000; i += 2) {
-        pmm->free(a[i + _cpu()]);
-    }
+    // for (int i = 0; i < 8000; i += 2) {
+    //     pmm->free(a[i + _cpu()]);
+    // }
 
     // for (int i = 0; i < 8000; i++) {
     //     pmm->free(a[i]);
