@@ -146,7 +146,7 @@ static void pmm_init()
     printf("%p\n",kmem_cache);
     for (int i = 0; i < CPU_NUM; ++i){
         for (int j = 0; j < 13; ++j) {
-            printf("%d %d\n", i, j);
+            printf("%d %d %p\n", i, j,&kmem_cache[i][j]);
             kmem_cache[i][j].list = NULL;
         }}
     pages = (page_t*)_heap.start;
