@@ -105,7 +105,7 @@ static void* kalloc(size_t size)
 
     int oldcnt = curPage->bitmapcnt;
     do {
-        printf("%d\n", curPage->bitmapcnt);
+        printf("sssss\n");
         if (!isUnitUsing(curPage->bitmap, curPage->bitmapcnt)) {
             setUnit(curPage->bitmap, curPage->bitmapcnt, 1);
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
