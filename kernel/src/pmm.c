@@ -105,14 +105,13 @@ static void* kalloc(size_t size)
 
     int oldcnt = curPage->bitmapcnt;
     do {
-        printf("sssss\n");
         if (!isUnitUsing(curPage->bitmap, curPage->bitmapcnt)) {
             setUnit(curPage->bitmap, curPage->bitmapcnt, 1);
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             if (++curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
             //spin_unlock(&curPage->lock);
-            //printf("%d:%p\n", _cpu(), ret);
+            printf("%d:%p %d\n", _cpu(), ret,curPage->bitmapcnt);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
