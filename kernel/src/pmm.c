@@ -100,10 +100,10 @@ static void* kalloc(size_t size)
         curPage = kmem_cache[cpu][cachenum].list = tmp;
         spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
     }
+    printf("tes\n");
 
     spin_lock(&curPage->lock);
     //spin_lock(&L);
-    printf("tes\n");
 
     int oldcnt = curPage->bitmapcnt;
     do {
