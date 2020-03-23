@@ -60,7 +60,7 @@ static void* kalloc(size_t size)
     }
     int cpu = _cpu();
     bool new_page = false;
-    spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
+    //spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
     page_t* curPage = kmem_cache[cpu][cachenum].list;
 
     if (curPage == NULL)
@@ -75,14 +75,14 @@ static void* kalloc(size_t size)
             }
         }
     }
-    spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+    ///spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
         if (freePageHead == NULL) return NULL;
-        spin_lock(&freePageHead->lock);
+        spin_lock(&L);
         page_t* tmp = freePageHead;
         freePageHead = freePageHead->nxt;
-        spin_unlock(&tmp->lock);
+        spin_unlock(&L);
 
         memset(tmp->header, 0, sizeof(tmp->header));
         spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
@@ -106,8 +106,6 @@ static void* kalloc(size_t size)
     }
 
     spin_lock(&curPage->lock);
-    //spin_lock(&L);
-
     int oldcnt = curPage->bitmapcnt;
     do {
         if (!isUnitUsing(curPage->bitmap, curPage->bitmapcnt)) {
@@ -121,7 +119,6 @@ static void* kalloc(size_t size)
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     } while (oldcnt != curPage->bitmapcnt);
-    //spin_unlock(&L);
     spin_unlock(&curPage->lock);
 
     return NULL;
@@ -130,7 +127,7 @@ static void* kalloc(size_t size)
 static void kfree(void* ptr)
 {
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
-    if (curPage->cpuid != _cpu()) return;
+    //if (curPage->cpuid != _cpu()) return;
     spin_lock(&curPage->lock);
     int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
@@ -146,8 +143,10 @@ static void kfree(void* ptr)
             kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
             spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
         }
+        spin_lock(&L);
         curPage->nxt = freePageHead;
         freePageHead = curPage;
+        spin_unlock(&L);
     }
     spin_unlock(&curPage->lock);
 }
