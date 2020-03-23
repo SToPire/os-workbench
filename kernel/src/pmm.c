@@ -55,13 +55,13 @@ spinlock_t G;
 int cnt = 0;
 static void* kalloc(size_t size)
 {
-    printf("sss\n");
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
         ++cachenum;
     }
     int cpu = _cpu();
+    printf("%d\n",cpu);
     bool new_page = false;
     //spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
     page_t* curPage = kmem_cache[cpu][cachenum].list;
