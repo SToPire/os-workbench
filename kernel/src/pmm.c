@@ -135,7 +135,7 @@ static void* kalloc(size_t size)
                 // assert(curPage == kmem_cache[cpu][cachenum].list);
                 //spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
                 // if (curPage->nxt) curPage->nxt->pre = NULL;
-                kmem_cache[cpu][cachenum].list = curPage->nxt;
+                //kmem_cache[cpu][cachenum].list = curPage->nxt;
 
                 //if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
                 // curPage->nxt = kmem_cache[cpu][cachenum].full;
@@ -154,6 +154,7 @@ static void* kalloc(size_t size)
             spin_unlock(&curPage->lock);
             return ret;
         }
+        assert(0);
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     } while (oldcnt != curPage->bitmapcnt);
     //spin_unlock(&G);
