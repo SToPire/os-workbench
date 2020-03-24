@@ -135,13 +135,13 @@ static void* kalloc(size_t size)
                 curPage->full = 1;
                 // assert(curPage == kmem_cache[cpu][cachenum].list);
                 // spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
-                if (curPage->nxt) curPage->nxt->pre = NULL;
-                kmem_cache[cpu][cachenum].list = curPage->nxt;
+                // if (curPage->nxt) curPage->nxt->pre = NULL;
+                // kmem_cache[cpu][cachenum].list = curPage->nxt;
 
-                if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
-                curPage->nxt = kmem_cache[cpu][cachenum].full;
-                curPage->pre = NULL;
-                kmem_cache[cpu][cachenum].full = curPage;
+                // if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
+                // curPage->nxt = kmem_cache[cpu][cachenum].full;
+                // curPage->pre = NULL;
+                // kmem_cache[cpu][cachenum].full = curPage;
                 // spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
