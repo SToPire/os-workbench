@@ -144,7 +144,7 @@ static void* kalloc(size_t size)
                 // if (curPage->nxt) curPage->nxt->pre = NULL;
                 if(curPage->nxt == NULL) kmem_cache[cpu][cachenum].list = NULL;
 
-                if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
+                //if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
                 // curPage->nxt = kmem_cache[cpu][cachenum].full;
                 // curPage->pre = NULL;
                 // kmem_cache[cpu][cachenum].full = curPage;
