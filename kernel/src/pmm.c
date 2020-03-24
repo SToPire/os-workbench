@@ -132,7 +132,6 @@ static void* kalloc(size_t size)
     spin_lock(&curPage->lock);
     int oldcnt = curPage->bitmapcnt;
     do {
-            printf("oldpnt:%d bmpcnt:%d\n",oldcnt,curPage->bitmapcnt);
             if (!isUnitUsing(curPage, curPage->bitmapcnt)) {
                 setUnit(curPage, curPage->bitmapcnt, 1);
                 void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
@@ -151,8 +150,7 @@ static void* kalloc(size_t size)
                     // kmem_cache[cpu][cachenum].full = curPage;
                     //spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
                 }
-                printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full, freePageHead);
-                printf("bmp:%lu\n", curPage->bitmap[0]);
+                //printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full, freePageHead);
 
                 //printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full,freePageHead);
                 //spin_unlock(&G);
@@ -180,7 +178,6 @@ static void kfree(void* ptr)
     // }
     //int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
-    printf("bitmap%d will be freed\n", num);
     setUnit(curPage, num, 0);
 
     // if (curPage->full) {
