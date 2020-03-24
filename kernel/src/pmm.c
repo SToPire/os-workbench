@@ -163,7 +163,6 @@ static void* kalloc(size_t size)
 
 static void kfree(void* ptr)
 {
-    printf("%x\n", ptr);
     spin_lock(&G);
     assert(ptr >= _heap.start && ptr <= _heap.end);
 

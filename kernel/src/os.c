@@ -13,9 +13,9 @@ static void os_run()
     void* a[200000];
     printf("%p\n", a);
     for (int i = 1; i <= 5;i++){
-        a[i+5*_cpu()] = pmm->alloc(4096);
+        printf("%d\n", i + 5 * _cpu());
+        a[i + 5 * _cpu()] = pmm->alloc(4096);
     }
-    printf("os:%x\n", a[2]);
     if (_cpu() == 1) pmm->free(a[2]);
     pmm->alloc(4096);
     pmm->alloc(4096);
