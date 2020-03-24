@@ -52,11 +52,10 @@ void setUnit(page_t* page, int num, bool b)
 {
     //spin_lock(&page->lock);
     assert(b == 0 || b == 1);
-    if (b == 0)
+    if (b == 1)
         page->bitmap[num / 64] |= (1 << (num % 64));
     else
         page->bitmap[num / 64] &= ~(1 << (num % 64));
-    printf("%d %d \n", num / 64, page->bitmap[num / 64]);
 
     //spin_unlock(&page->lock);
 }
