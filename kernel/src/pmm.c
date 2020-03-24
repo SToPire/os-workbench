@@ -42,11 +42,7 @@ page_t* pages;
 
 bool isUnitUsing(page_t* page, bool num)
 {
-    //spin_lock(&page->lock);
-    bool ret = (page->bitmap[num / 64]) & (1 << (num % 64));
-    //spin_unlock(&page->lock);
-
-    return ret;
+    return (page->bitmap[num / 64]) & (1 << (num % 64));
 }
 void setUnit(page_t* page, int num, bool b)
 {
@@ -92,9 +88,7 @@ static void* kalloc(size_t size)
     spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
-        // spin_lock(&cnttt);
-        // cnt++;
-        // spin_unlock(&cnttt);
+        
 
         spin_lock(&fPHLock);
         if (freePageHead == NULL) {
@@ -150,9 +144,13 @@ static void* kalloc(size_t size)
                 // kmem_cache[cpu][cachenum].full = curPage;
                 //spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
-            printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full, freePageHead);
+            //printf("%d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full, freePageHead);
+            
+            spin_lock(&cnttt);
+            cnt++;
+            spin_unlock(&cnttt);
 
-            //printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full,freePageHead);
+            printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full,freePageHead);
             //spin_unlock(&G);
             spin_unlock(&curPage->lock);
             return ret;
@@ -168,14 +166,15 @@ static void* kalloc(size_t size)
 
 static void kfree(void* ptr)
 {
+    return;
     assert(ptr >= _heap.start && ptr <= _heap.end);
 
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
     spin_lock(&curPage->lock);
-    // if (curPage->cpuid != _cpu()) {
-    //     spin_unlock(&curPage->lock);
-    //     return;
-    // }
+    if (curPage->cpuid != _cpu()) {
+        spin_unlock(&curPage->lock);
+        return;
+    }
     int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
     setUnit(curPage, num, 0);
