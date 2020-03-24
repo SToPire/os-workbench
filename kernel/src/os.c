@@ -16,7 +16,7 @@ static void os_run()
         printf("%d\n", i + 5 * _cpu());
         a[i + 5 * _cpu()] = pmm->alloc(4096);
     }
-    if (_cpu() == 1) pmm->free(a[2]);
+    //if (_cpu() == 1) pmm->free(a[2]);
     pmm->alloc(4096);
     pmm->alloc(4096);
 
