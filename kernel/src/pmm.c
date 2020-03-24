@@ -40,17 +40,25 @@ spinlock_t fPHLock;
 cache_t* kmem_cache[CPU_NUM];
 page_t* pages;
 
-bool isUnitUsing(uint64_t* bitmap, bool num)
+bool isUnitUsing(page_t* page, bool num)
 {
-    return (bitmap[num / 64]) & (1 << (num % 64));
+    spin_lock(&page->lock);
+    bool ret = (page->bitmap[num / 64]) & (1 << (num % 64));
+    spin_unlock(&page->lock);
+
+    return ret;
 }
-void setUnit(uint64_t* bitmap, int num, bool b)
+void setUnit(page_t* page, int num, bool b)
 {
+    spin_lock(&page->lock);
+
     assert(b == 0 || b == 1);
     if (b == 0)
-        bitmap[num / 64] |= (1 << (num % 64));
+        page->bitmap[num / 64] |= (1 << (num % 64));
     else
-        bitmap[num / 64] &= ~(1 << (num % 64));
+        page->bitmap[num / 64] &= ~(1 << (num % 64));
+
+    spin_unlock(&page->lock);
 }
 spinlock_t L;
 spinlock_t G;
@@ -117,15 +125,16 @@ static void* kalloc(size_t size)
     spin_lock(&curPage->lock);
     int oldcnt = curPage->bitmapcnt;
     do {
-        if (!isUnitUsing(curPage->bitmap, curPage->bitmapcnt)) {
-            setUnit(curPage->bitmap, curPage->bitmapcnt, 1);
+        if (!isUnitUsing(curPage, curPage->bitmapcnt)) {
+            spin_lock(&L);
+            setUnit(curPage, curPage->bitmapcnt, 1);
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
-            if (++curPage->obj_cnt == curPage->maxUnit){
+            if (++curPage->obj_cnt == curPage->maxUnit) {
                 curPage->full = 1;
                 spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
-                if(curPage->pre) curPage->pre->nxt = curPage->nxt;
-                if(curPage->nxt) curPage->nxt->pre = curPage->pre;
+                if (curPage->pre) curPage->pre->nxt = curPage->nxt;
+                if (curPage->nxt) curPage->nxt->pre = curPage->pre;
                 if (curPage == kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list = curPage->nxt;
 
                 if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
@@ -141,12 +150,14 @@ static void* kalloc(size_t size)
 
             //printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt,_cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             spin_unlock(&curPage->lock);
+            spin_unlock(&L);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     } while (oldcnt != curPage->bitmapcnt);
     spin_unlock(&curPage->lock);
     //printf("Failed allocation.\n");
+
     return NULL;
 }
 
@@ -155,12 +166,12 @@ static void kfree(void* ptr)
     assert(ptr >= _heap.start && ptr <= _heap.end);
 
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
-    //   if (curPage->cpuid != _cpu()) return;
+    //if (curPage->cpuid != _cpu()) return;
     spin_lock(&curPage->lock);
     int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
-    setUnit(curPage->bitmap, num, 0);
-    if(curPage->full){
+    setUnit(curPage, num, 0);
+    if (curPage->full) {
         spin_lock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
 
         if (curPage->nxt) curPage->nxt->pre = curPage->pre;
