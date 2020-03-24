@@ -12,28 +12,13 @@ static void os_run()
     }
     void* a[200000];
     printf("%p\n", a);
-    for (int i = 0; i < 16000; i+=2) {
-         a[i+_cpu()] = pmm->alloc(1024);
+    for (int i = 1; i <= 5;i++){
+        a[i] = pmm->alloc(4096);
     }
-    // for (int i = 15998; i >= 0; i -= 2) {
-    //     pmm->free(a[i + _cpu()]);
-    // }
-    // for (int i = 0; i < 16000; i += 2) {
-    //     a[i + _cpu()] = pmm->alloc(1024);
-    // }
-    // for (int i = 15998; i >= 0; i -= 2) {
-    //     pmm->free(a[i + _cpu()]);
-    // }
-    // for (int i = 0; i < 16000; i += 2) {
-    //     a[i + _cpu()] = pmm->alloc(4096);
-    // }
-    // for (int i = 0; i < 16000; i += 2) {
-    //     pmm->free(a[i + _cpu()]);
-    // }
-   // pmm->alloc(4096);
-    // for (int i = 0; i < 8000; i++) {
-    //     pmm->free(a[i]);
-    // }
+    pmm -> free(a[2]);
+    pmm->alloc(4096);
+    pmm->alloc(4096);
+
     while (1)
         ;
 }
