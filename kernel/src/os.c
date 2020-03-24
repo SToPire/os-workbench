@@ -24,7 +24,7 @@ static void os_run()
     // for (int i = 0; i < 16000; i += 2) {
     //     pmm->free(a[i + _cpu()]);
     // }
-    pmm->alloc(4096);
+   // pmm->alloc(4096);
     // for (int i = 0; i < 8000; i++) {
     //     pmm->free(a[i]);
     // }
