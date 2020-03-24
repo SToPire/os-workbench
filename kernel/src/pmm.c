@@ -50,7 +50,7 @@ bool isUnitUsing(page_t* page, bool num)
 }
 void setUnit(page_t* page, int num, bool b)
 {
-    spin_lock(&page->lock);
+    //spin_lock(&page->lock);
 
     assert(b == 0 || b == 1);
     if (b == 0)
@@ -58,7 +58,7 @@ void setUnit(page_t* page, int num, bool b)
     else
         page->bitmap[num / 64] &= ~(1 << (num % 64));
 
-    spin_unlock(&page->lock);
+    //spin_unlock(&page->lock);
 }
 spinlock_t L;
 spinlock_t G;
