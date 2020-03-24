@@ -50,7 +50,7 @@ bool isUnitUsing(page_t* page, bool num)
 }
 void setUnit(page_t* page, int num, bool b)
 {
-    //spin_lock(&page->lock);
+    spin_lock(&page->lock);
 
     assert(b == 0 || b == 1);
     if (b == 0)
@@ -58,7 +58,7 @@ void setUnit(page_t* page, int num, bool b)
     else
         page->bitmap[num / 64] &= ~(1 << (num % 64));
 
-    //spin_unlock(&page->lock);
+    spin_unlock(&page->lock);
 }
 spinlock_t L;
 spinlock_t G;
@@ -122,7 +122,7 @@ static void* kalloc(size_t size)
         spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
     }
 
-    spin_lock(&curPage->lock);
+    //spin_lock(&curPage->lock);
     int oldcnt = curPage->bitmapcnt;
     do {
         if (!isUnitUsing(curPage, curPage->bitmapcnt)) {
@@ -143,17 +143,17 @@ static void* kalloc(size_t size)
                 spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
-            spin_lock(&G);
-            cnt++;
-            spin_unlock(&G);
+            // spin_lock(&G);
+            // cnt++;
+            // spin_unlock(&G);
 
-            printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt,_cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
-            spin_unlock(&curPage->lock);
+            // printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt,_cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
+            //spin_unlock(&curPage->lock);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     } while (oldcnt != curPage->bitmapcnt);
-    spin_unlock(&curPage->lock);
+    //spin_unlock(&curPage->lock);
     //printf("Failed allocation.\n");
 
     return NULL;
