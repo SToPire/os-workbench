@@ -60,11 +60,13 @@ void setUnit(page_t* page, int num, bool b)
 
     //spin_unlock(&page->lock);
 }
-spinlock_t L;
+spinlock_t cnttt;
 spinlock_t G;
 int cnt = 0;
 static void* kalloc(size_t size)
 {
+    spin_lock(&G);
+
     int sz = 1, cachenum = 0;
     while (sz < size) {
         sz <<= 1;
@@ -91,9 +93,7 @@ static void* kalloc(size_t size)
     spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
-        spin_lock(&G);
-        cnt++;
-        spin_unlock(&G);
+        
         spin_lock(&fPHLock);
         if (freePageHead == NULL) {
             //printf("Failed allocation.\n");
@@ -124,7 +124,6 @@ static void* kalloc(size_t size)
         spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
     }
 
-    spin_lock(&G);
     int oldcnt = curPage->bitmapcnt;
     do {
         if (!isUnitUsing(curPage, curPage->bitmapcnt)) {
@@ -145,9 +144,13 @@ static void* kalloc(size_t size)
                 spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
+            spin_lock(&cnttt);
+            cnt++;
+            spin_unlock(&cnttt);
+
             spin_unlock(&G);
             printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
-            spin_unlock(&curPage->lock);
+            //spin_unlock(&curPage->lock);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
@@ -160,11 +163,11 @@ static void* kalloc(size_t size)
 
 static void kfree(void* ptr)
 {
+    spin_lock(&G);
     assert(ptr >= _heap.start && ptr <= _heap.end);
 
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
     //if (curPage->cpuid != _cpu()) return;
-    spin_lock(&curPage->lock);
     int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
 
@@ -200,7 +203,7 @@ static void kfree(void* ptr)
         spin_unlock(&fPHLock);
         spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
     }
-    spin_unlock(&curPage->lock);
+    spin_unlock(&G);
 
     //printf("free:%p\n", ptr);
 }
