@@ -170,11 +170,8 @@ static void kfree(void* ptr)
     spin_lock(&curPage->lock);
     int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
-   // spin_lock(&curPage->lock);
 
     setUnit(curPage, num, 0);
-
-    //spin_unlock(&curPage->lock);
 
     if (curPage->full) {
         spin_lock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
