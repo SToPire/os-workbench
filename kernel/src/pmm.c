@@ -31,10 +31,12 @@ typedef union page {
 
 typedef struct __pmm_cache {
     page_t* list;
+    page_t* full;
     spinlock_t cache_lock;
 } cache_t;
 
 page_t* freePageHead;
+spinlock_t fPHLock;
 cache_t* kmem_cache[CPU_NUM];
 page_t* pages;
 
@@ -62,25 +64,26 @@ static void* kalloc(size_t size)
     }
     int cpu = _cpu();
     bool new_page = false;
-    //spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
+    spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
     page_t* curPage = kmem_cache[cpu][cachenum].list;
 
     if (curPage == NULL)
         new_page = true;
     else {
-        while (curPage->full == true) {
-            if (curPage->nxt)
-                curPage = curPage->nxt;
-            else {
-                new_page = true;
-                break;
-            }
-        }
+        assert(!curPage->full);
+        // while (curPage->full == true) {
+        //     if (curPage->nxt)
+        //         curPage = curPage->nxt;
+        //     else {
+        //         new_page = true;
+        //         break;
+        //     }
+        // }
     }
-    ///spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+    spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
-        spin_lock(&L);
+        spin_lock(&fPHLock);
         //printf("current fPH:%p\n", freePageHead);
         if (freePageHead == NULL) {
             //printf("Failed allocation.\n");
@@ -88,7 +91,7 @@ static void* kalloc(size_t size)
         }
         page_t* tmp = freePageHead;
         freePageHead = freePageHead->nxt;
-        spin_unlock(&L);
+        spin_unlock(&fPHLock);
 
         memset(tmp->header, 0, sizeof(tmp->header));
         spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
@@ -118,14 +121,24 @@ static void* kalloc(size_t size)
             setUnit(curPage->bitmap, curPage->bitmapcnt, 1);
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
-            if (++curPage->obj_cnt == curPage->maxUnit) curPage->full = 1;
+            if (++curPage->obj_cnt == curPage->maxUnit){
+                curPage->full = 1;
+                spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
+                if(curPage->pre) curPage->pre->nxt = curPage->nxt;
+                if(curPage->nxt) curPage->nxt->pre = curPage->pre;
+                if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
+                curPage->nxt = kmem_cache[cpu][cachenum].full;
+                curPage->pre = NULL;
+                kmem_cache[cpu][cachenum].full = curPage;
+                spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+            }
+
+            // spin_lock(&G);
+            // cnt++;
+            // spin_unlock(&G);
+
+            //printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt,_cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             spin_unlock(&curPage->lock);
-
-            spin_lock(&G);
-            cnt++;
-            spin_unlock(&G);
-
-            printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt,_cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
@@ -138,12 +151,25 @@ static void* kalloc(size_t size)
 static void kfree(void* ptr)
 {
     assert(ptr >= _heap.start && ptr <= _heap.end);
+
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
-    //if (curPage->cpuid != _cpu()) return;
+    //   if (curPage->cpuid != _cpu()) return;
     spin_lock(&curPage->lock);
     int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
     setUnit(curPage->bitmap, num, 0);
+    if(curPage->full){
+        spin_lock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
+
+        if (curPage->nxt) curPage->nxt->pre = curPage->pre;
+        if (curPage->pre) curPage->pre->nxt = curPage->nxt;
+        if (kmem_cache[cpu][curPage->cachenum].list) kmem_cache[cpu][curPage->cachenum].list->pre = curPage;
+        curPage->nxt = kmem_cache[cpu][curPage->cachenum].list;
+        curPage->pre = NULL;
+        kmem_cache[cpu][curPage->cachenum].list = curPage;
+
+        spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
+    }
     curPage->full = false;
     if (--curPage->obj_cnt == 0) {
         spin_lock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
@@ -154,14 +180,14 @@ static void kfree(void* ptr)
             if (curPage->nxt) curPage->nxt->pre = NULL;
             kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
         }
-        spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
-        spin_lock(&L);
+        spin_lock(&fPHLock);
         curPage->nxt = freePageHead;
         freePageHead = curPage;
-        spin_unlock(&L);
+        spin_unlock(&fPHLock);
+        spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
     }
     spin_unlock(&curPage->lock);
-    printf("free:%p\n", ptr);
+    //printf("free:%p\n", ptr);
 }
 
 static void pmm_init()
