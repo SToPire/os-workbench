@@ -17,8 +17,11 @@ static void os_run()
     }
 
     if (_cpu() == 1) pmm->free(a[2]);
-   pmm->alloc(4096);
-   pmm->alloc(4096);
+    if(_cpu()==0)
+        for (volatile int i = 1; i <= 1000000;i++)
+            ;
+    pmm->alloc(4096);
+    pmm->alloc(4096);
 
     while (1)
         ;
