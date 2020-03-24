@@ -80,7 +80,7 @@ static void* kalloc(size_t size)
     if (curPage == NULL)
         new_page = true;
     else {
-        assert(!curPage->full);
+        //assert(!curPage->full);
         // while (curPage->full == true) {
         //     if (curPage->nxt)
         //         curPage = curPage->nxt;
@@ -131,9 +131,9 @@ static void* kalloc(size_t size)
             if (++curPage->obj_cnt == curPage->maxUnit) {
                 curPage->full = 1;
                 // spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
-                if (curPage->pre) curPage->pre->nxt = curPage->nxt;
-                if (curPage->nxt) curPage->nxt->pre = curPage->pre;
-                if (curPage == kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list = curPage->nxt;
+                //if (curPage->pre) curPage->pre->nxt = curPage->nxt;
+                if (curPage->nxt) curPage->nxt->pre = NULL;
+                kmem_cache[cpu][cachenum].list = curPage->nxt;
 
                 if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
                 curPage->nxt = kmem_cache[cpu][cachenum].full;
@@ -142,11 +142,11 @@ static void* kalloc(size_t size)
                 // spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
-            spin_lock(&cnttt);
-            cnt++;
-            spin_unlock(&cnttt);
+            // spin_lock(&cnttt);
+            // cnt++;
+            // spin_unlock(&cnttt);
 
-            printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
+            // printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             //spin_unlock(&G);
             //spin_unlock(&curPage->lock);
             return ret;

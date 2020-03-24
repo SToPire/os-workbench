@@ -4,7 +4,6 @@ static void os_init()
 {
     pmm->init();
 }
-static void* a[200000];
 
 static void os_run()
 {
@@ -12,9 +11,9 @@ static void os_run()
         _putc(*s == '*' ? '0' + _cpu() : *s);
     }
     
-    printf("%p\n", a);
+    // printf("%p\n", a);
     for (int i = 1; i <= 8000; i++) {
-        a[i + 5 * _cpu()] = pmm->alloc(4096);
+        pmm->alloc(4096);
     }
 
     // if (_cpu() == 1) {
