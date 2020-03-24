@@ -44,7 +44,7 @@ bool isUnitUsing(page_t* page, bool num)
 {
     printf("num/64=%d num%64=%d page->bitmap[num/64]=%lu 1 << (num % 64)=%d ret=%d\n",
            num / 64, num % 64, page->bitmap[num / 64], (1 << (num % 64)), (page->bitmap[num / 64]) & (1 << (num % 64)));
-    return (page->bitmap[num / 64]) & (1 << (num % 64));
+    return (page->bitmap[num / 64]) & ((uint64_t)1 << (num % 64));
 }
 void setUnit(page_t* page, int num, bool b)
 {
