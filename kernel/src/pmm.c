@@ -135,13 +135,13 @@ static void* kalloc(size_t size)
                 curPage->full = 1;
                 // assert(curPage == kmem_cache[cpu][cachenum].list);
                 // spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
-                // if (curPage->nxt) curPage->nxt->pre = NULL;
-                // kmem_cache[cpu][cachenum].list = curPage->nxt;
+                if (curPage->nxt) curPage->nxt->pre = NULL;
+                kmem_cache[cpu][cachenum].list = curPage->nxt;
 
-                // if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
-                // curPage->nxt = kmem_cache[cpu][cachenum].full;
-                // curPage->pre = NULL;
-                // kmem_cache[cpu][cachenum].full = curPage;
+                if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
+                curPage->nxt = kmem_cache[cpu][cachenum].full;
+                curPage->pre = NULL;
+                kmem_cache[cpu][cachenum].full = curPage;
                 // spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
@@ -163,53 +163,53 @@ static void* kalloc(size_t size)
 static void kfree(void* ptr)
 {
     return;
-    spin_lock(&G);
-    assert(ptr >= _heap.start && ptr <= _heap.end);
+    // spin_lock(&G);
+    // assert(ptr >= _heap.start && ptr <= _heap.end);
 
-    page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
-    // if (curPage->cpuid != _cpu()) {
-    //     spin_unlock(&G);
-    //     return;
+    // page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
+    // // if (curPage->cpuid != _cpu()) {
+    // //     spin_unlock(&G);
+    // //     return;
+    // // }
+    //     int cpu = curPage->cpuid;
+    //     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
+
+    //     setUnit(curPage, num, 0);
+
+    //     // if (curPage->full) {
+    //     //     spin_lock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
+
+    //     //     if (curPage->nxt) curPage->nxt->pre = curPage->pre;
+    //     //     if (curPage->pre) curPage->pre->nxt = curPage->nxt;
+    //     //     if (curPage == kmem_cache[cpu][curPage->cachenum].full) kmem_cache[cpu][curPage->cachenum].full = curPage->nxt;
+
+    //     //     if (kmem_cache[cpu][curPage->cachenum].list) kmem_cache[cpu][curPage->cachenum].list->pre = curPage;
+    //     //     curPage->nxt = kmem_cache[cpu][curPage->cachenum].list;
+    //     //     curPage->pre = NULL;
+    //     //     kmem_cache[cpu][curPage->cachenum].list = curPage;
+
+    //     //     spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
+    //     // }
+    //     curPage->full = false;
+    //     if (--curPage->obj_cnt == 0) {
+    //         //spin_lock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
+    //         // if (curPage->pre) {
+    //         //     curPage->pre->nxt = curPage->nxt;
+    //         //     if (curPage->nxt) curPage->nxt->pre = curPage->pre;
+    //         // } else {
+    //         //     if (curPage->nxt) curPage->nxt->pre = NULL;
+    //         //     kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
+    //         // }
+    //         if (kmem_cache[cpu][curPage->cachenum].list == curPage) kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
+    //         if (curPage->pre) curPage->pre->nxt = curPage->nxt;
+    //         if (curPage->nxt) curPage->nxt->pre = curPage->pre;
+    //        // spin_lock(&fPHLock);
+    //         curPage->nxt = freePageHead;
+    //         freePageHead = curPage;
+    //         //spin_unlock(&fPHLock);
+    //        // spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
     // }
-        int cpu = curPage->cpuid;
-        int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
-
-        setUnit(curPage, num, 0);
-
-        // if (curPage->full) {
-        //     spin_lock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
-
-        //     if (curPage->nxt) curPage->nxt->pre = curPage->pre;
-        //     if (curPage->pre) curPage->pre->nxt = curPage->nxt;
-        //     if (curPage == kmem_cache[cpu][curPage->cachenum].full) kmem_cache[cpu][curPage->cachenum].full = curPage->nxt;
-
-        //     if (kmem_cache[cpu][curPage->cachenum].list) kmem_cache[cpu][curPage->cachenum].list->pre = curPage;
-        //     curPage->nxt = kmem_cache[cpu][curPage->cachenum].list;
-        //     curPage->pre = NULL;
-        //     kmem_cache[cpu][curPage->cachenum].list = curPage;
-
-        //     spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
-        // }
-        curPage->full = false;
-        if (--curPage->obj_cnt == 0) {
-            //spin_lock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
-            // if (curPage->pre) {
-            //     curPage->pre->nxt = curPage->nxt;
-            //     if (curPage->nxt) curPage->nxt->pre = curPage->pre;
-            // } else {
-            //     if (curPage->nxt) curPage->nxt->pre = NULL;
-            //     kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
-            // }
-            if (kmem_cache[cpu][curPage->cachenum].list == curPage) kmem_cache[cpu][curPage->cachenum].list = curPage->nxt;
-            if (curPage->pre) curPage->pre->nxt = curPage->nxt;
-            if (curPage->nxt) curPage->nxt->pre = curPage->pre;
-           // spin_lock(&fPHLock);
-            curPage->nxt = freePageHead;
-            freePageHead = curPage;
-            //spin_unlock(&fPHLock);
-           // spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
-    }
-    spin_unlock(&G);
+    // spin_unlock(&G);
 
     //printf("free:%p\n", ptr);
 }
