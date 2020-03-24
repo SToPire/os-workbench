@@ -65,7 +65,7 @@ spinlock_t G;
 int cnt = 0;
 static void* kalloc(size_t size)
 {
-    spin_lock(&G);
+    //spin_lock(&G);
 
     int sz = 1, cachenum = 0;
     while (sz < size) {
@@ -80,34 +80,35 @@ static void* kalloc(size_t size)
     if (curPage == NULL)
         new_page = true;
     else {
-        //assert(!curPage->full);
-        while (curPage->full == true) {
-            if (curPage->nxt)
-                curPage = curPage->nxt;
-            else {
-                new_page = true;
-                break;
-            }
-        }
+        assert(!curPage->full);
+        // while (curPage->full == true) {
+        //     if (curPage->nxt)
+        //         curPage = curPage->nxt;
+        //     else {
+        //         new_page = true;
+        //         break;
+        //     }
+        // }
     }
-    //spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+   // spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
         
-        //spin_lock(&fPHLock);
+        spin_lock(&fPHLock);
         if (freePageHead == NULL) {
             //printf("Failed allocation.\n");
             return NULL;
         }
         page_t* tmp = freePageHead;
         freePageHead = freePageHead->nxt;
-        //spin_unlock(&fPHLock);
+        spin_unlock(&fPHLock);
 
         memset(tmp->header, 0, sizeof(tmp->header));
-        //spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
+      //  spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
         tmp->nxt = kmem_cache[cpu][cachenum].list;
         if (kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list->pre = tmp;
-        //spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
+        curPage = kmem_cache[cpu][cachenum].list = tmp;
+       // spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
         tmp->unitsize = sz;
         tmp->cachenum = cachenum;
@@ -119,9 +120,6 @@ static void* kalloc(size_t size)
             tmp->data_align = (uintptr_t)tmp->data;
         tmp->maxUnit = ((uintptr_t)tmp->header + PAGE_SIZE - (uintptr_t)tmp->data_align) / sz;
 
-        //spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
-        curPage = kmem_cache[cpu][cachenum].list = tmp;
-        //spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
     }
 
     int oldcnt = curPage->bitmapcnt;
@@ -133,14 +131,14 @@ static void* kalloc(size_t size)
             if (++curPage->obj_cnt == curPage->maxUnit) {
                 curPage->full = 1;
                 // spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
-                // if (curPage->pre) curPage->pre->nxt = curPage->nxt;
-                // if (curPage->nxt) curPage->nxt->pre = curPage->pre;
-                // if (curPage == kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list = curPage->nxt;
+                if (curPage->pre) curPage->pre->nxt = curPage->nxt;
+                if (curPage->nxt) curPage->nxt->pre = curPage->pre;
+                if (curPage == kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list = curPage->nxt;
 
-                // if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
-                // curPage->nxt = kmem_cache[cpu][cachenum].full;
-                // curPage->pre = NULL;
-                // kmem_cache[cpu][cachenum].full = curPage;
+                if (kmem_cache[cpu][cachenum].full) kmem_cache[cpu][cachenum].full->pre = curPage;
+                curPage->nxt = kmem_cache[cpu][cachenum].full;
+                curPage->pre = NULL;
+                kmem_cache[cpu][cachenum].full = curPage;
                 // spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
@@ -149,13 +147,13 @@ static void* kalloc(size_t size)
             // spin_unlock(&cnttt);
 
             //printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
-            spin_unlock(&G);
+            //spin_unlock(&G);
             //spin_unlock(&curPage->lock);
             return ret;
         }
         curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
     } while (oldcnt != curPage->bitmapcnt);
-    spin_unlock(&G);
+    //spin_unlock(&G);
     //printf("Failed allocation.\n");
 
     return NULL;
@@ -163,6 +161,7 @@ static void* kalloc(size_t size)
 
 static void kfree(void* ptr)
 {
+    return;
     spin_lock(&G);
     assert(ptr >= _heap.start && ptr <= _heap.end);
 
