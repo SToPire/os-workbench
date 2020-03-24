@@ -17,9 +17,9 @@ static void os_run()
     // for (int i = 1; i <= 2000; i++) pmm->alloc(1024);
     // for (int i = 1; i <= 2000; i++) pmm->alloc(512);
     // for (int i = 1; i <= 8000; i++) pmm->alloc(8);
-    void* a = pmm->alloc(4096);
+    void* a = pmm->alloc(2048);
     pmm->free(a);
-    pmm->alloc(4096);
+    pmm->alloc(2048);
     // if (_cpu() == 1) {
     //     pmm->free(a[1]);
     //     pmm->free(a[2]);
