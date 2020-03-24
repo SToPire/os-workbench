@@ -13,9 +13,10 @@ static void os_run()
     void* a[200000];
     printf("%p\n", a);
     for (int i = 1; i <= 5;i++){
-        printf("%d\n", i + 5 * _cpu());
         a[i + 5 * _cpu()] = pmm->alloc(4096);
+        printf("cpu:%d a[%d]:%x\n", _cpu(), i + 5 * _cpu(), a[i + 5 * _cpu()]);
     }
+
     if (_cpu() == 1) pmm->free(a[5]);
    // pmm->alloc(4096);
    // pmm->alloc(4096);
