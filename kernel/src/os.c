@@ -17,10 +17,10 @@ static void os_run()
     // for (int i = 1; i <= 2000; i++) pmm->alloc(1024);
     // for (int i = 1; i <= 2000; i++) pmm->alloc(512);
     //for (int i = 1; i <= 8000; i++) pmm->alloc(8);
-    pmm->alloc(2048);
-    pmm->alloc(2048);
-    pmm->alloc(2048);
-    pmm->alloc(2048);
+    pmm->alloc(1);
+    pmm->alloc(1);
+    pmm->alloc(1);
+    pmm->alloc(1);
 
     // if(_cpu()==0){
     //     a[0] = pmm->alloc(2048);

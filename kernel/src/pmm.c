@@ -127,7 +127,7 @@ static void* kalloc(size_t size)
     int oldcnt = curPage->bitmapcnt;
     do {
         if (!isUnitUsing(curPage, curPage->bitmapcnt)) {
-            //setUnit(curPage, curPage->bitmapcnt, 1);
+            setUnit(curPage, curPage->bitmapcnt, 1);
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             curPage->obj_cnt = curPage->obj_cnt + 1;
