@@ -20,6 +20,7 @@ static void os_run()
     pmm->alloc(2048);
     pmm->alloc(2048);
     pmm->alloc(2048);
+    pmm->alloc(2048);
 
     // if(_cpu()==0){
     //     a[0] = pmm->alloc(2048);
