@@ -80,7 +80,7 @@ static void* kalloc(size_t size)
     if (curPage == NULL)
         new_page = true;
     else {
-        assert(!curPage->full);
+        //assert(!curPage->full);
         while (curPage->full == true) {
             if (curPage->nxt)
                 curPage = curPage->nxt;
