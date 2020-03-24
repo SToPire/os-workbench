@@ -204,7 +204,7 @@ static void kfree(void* ptr)
         spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
     }
     spin_unlock(&curPage->lock);
-    printf("free:%p\n", ptr);
+    //printf("free:%p\n", ptr);
 }
 
 static void pmm_init()
