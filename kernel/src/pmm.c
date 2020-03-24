@@ -81,19 +81,22 @@ static void* kalloc(size_t size)
         new_page = true;
     else {
         //assert(!curPage->full);
-        // while (curPage->full == true) {
-        //     if (curPage->nxt)
-        //         curPage = curPage->nxt;
-        //     else {
-        //         new_page = true;
-        //         break;
-        //     }
-        // }
+        while (curPage->full == true) {
+            if (curPage->nxt)
+                curPage = curPage->nxt;
+            else {
+                new_page = true;
+                break;
+            }
+        }
     }
    // spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
-        
+        spin_lock(&cnttt);
+        cnt++;
+        spin_unlock(&cnttt);
+
         spin_lock(&fPHLock);
         if (freePageHead == NULL) {
             //printf("Failed allocation.\n");
@@ -129,10 +132,9 @@ static void* kalloc(size_t size)
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             if (++curPage->obj_cnt == curPage->maxUnit) {
-                assert(curPage == kmem_cache[cpu][cachenum].list);
                 curPage->full = 1;
+                // assert(curPage == kmem_cache[cpu][cachenum].list);
                 // spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
-                //if (curPage->pre) curPage->pre->nxt = curPage->nxt;
                 if (curPage->nxt) curPage->nxt->pre = NULL;
                 kmem_cache[cpu][cachenum].list = curPage->nxt;
 
@@ -143,11 +145,9 @@ static void* kalloc(size_t size)
                 // spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
-            // spin_lock(&cnttt);
-            // cnt++;
-            // spin_unlock(&cnttt);
+           
 
-            // printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
+            printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             //spin_unlock(&G);
             //spin_unlock(&curPage->lock);
             return ret;
