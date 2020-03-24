@@ -111,6 +111,7 @@ static void* kalloc(size_t size)
         tmp->full = 0;
         tmp->bitmapcnt = 0;
         memset(tmp->bitmap, 0, sizeof(tmp->bitmap));
+        for (int i = 0; i < 112; i++) tmp->bitmap[i] = 0;
         tmp->unitsize = sz;
         tmp->cachenum = cachenum;
         tmp->cpuid = cpu;
