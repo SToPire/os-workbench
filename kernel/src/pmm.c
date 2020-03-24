@@ -93,9 +93,9 @@ static void* kalloc(size_t size)
     spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
-        // spin_lock(&cnttt);
-        // cnt++;
-        // spin_unlock(&cnttt);
+        spin_lock(&cnttt);
+        cnt++;
+        spin_unlock(&cnttt);
 
         spin_lock(&fPHLock);
         if (freePageHead == NULL) {
@@ -151,7 +151,7 @@ static void* kalloc(size_t size)
                 spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
-            //printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full,freePageHead);
+            printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full,freePageHead);
             spin_unlock(&G);
             //spin_unlock(&curPage->lock);
             return ret;
