@@ -129,7 +129,7 @@ static void* kalloc(size_t size)
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
             curPage->bitmapcnt = (curPage->bitmapcnt + 1) % curPage->maxUnit;
             if (++curPage->obj_cnt == curPage->maxUnit) {
-                assert(curPage != kmem_cache[cpu][cachenum].list);
+                assert(curPage == kmem_cache[cpu][cachenum].list);
                 curPage->full = 1;
                 // spin_lock(&kmem_cache[cpu][cachenum].cache_lock);
                 //if (curPage->pre) curPage->pre->nxt = curPage->nxt;
