@@ -13,7 +13,7 @@ static void os_run()
     }
     printf("%p\n", a);
     for (int i = 1; i <= 5; i++) {
-        a[i + 5 * _cpu()] = pmm->alloc(4096);
+        a[i + 5 * _cpu()] = pmm->alloc(2040);
     }
 
     if (_cpu() == 1) {
@@ -28,9 +28,9 @@ static void os_run()
     if (_cpu() == 0)
         for (volatile int i = 1; i <= 1000000; i++)
             ;
-    pmm->alloc(4096);
-    pmm->alloc(4096);
-    pmm->alloc(4096);
+    pmm->alloc(2048);
+    pmm->alloc(2048);
+    pmm->alloc(2048);
 
     while (1)
         ;
