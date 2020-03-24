@@ -13,8 +13,8 @@ static void os_run()
     }
     
     printf("%p\n", a);
-    for (int i = 1; i <= 5; i++) {
-        a[i + 5 * _cpu()] = pmm->alloc(2040);
+    for (int i = 1; i <= 8000; i++) {
+        a[i + 5 * _cpu()] = pmm->alloc(4096);
     }
 
     // if (_cpu() == 1) {
