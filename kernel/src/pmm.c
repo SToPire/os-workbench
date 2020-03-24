@@ -174,7 +174,6 @@ static void kfree(void* ptr)
         int cpu = curPage->cpuid;
         int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
 
-    printf("kfree\n");
         setUnit(curPage, num, 0);
 
         // if (curPage->full) {
