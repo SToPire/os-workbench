@@ -22,11 +22,11 @@ static void os_run()
         a[1] = pmm->alloc(2048);
         for (volatile int i = 1; i <= 1000000; i++)        ;
     }
-    if(_cpu()==1){
-        pmm->free(a[0]);
-        for (volatile int i = 1; i <= 1000000; i++)
-            ;
-    }
+    // if(_cpu()==1){
+    //     pmm->free(a[0]);
+    //     for (volatile int i = 1; i <= 1000000; i++)
+    //         ;
+    // }
     if(_cpu()==0){
         pmm->alloc(2048);
     }
