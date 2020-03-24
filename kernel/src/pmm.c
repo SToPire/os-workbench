@@ -93,9 +93,9 @@ static void* kalloc(size_t size)
     spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
-        spin_lock(&cnttt);
-        cnt++;
-        spin_unlock(&cnttt);
+        // spin_lock(&cnttt);
+        // cnt++;
+        // spin_unlock(&cnttt);
 
         spin_lock(&fPHLock);
         if (freePageHead == NULL) {
@@ -113,9 +113,15 @@ static void* kalloc(size_t size)
         curPage = kmem_cache[cpu][cachenum].list = tmp;
         spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
+        spin_init(&tmp->lock);
+        tmp->obj_cnt = 0;
+        tmp->full = 0;
+        tmp->bitmapcnt = 0;
+        memset(tmp->bitmap, 0, sizeof(tmp->bitmap));
         tmp->unitsize = sz;
         tmp->cachenum = cachenum;
         tmp->cpuid = cpu;
+        tmp->pre = NULL;
 
         if (sz == 2048 || sz == 4096)
             tmp->data_align = (uintptr_t)tmp->header + sz;
@@ -145,7 +151,7 @@ static void* kalloc(size_t size)
                 spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
-            printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full,freePageHead);
+            //printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d freepagehead:%p\n", cnt, _cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full,freePageHead);
             spin_unlock(&G);
             //spin_unlock(&curPage->lock);
             return ret;
