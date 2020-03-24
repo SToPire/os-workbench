@@ -145,11 +145,11 @@ static void* kalloc(size_t size)
                 spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
-            // spin_lock(&G);
-            // cnt++;
-            // spin_unlock(&G);
+            spin_lock(&G);
+            cnt++;
+            spin_unlock(&G);
 
-            // printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt,_cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
+            printf("cnt = %d     %d:%p bmpcnt:%d max:%d objcnt:%d full:%d\n", cnt,_cpu(), ret, curPage->bitmapcnt, curPage->maxUnit, curPage->obj_cnt, curPage->full);
             //spin_unlock(&curPage->lock);
             return ret;
         }
