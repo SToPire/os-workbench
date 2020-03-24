@@ -30,6 +30,7 @@ static void os_run()
             ;
     pmm->alloc(4096);
     pmm->alloc(4096);
+    pmm->alloc(4096);
 
     while (1)
         ;
