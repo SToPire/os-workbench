@@ -13,7 +13,7 @@ typedef union page {
         int unitsize;  // 该页每个内存单元的大小
         int cachenum;
 
-        uint8_t bitmap[896];
+        uint64_t bitmap[112];
         int bitmapcnt;
 
         uintptr_t data_align;  // 对齐之后的数据域首地址
@@ -42,16 +42,18 @@ page_t* pages;
 
 bool isUnitUsing(page_t* page, bool num)
 {
-    return (page->bitmap[num / 8]) & ((uint8_t)1 << (num %8));
+    printf("num/64=%d num%64=%d page->bitmap[num/64]=%lu 1 << (num % 64)=%lu ret=%lu\n",
+           num / 64, num % 64, page->bitmap[num / 64], (1 << (num % 64)), (page->bitmap[num / 64]) & (1 << (num % 64)));
+    return (page->bitmap[num / 64]) & ((uint64_t)1 << (num % 64));
 }
 void setUnit(page_t* page, int num, bool b)
 {
     //spin_lock(&page->lock);
     assert(b == 0 || b == 1);
     if (b == 1)
-        page->bitmap[num / 8] |= (1 << (num % 8));
+        page->bitmap[num / 64] |= (1 << (num % 64));
     else
-        page->bitmap[num / 8] &= ~(1 << (num % 8));
+        page->bitmap[num / 64] &= ~(1 << (num % 64));
 
     //spin_unlock(&page->lock);
 }
