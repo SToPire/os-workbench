@@ -180,7 +180,7 @@ static void kfree(void* ptr)
     // }
     //int cpu = curPage->cpuid;
     int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
-
+    printf("bitmap%d will be freed\n", num);
     setUnit(curPage, num, 0);
 
     // if (curPage->full) {
