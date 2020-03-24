@@ -40,7 +40,7 @@ spinlock_t fPHLock;
 cache_t* kmem_cache[CPU_NUM];
 page_t* pages;
 
-bool isUnitUsing(page_t* page, bool num)
+bool isUnitUsing(page_t* page, int num)
 {
     printf("num = %d num/64=%d num%64=%d page->bitmap[num/64]=%lu 1 << (num % 64)=%lu ret=%lu\n",num,
            num / 64, num % 64, page->bitmap[num / 64], ((uint64_t)1 << (num % 64)), (page->bitmap[num / 64]) & ((uint64_t)1 << (num % 64)));
