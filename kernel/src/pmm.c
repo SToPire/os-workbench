@@ -42,8 +42,6 @@ page_t* pages;
 
 bool isUnitUsing(page_t* page, int num)
 {
-    printf("num = %d num/64=%d num%64=%d page->bitmap[num/64]=%lu 1 << (num % 64)=%lu ret=%lu\n",num,
-           num / 64, num % 64, page->bitmap[num / 64], ((uint64_t)1 << (num % 64)), (page->bitmap[num / 64]) & ((uint64_t)1 << (num % 64)));
     return (page->bitmap[num / 64]) & ((uint64_t)1 << (num % 64));
 }
 void setUnit(page_t* page, int num, bool b)
@@ -128,7 +126,6 @@ static void* kalloc(size_t size)
     spin_lock(&curPage->lock);
     int oldcnt = curPage->bitmapcnt;
     do {
-            printf("argument:%d\n", curPage->bitmapcnt);
         if (!isUnitUsing(curPage, curPage->bitmapcnt)) {
             setUnit(curPage, curPage->bitmapcnt, 1);
             void* ret = (void*)((uintptr_t)curPage->data_align + curPage->unitsize * curPage->bitmapcnt);
