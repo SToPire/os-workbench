@@ -14,9 +14,9 @@ static void os_run()
     // printf("%p\n", a);
     //for (int i = 1; i <= 2000; i++) pmm->alloc(2048);
     for (int i = 1; i <= 2000; i++) pmm->alloc(512);
-    for (int i = 1; i <= 8000; i++) pmm->alloc(8);
-    for (int i = 1; i <= 2000; i++) pmm->alloc(4096);
-    for (int i = 1; i <= 2000; i++) pmm->alloc(1024);
+    // for (int i = 1; i <= 8000; i++) pmm->alloc(8);
+    // for (int i = 1; i <= 2000; i++) pmm->alloc(4096);
+    // for (int i = 1; i <= 2000; i++) pmm->alloc(1024);
     
 
     // if(_cpu()==0){
