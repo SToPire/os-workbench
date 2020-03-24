@@ -93,9 +93,9 @@ static void* kalloc(size_t size)
     spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
 
     if (new_page) {
-        spin_lock(&cnttt);
-        cnt++;
-        spin_unlock(&cnttt);
+        // spin_lock(&cnttt);
+        // cnt++;
+        // spin_unlock(&cnttt);
 
         spin_lock(&fPHLock);
         if (freePageHead == NULL) {
@@ -220,6 +220,7 @@ static void kfree(void* ptr)
 
 static void pmm_init()
 {
+    spin_init(&G);
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
     printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, _heap.start, _heap.end);
 
