@@ -17,7 +17,11 @@ static void os_run()
     }
 
     if (_cpu() == 1) {
+        pmm->free(a[1]);
         pmm->free(a[2]);
+        pmm->free(a[3]);
+        pmm->free(a[4]);
+        pmm->free(a[5]);
         for (volatile int i = 1; i <= 1000000; i++)
             ;
     }
