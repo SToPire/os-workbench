@@ -163,7 +163,6 @@ static void* kalloc(size_t size)
 
 static void kfree(void* ptr)
 {
-    printf("kfree\n");
     spin_lock(&G);
     assert(ptr >= _heap.start && ptr <= _heap.end);
 
@@ -175,6 +174,7 @@ static void kfree(void* ptr)
         int cpu = curPage->cpuid;
         int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
 
+    printf("kfree\n");
         setUnit(curPage, num, 0);
 
         // if (curPage->full) {
