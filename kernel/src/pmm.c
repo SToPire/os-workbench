@@ -130,6 +130,7 @@ static void* kalloc(size_t size)
                 curPage->nxt = kmem_cache[cpu][cachenum].full;
                 curPage->pre = NULL;
                 kmem_cache[cpu][cachenum].full = curPage;
+                if (curPage == kmem_cache[cpu][cachenum].list) kmem_cache[cpu][cachenum].list = curPage->nxt;
                 spin_unlock(&kmem_cache[cpu][cachenum].cache_lock);
             }
 
@@ -167,6 +168,7 @@ static void kfree(void* ptr)
         curPage->nxt = kmem_cache[cpu][curPage->cachenum].list;
         curPage->pre = NULL;
         kmem_cache[cpu][curPage->cachenum].list = curPage;
+        if (curPage == kmem_cache[cpu][curPage->cachenum].full) kmem_cache[cpu][curPage->cachenum].full = curPage->nxt;
 
         spin_unlock(&kmem_cache[cpu][curPage->cachenum].cache_lock);
     }
