@@ -167,10 +167,10 @@ static void kfree(void* ptr)
     assert(ptr >= _heap.start && ptr <= _heap.end);
 
     page_t* curPage = (page_t*)((uintptr_t)ptr & ((2 * PAGE_SIZE - 1) ^ (~PAGE_SIZE)));
-    if (curPage->cpuid != _cpu()) {
-        spin_unlock(&G);
-        return;
-    }
+    // if (curPage->cpuid != _cpu()) {
+    //     spin_unlock(&G);
+    //     return;
+    // }
         int cpu = curPage->cpuid;
         int num = ((uintptr_t)ptr - curPage->data_align) / curPage->unitsize;
 
