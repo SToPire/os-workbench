@@ -29,6 +29,7 @@ static void os_run()
     }
     if(_cpu()==0){
         pmm->alloc(2048);
+        pmm->alloc(2048);
     }
     // if (_cpu() == 1) {
     //     pmm->free(a[1]);
