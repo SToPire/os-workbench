@@ -65,8 +65,12 @@ int main(int argc, char* argv[])
             while (s[i3] != '>' && i3 >= 0) --i3;
             if (!i2 || !i3) break;
 
-            for (int i = i2; i <= i3; i++) putchar(s[i]);
-            printf("\n");
+            char ts[64];
+            int tscnt = 0;
+            for (int i = i2 + 1; i < i3; i++) ts[tscnt++] = s[i];
+            ts[tscnt] = '\0';
+            double t = strtod(ts, 0);
+            printf("%d",t);
             if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
         }
         printf("HSHSHHSHSHSHS\n");
