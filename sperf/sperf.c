@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     if(pid==0){ //children
         for (int i = 0; i < 32;i++)
             if(currenetPaths[i]){
-                freopen(pipe_fd[1], 'w', stderr);
+                dup2(pipe_fd[1], 2);
                 char* newLoc = malloc(strlen(currenetPaths[i]) + 10);
                 strcpy(newLoc, currenetPaths[i]);
                 strcat(newLoc, "/strace");
