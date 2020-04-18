@@ -47,13 +47,13 @@ int main(int argc, char* argv[])
                 execve(newLoc, exec_argv, exec_envp);
             }
     }else{
-        sleep(1);
+        //sleep(1);
        // dup2(pipe_fd[0], STDIN_FILENO);
         //waitpid(pid,0,0);
-        char s[512];
-        while (fgets(s,512,stdin)){
+        //char s[512];
+        //while (fgets(s,512,stdin)){
             //printf("%s\n", s);
-        }
+        //}
         printf("HSHSHHSHSHSHS\n");
     }
     // perror(argv[0]);
