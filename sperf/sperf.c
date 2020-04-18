@@ -15,8 +15,7 @@ int main(int argc, char* argv[])
     for (char ** i = environ; *i != NULL; i++)
         if (strncmp(*i, "PATH=", 5) == 0){
             exec_envp[0] = *i;
-            printf("%u", sizeof(*i));
-            char* tmp = malloc(sizeof(*i));
+            char* tmp = malloc(strlen(*i));
             strcpy(tmp, *i + 5);
             strtok(tmp, ":");
             char* s;
