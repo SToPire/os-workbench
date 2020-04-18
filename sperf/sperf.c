@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
             for (int i = i2 + 1; i < i3; i++) ts[tscnt++] = s[i];
             ts[tscnt] = '\0';
             double t = strtod(ts, 0);
-            printf("%f",t);
+            printf("%f\n",t);
             if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
         }
         printf("HSHSHHSHSHSHS\n");
