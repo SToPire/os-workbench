@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[])
 {
-    char* exec_argv[] = {"strace","-T",NULL,NULL,};
+    char* exec_argv[argc+2] = {"strace","-T",NULL,NULL,};
     exec_argv[2] = argv[1];
     char *exec_envp[] = { NULL, NULL, };
 
