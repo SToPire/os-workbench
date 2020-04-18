@@ -18,17 +18,15 @@ int main(int argc, char* argv[])
             char* tmp = malloc(strlen(*i));
             strcpy(tmp, *i + 5);
             strtok(tmp, ":");
-            char* s;
             int ii = 0;
             while ((currenetPaths[ii++] = strtok(NULL, ":")))
                 ;
             break;
         }
 
-    // for (int ii = 0; ii < 20;ii++){
-    //     if (currenetPaths[ii]) printf("%s\n", currenetPaths[ii]);
-    // }
-    printf("%s\n", exec_envp[0]);
+    for (int ii = 0; ii < 20;ii++){
+        if (currenetPaths[ii]) printf("%s\n", currenetPaths[ii]);
+    }
     execve("/usr/bin/strace", exec_argv, exec_envp);
     // perror(argv[0]);
     // exit(EXIT_FAILURE);
