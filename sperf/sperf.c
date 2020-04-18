@@ -53,9 +53,9 @@ int main(int argc, char* argv[])
         //waitpid(pid,0,0);
         char s[512];
         int i = 0;
-        while (fgets(s, 512, stdin)) {
-            printf("%s\n",s);
-        }
+        // while (fgets(s, 512, stdin)) {
+        //     printf("%s\n",s);
+        // }
         printf("HSHSHHSHSHSHS\n");
     }
     // perror(argv[0]);
