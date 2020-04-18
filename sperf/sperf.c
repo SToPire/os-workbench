@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     exec_argv[1] = argv[1];
     char *exec_envp[] = { NULL, NULL, };
 
-    char* currenetPaths[20]={NULL};
+    char* currenetPaths[32]={NULL};
 
     extern char** environ;
     for (char ** i = environ; *i != NULL; i++)
@@ -24,10 +24,12 @@ int main(int argc, char* argv[])
             break;
         }
 
-    for (int ii = 0; ii < 20;ii++){
-        if (currenetPaths[ii]) printf("%s\n", currenetPaths[ii]);
+    __pid_t pid = fork();
+    if(pid==0){ //children
+      execve("/usr/bin/strace", exec_argv, exec_envp);
+    }else{
+        printf("HSHSHHSHSHSHS\n");
     }
-    execve("/usr/bin/strace", exec_argv, exec_envp);
     // perror(argv[0]);
     // exit(EXIT_FAILURE);
 }
