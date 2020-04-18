@@ -86,12 +86,9 @@ int main(int argc, char* argv[])
 
             for (int i = 0; i < 127; ++i) {
                 if (strcmp(stat[i].name, name) == 0) {
-                    printf("asdasdasdasdssssssssssssssssssss");
                     stat[i].t += t;
                     break;
                 } else if (strcmp(stat[i].name,"")==0) {
-                    printf("asdasdasdasdssssssssssssssssssss");
-
                     strcpy(stat[i].name, name);
                     stat[i].t += t;
                     break;
