@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
             }
     }else{
         sleep(1);
-        waitpid(pid);
+        waitpid(pid,0,0);
         printf("HSHSHHSHSHSHS\n");
     }
     // perror(argv[0]);
