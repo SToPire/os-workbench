@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
                     printf("asdasdasdasdssssssssssssssssssss");
                     stat[i].t += t;
                     break;
-                } else if (stat[i].name == "") {
+                } else if (strcmp(stat[i].name,"")==0) {
                     printf("asdasdasdasdssssssssssssssssssss");
 
                     strcpy(stat[i].name, name);
