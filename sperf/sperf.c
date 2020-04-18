@@ -6,15 +6,13 @@
 
 int main(int argc, char* argv[])
 {
-    // char* exec_argv[] = {"strace","-T",NULL,NULL,};
-    // exec_argv[2] = argv[1];
-
     char* exec_argv[argc+2];
     exec_argv[0] = "strace";
     exec_argv[1] = "-T";
     for (int i = 1; i < argc;++i)
         exec_argv[i + 1] = argv[i];
     exec_argv[argc+1]=NULL;
+
     char *exec_envp[] = { NULL, NULL, };
 
     char* currenetPaths[32]={NULL};
@@ -54,7 +52,7 @@ int main(int argc, char* argv[])
         //waitpid(pid,0,0);
         char s[512];
         while (fgets(s,512,stdin)){
-            printf("%s\n", s);
+            //printf("%s\n", s);
         }
         printf("HSHSHHSHSHSHS\n");
     }
