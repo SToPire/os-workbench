@@ -43,7 +43,12 @@ int main(int argc, char* argv[])
             }
     }else{
         sleep(1);
-        waitpid(pid,0,0);
+        dup2(pipe_fd[0], STDIN_FILENO);
+        //waitpid(pid,0,0);
+        char s[512];
+        while (fgetc(s,512,stdin)){
+            printf("%s\n", s);
+        }
         printf("HSHSHHSHSHSHS\n");
     }
     // perror(argv[0]);
