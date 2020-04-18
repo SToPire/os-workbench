@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
                 execve(newLoc, exec_argv, exec_envp);
             }
     }else{
-        //sleep(1);
+        sleep(1);
        // dup2(pipe_fd[0], STDIN_FILENO);
         //waitpid(pid,0,0);
         //char s[512];
