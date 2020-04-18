@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
             if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
         }
         for (int i = 0; i < 128; i++) {
-            if (stat[i].name) {
+            if (strcmp(stat[i].name,"")!=0) {
                 printf("%s:%f\n", stat[i].name, stat[i].t);
             }
         }
