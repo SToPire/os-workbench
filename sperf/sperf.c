@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
             }
     }else{
         sleep(1);
-       // dup2(pipe_fd[0], STDIN_FILENO);
+        dup2(pipe_fd[0], STDIN_FILENO);
         //waitpid(pid,0,0);
         //char s[512];
         //while (fgets(s,512,stdin)){
