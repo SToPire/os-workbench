@@ -9,17 +9,17 @@ int main(int argc, char* argv[])
     exec_argv[1] = argv[1];
     char *exec_envp[] = { NULL, NULL, };
 
-    char* currenetPaths[20];
+    //char* currenetPaths[20];
 
     extern char** environ;
     for (char ** i = environ; *i != NULL; i++)
         if (strncmp(*i, "PATH=", 5) == 0){
             exec_envp[0] = *i;
-            strtok(*i + 5, ":");
-            char* s;
-            int ii = 0;
-            while ((currenetPaths[ii++] = strtok(NULL, ":")))
-                ;
+            // strtok(*i + 5, ":");
+            // char* s;
+            // int ii = 0;
+            // while ((currenetPaths[ii++] = strtok(NULL, ":")))
+            //     ;
             break;
         }
 
