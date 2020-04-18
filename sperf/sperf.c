@@ -34,13 +34,14 @@ int main(int argc, char* argv[])
     if(pid==0){ //children
         for (int i = 0; i < 32;i++)
             if(currenetPaths[i]){
-                dup2(pipe_fd[1], 2);
+                dup2(pipe_fd[1], STDERR_FILENO);
                 char* newLoc = malloc(strlen(currenetPaths[i]) + 10);
                 strcpy(newLoc, currenetPaths[i]);
                 strcat(newLoc, "/strace");
                 execve(newLoc, exec_argv, exec_envp);
             }
     }else{
+        sleep(5);
         printf("HSHSHHSHSHSHS\n");
     }
     // perror(argv[0]);
