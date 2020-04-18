@@ -6,7 +6,7 @@
 int main(int argc, char *argv[]) {
     char *exec_envp[] = { NULL, NULL, };
     extern char ** environ;
-    for (char ** i = environ; *i != NULL; i++){
+    for (char ** i = environ; *i != NULL; i++)
         if (strncmp(*i, "PATH=", 5) == 0)
             exec_envp[0] = *i;
         printf("%s\n", exec_envp[0]);
