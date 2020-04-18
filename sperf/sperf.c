@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
             int ii = 0;
             while ((currenetPaths[ii++] = strtok(NULL, ":")))
                 ;
+            break;
         }
 
     // for (int ii = 0; ii < 20;ii++){
