@@ -54,6 +54,7 @@ int main(int argc, char* argv[])
         char s[512];
         while (fgets(s, 512, stdin)){
             puts(s);
+            break;
         }
         printf("HSHSHHSHSHSHS\n");
     }
