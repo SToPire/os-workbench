@@ -5,7 +5,9 @@
 
 int main(int argc, char *argv[]) {
     char *exec_envp[] = { NULL, NULL, };
-    sprintf(exec_envp[0], "PATH=%s", getenv("PATH"));
+    char* t = "PATH=";
+    strcat(t, getenv("PATH"));
+    exec_envp[0] = t;
     printf("%s\n", exec_envp[0]);
     // extern char ** environ;
     // for (char ** i = environ; *i != NULL; i++){
