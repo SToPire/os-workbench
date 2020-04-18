@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     exec_argv[1] = argv[1];
     char *exec_envp[] = { NULL, NULL, };
 
-    char* currenetPaths[20];
+    char* currenetPaths[20]={NULL};
 
     extern char** environ;
     for (char ** i = environ; *i != NULL; i++)
