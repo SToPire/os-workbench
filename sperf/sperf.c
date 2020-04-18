@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
         for (int i = 1; i <= 1000; i++){
             fgets(s, 512, stdin);
             printf("%d\n", i);
-            //puts(s);
+            puts(s);
         }
         printf("HSHSHHSHSHSHS\n");
     }
