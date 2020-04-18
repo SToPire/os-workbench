@@ -5,23 +5,19 @@
 
 int main(int argc, char *argv[]) {
     char *exec_envp[] = { NULL, NULL, };
-    char* t = "PATH=";
-    strcat(t, getenv("PATH"));
-    exec_envp[0] = t;
-    printf("%s\n", exec_envp[0]);
-    // extern char ** environ;
-    // for (char ** i = environ; *i != NULL; i++){
-    //     if (strncmp(*i, "PATH=", 5) == 0)
-    //         exec_envp[0] = *i;
+    extern char ** environ;
+    for (char ** i = environ; *i != NULL; i++){
+        if (strncmp(*i, "PATH=", 5) == 0)
+            exec_envp[0] = *i;
+        printf("%s\n", exec_envp[0]);
+        // char* exec_argv[] = {
+        //     "strace",
+        //     NULL,
+        //     NULL,
+        // };
+        // exec_argv[1] = argv[1];
 
-    // char* exec_argv[] = {
-    //     "strace",
-    //     NULL,
-    //     NULL,
-    // };
-    // exec_argv[1] = argv[1];
-
-    // execve("/usr/bin/strace", exec_argv, exec_envp);
-    // perror(argv[0]);
-    // exit(EXIT_FAILURE);
+        // execve("/usr/bin/strace", exec_argv, exec_envp);
+        // perror(argv[0]);
+        // exit(EXIT_FAILURE);
 }
