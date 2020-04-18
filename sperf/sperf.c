@@ -26,7 +26,9 @@ int main(int argc, char* argv[])
 
     __pid_t pid = fork();
     if(pid==0){ //children
-      execve("/usr/bin/strace", exec_argv, exec_envp);
+        for (int i = 0; i < 32;i++)
+            if(currenetPaths[i])
+              execve("/usr/bin/strace", exec_argv, exec_envp);
     }else{
         printf("HSHSHHSHSHSHS\n");
     }
