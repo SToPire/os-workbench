@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     for (char ** i = environ; *i != NULL; i++)
         if (strncmp(*i, "PATH=", 5) == 0)
             exec_envp[0] = *i;
-        printf("%s\n", exec_envp[0]);
+    printf("%s\n", exec_envp[0]);
         // char* exec_argv[] = {
         //     "strace",
         //     NULL,
