@@ -4,6 +4,11 @@
 #include<string.h>
 #include <sys/wait.h>
 
+typedef struct __node{
+    char name[64];
+    double t;
+}node;
+
 int main(int argc, char* argv[])
 {
     char* exec_argv[argc+2];
@@ -52,6 +57,9 @@ int main(int argc, char* argv[])
         dup2(pipe_fd[0], STDIN_FILENO);
         //waitpid(pid,0,0);
         char s[512];
+        node stat[128];
+        memset(stat, 0, sizeof(stat));
+        double tot = 0.0;
         while (fgets(s, 512, stdin)) {
             int i2 = strlen(s), i3 = strlen(s);
             while (s[i2] != '<' && i2 >= 0) --i2;
@@ -69,6 +77,17 @@ int main(int argc, char* argv[])
             for (int i = 0; i < i1; ++i) name[i] = s[i];
             name[i1] = '\0';
 
+            for (int i = 0; i < 127;++i){
+              if(strcmp(stat[i].name,name)==0){
+                  stat[i].t += t;
+                  break;
+              }else if(stat[i].name == NULL){
+                  strcpy(stat[i].name, name);
+                  stat[i].t += t;
+                  break;
+              }
+            }
+            tot += t;
             printf("%s:%f\n", name, t);
 
             if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
