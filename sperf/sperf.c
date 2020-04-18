@@ -41,7 +41,8 @@ int main(int argc, char* argv[])
                 execve(newLoc, exec_argv, exec_envp);
             }
     }else{
-        sleep(5);
+        sleep(1);
+        waitpid(pid);
         printf("HSHSHHSHSHSHS\n");
     }
     // perror(argv[0]);
