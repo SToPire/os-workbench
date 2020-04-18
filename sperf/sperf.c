@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
         dup2(pipe_fd[0], STDIN_FILENO);
         //waitpid(pid,0,0);
         char s[512];
-        while (fgetc(s,512,stdin)){
+        while (fgets(s,512,stdin)){
             printf("%s\n", s);
         }
         printf("HSHSHHSHSHSHS\n");
