@@ -88,11 +88,15 @@ int main(int argc, char* argv[])
               }
             }
             tot += t;
-            printf("%s:%f\n", name, t);
 
             if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
         }
-        printf("HSHSHHSHSHSHS\n");
+        for (int i = 0; i < 128;i++){
+          if(stat[i].name){
+              printf("%s:%f\n", stat[i].name, stat[i].t);
+          }
+        }
+            printf("HSHSHHSHSHSHS\n");
     }
     // perror(argv[0]);
     // exit(EXIT_FAILURE);
