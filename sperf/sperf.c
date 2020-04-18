@@ -51,8 +51,9 @@ int main(int argc, char* argv[])
         dup2(pipe_fd[0], STDIN_FILENO);
         //waitpid(pid,0,0);
         char s[512];
-        while (fgets(s,512,stdin)){
-            //printf("%s\n", s);
+        char *a = malloc(128);
+        while ((a = fgets(s, 512, stdin))) {
+            printf("%s |||||| %a\n", s,a);
         }
         printf("HSHSHHSHSHSHS\n");
     }
