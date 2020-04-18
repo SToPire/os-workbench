@@ -52,9 +52,10 @@ int main(int argc, char* argv[])
         dup2(pipe_fd[0], STDIN_FILENO);
         //waitpid(pid,0,0);
         char s[512];
-        while (fgets(s, 512, stdin)){
+        int i = 0;
+        while (fgets(s, 512, stdin)) {
             puts(s);
-            break;
+            if (++i == 1000) break;
         }
         printf("HSHSHHSHSHSHS\n");
     }
