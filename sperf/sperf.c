@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
         for (int i = 0; i < 32;i++)
             if(currenetPaths[i]){
                 dup2(pipe_fd[1], STDERR_FILENO);
+                freopen("/dev/null", "w", stdout);
                 char* newLoc = malloc(strlen(currenetPaths[i]) + 10);
                 strcpy(newLoc, currenetPaths[i]);
                 strcat(newLoc, "/strace");
@@ -49,7 +50,6 @@ int main(int argc, char* argv[])
     }else{
         sleep(1);
         dup2(pipe_fd[0], STDIN_FILENO);
-        freopen("/dev/null", "w", stdout);
         //waitpid(pid,0,0);
         char s[512];
         while (fgets(s, 512, stdin)){
