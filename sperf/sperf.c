@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     for (char ** i = environ; *i != NULL; i++)
         if (strncmp(*i, "PATH=", 5) == 0){
             exec_envp[0] = *i;
-            char* newi = i;
+            char* newi = *i;
             strtok(newi + 5, ":");
             char* s;
             int ii = 0;
