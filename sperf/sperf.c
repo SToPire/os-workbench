@@ -5,9 +5,12 @@
 
 int main(int argc, char *argv[]) {
     extern char ** environ;
-    char** i;
-    for (i = environ; *i != NULL; i++){
-        if (strncmp(*i, "PATH=", 5) == 0) printf("%s\n", *i);
+    for (char ** i = environ; *i != NULL; i++){
+        if (strncmp(*i, "PATH=", 5) == 0){
+            strtok(*i + 5, ":");
+            char* s;
+            while (s = strtok(NULL, ":")) printf("%s\n", s);
+        }
     }
 
     char* exec_argv[] = {
