@@ -49,11 +49,10 @@ int main(int argc, char* argv[])
     }else{
         sleep(1);
         dup2(pipe_fd[0], STDIN_FILENO);
-        waitpid(pid,0,0);
+        //waitpid(pid,0,0);
         char s[512];
-        char *a = malloc(128);
-        while ((a = fgets(s, 512, stdin))) {
-            printf("%s |||||| %s\n", s,a);
+        while (fgets(s, 512, stdin)){
+            printf("s:%s\n", s);
         }
         printf("HSHSHHSHSHSHS\n");
     }
