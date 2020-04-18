@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     int pipe_fd[2];
     if (pipe(pipe_fd)<0){
         printf("pipe create error\n");
-        assert(0);
+        return -1;
     }
 
         __pid_t pid = fork();
