@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
             exec_envp[0] = *i;
     exec_argv[1] = argv[1];
 
-    execve("strace", exec_argv, exec_envp);
+    execve("/usr/bin/strace", exec_argv, exec_envp);
     // perror(argv[0]);
     // exit(EXIT_FAILURE);
 }
