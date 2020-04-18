@@ -52,9 +52,13 @@ int main(int argc, char* argv[])
         dup2(pipe_fd[0], STDIN_FILENO);
         //waitpid(pid,0,0);
         char s[512];
-        int i = 0;
         while (fgets(s, 512, stdin)) {
-            printf("%s\n",s);
+            int i1 = 0;
+            char name[64];
+            while (s[i1] != '(') ++i1;
+            for (int i = 0; i < i1; ++i) name[i] = s[i];
+            name[i1] = '\0';
+            puts(name);
             if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
         }
         printf("HSHSHHSHSHSHS\n");
