@@ -50,10 +50,10 @@ int main(int argc, char* argv[])
         sleep(1);
         dup2(pipe_fd[0], STDIN_FILENO);
         //waitpid(pid,0,0);
-        //char s[512];
-        //while (fgets(s,512,stdin)){
-            //printf("%s\n", s);
-        //}
+        char s[512];
+        while (fgets(s,512,stdin)){
+            printf("%s\n", s);
+        }
         printf("HSHSHHSHSHSHS\n");
     }
     // perror(argv[0]);
