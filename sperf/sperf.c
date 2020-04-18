@@ -53,13 +53,9 @@ int main(int argc, char* argv[])
         //waitpid(pid,0,0);
         char s[512];
         int i = 0;
-        // while (fgets(s, 512, stdin)) {
-        //     printf("%s\n",s);
-        // }
-        for (int i = 1; i <= 1000; i++){
-            fgets(s, 512, stdin);
-            printf("%d\n", i);
-            puts(s);
+        while (fgets(s, 512, stdin)) {
+            printf("%s\n",s);
+            if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
         }
         printf("HSHSHHSHSHSHS\n");
     }
