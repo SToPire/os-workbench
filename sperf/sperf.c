@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
         }
         for (int i = 0; i < 128; i++) {
             if (strcmp(stat[i].name,"")!=0) {
-                printf("%s:%f:%f\n", stat[i].name, stat[i].t,stat[i].t/tot);
+                printf("%s:%f:%f\n", stat[i].name, stat[i].t,100*stat[i].t/tot);
             }
         }
         printf("HSHSHHSHSHSHS\n");
