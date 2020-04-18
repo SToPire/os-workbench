@@ -56,6 +56,7 @@ int main(int argc, char* argv[])
         // while (fgets(s, 512, stdin)) {
         //     printf("%s\n",s);
         // }
+        for (int i = 1; i <= 100; i++) fgets(s, 512, stdin);
         printf("HSHSHHSHSHSHS\n");
     }
     // perror(argv[0]);
