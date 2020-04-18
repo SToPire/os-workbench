@@ -27,8 +27,12 @@ int main(int argc, char* argv[])
     __pid_t pid = fork();
     if(pid==0){ //children
         for (int i = 0; i < 32;i++)
-            if(currenetPaths[i])
-              execve("strace", exec_argv, exec_envp);
+            if(currenetPaths[i]){
+                char* newLoc = malloc(strlen(currenetPaths[i]) + 10);
+                strcpy(newLoc, currenetPaths[i]);
+                strcat(newLoc, "/strace");
+                execve("strace -T", exec_argv, exec_envp);
+            }
     }else{
         printf("HSHSHHSHSHSHS\n");
     }
