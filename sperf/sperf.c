@@ -22,9 +22,9 @@ int main(int argc, char* argv[])
                 ;
         }
 
-    for (int ii = 0; ii < 20;ii++){
-        if (currenetPaths[ii]) printf("%s\n", currenetPaths[ii]);
-    }
+    // for (int ii = 0; ii < 20;ii++){
+    //     if (currenetPaths[ii]) printf("%s\n", currenetPaths[ii]);
+    // }
         execve("/usr/bin/strace", exec_argv, exec_envp);
     // perror(argv[0]);
     // exit(EXIT_FAILURE);
