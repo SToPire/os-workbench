@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
         if (strncmp(*i, "PATH=", 5) == 0){
             strtok(*i + 5, ":");
             char* s;
-            while (s = strtok(NULL, ":")) printf("%s\n", s);
+            while ((s = strtok(NULL, ":"))) printf("%s\n", s);
         }
     }
 
