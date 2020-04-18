@@ -6,6 +6,7 @@
 
 int main(int argc, char* argv[])
 {
+  printf("%d",argc);
     char* exec_argv[] = {"strace","-T",NULL,NULL,};
     exec_argv[2] = argv[1];
     char *exec_envp[] = { NULL, NULL, };
