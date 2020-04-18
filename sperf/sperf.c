@@ -9,11 +9,12 @@ int main(int argc, char* argv[])
     // char* exec_argv[] = {"strace","-T",NULL,NULL,};
     // exec_argv[2] = argv[1];
 
-    char* exec_argv[argc+5];
+    char* exec_argv[argc+2];
     exec_argv[0] = "strace";
     exec_argv[1] = "-T";
     for (int i = 1; i < argc;++i)
         exec_argv[i + 1] = argv[i];
+    exec_argv[argc+1]=NULL;
     char *exec_envp[] = { NULL, NULL, };
 
     char* currenetPaths[32]={NULL};
