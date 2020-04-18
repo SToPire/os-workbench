@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
                 char* newLoc = malloc(strlen(currenetPaths[i]) + 10);
                 strcpy(newLoc, currenetPaths[i]);
                 strcat(newLoc, "/strace");
-                execve("strace -T", exec_argv, exec_envp);
+                execve(newLoc, exec_argv, exec_envp);
             }
     }else{
         printf("HSHSHHSHSHSHS\n");
