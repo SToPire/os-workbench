@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
         char s[512];
         char *a = malloc(128);
         while ((a = fgets(s, 512, stdin))) {
-            printf("%s |||||| %a\n", s,a);
+            printf("%s |||||| %s\n", s,a);
         }
         printf("HSHSHHSHSHSHS\n");
     }
