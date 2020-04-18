@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
         int i = 0;
         while (fgets(s, 512, stdin)) {
             puts(s);
-            if (++i == 1000) break;
+            if (++i == 100) break;
         }
         printf("HSHSHHSHSHSHS\n");
     }
