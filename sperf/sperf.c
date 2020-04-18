@@ -58,7 +58,14 @@ int main(int argc, char* argv[])
             while (s[i1] != '(') ++i1;
             for (int i = 0; i < i1; ++i) name[i] = s[i];
             name[i1] = '\0';
-            puts(name);
+
+            int i2 = strlen(s), i3 = strlen(s);
+            while (s[i2] != '<' && i2 >= 0) --i2;
+            while (s[i3] != '>' && i3 >= 0) --i3;
+            if (!i2 || !i3) break;
+
+            for (int i = i2; i <= i3; i++) putchar(s[i]);
+            //puts(name);
             if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
         }
         printf("HSHSHHSHSHSHS\n");
