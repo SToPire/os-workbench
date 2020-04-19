@@ -76,7 +76,8 @@ int main(int argc, char* argv[])
                 strcpy(stat[i].name, "");
             }
             tot = 0.0;
-            while (fgets(s, 512, stdin)) {
+            while (fgets(s, 512, stdin) &&) {
+                if (strlen(s) <= 1) continue;
                 int i2 = strlen(s), i3 = strlen(s);
                 while (s[i2] != '<' && i2 >= 0) --i2;
                 while (s[i3] != '>' && i3 >= 0) --i3;
@@ -114,7 +115,7 @@ int main(int argc, char* argv[])
             }
             puts("==========================");
             for (int i = 1; i <= 80; i++) putc(0, stdout);
-            //fflush(stdout);
+            fflush(stdout);
             if (waitpid(pid, &status, WNOHANG) == pid) break;
         }
     }
