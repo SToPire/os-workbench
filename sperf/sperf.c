@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 
         int f = 0;
         //while (1)
-        l:{
+        {
             while (1) {
                 if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
                 //printf("%s\n", s);
