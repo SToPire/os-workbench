@@ -125,8 +125,9 @@ int main(int argc, char* argv[])
         fflush(stdout);
         //if (f) goto l;
         int cc = 0;
-        while (waitpid(pid, &status, WNOHANG) == 0) {
-            if(++cc==1000000){
+        while (1) {
+            if (waitpid(pid, &status, WNOHANG) == pid) break;
+            if (++cc == 1000000) {
                 for (int i = 0; i < 128; i++) {
                     if (strcmp(stat[i].name, "") != 0) {
                         printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
