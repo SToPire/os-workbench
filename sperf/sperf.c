@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 
         char s[512];
         node stat[128];
-        double tot = 0.0;
+        //double tot = 0.0;
 
         int cnt = 0;
 
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
             }
             tot = 0.0;
             int ret;
-            if(ret = read(pipe_fd[0],s,sizeof(s))){
+            if((ret = read(pipe_fd[0],s,sizeof(s)))){
                 printf("%s||||||||||||||||||||||||||||\n", s);
             }
         //     while ((ret = read(pipe_fd[0], s, sizeof(s))) && waitpid(pid, &status, WNOHANG) != pid) {
