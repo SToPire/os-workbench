@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
                 stat[i].t = 0.0;
                 strcpy(stat[i].name, "");
             }
-            tot = 0.0;
+            //tot = 0.0;
             int ret;
             if((ret = read(pipe_fd[0],s,sizeof(s)))){
                 printf("%s||||||||||||||||||||||||||||\n", s);
