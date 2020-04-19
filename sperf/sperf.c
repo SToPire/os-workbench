@@ -102,6 +102,7 @@ int main(int argc, char* argv[])
                 if (i1 > 128) continue;
                 for (int i = 0; i < i1; ++i) name[i] = s[i];
                 name[i1] = '\0';
+                if (name[0] = ')') continue;
 
                 for (int i = 0; i < 127; ++i) {
                     if (strcmp(stat[i].name, name) == 0) {
