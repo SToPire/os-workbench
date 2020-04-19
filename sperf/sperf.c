@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
         // fflush(stdout);
         // //if (f) goto l;
         // int cc = 0;
-        waitpid(pid, &status, 0);
+        waitpid(pid, NULL, 0);
         // // while (1) {
         // //     if (waitpid(pid, &status, WNOHANG) == pid) break;
         // //     if (++cc == 1000000) {
