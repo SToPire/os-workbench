@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     if (pid == 0) {  //children
         for (int i = 0; i < 32; i++)
             if (currenetPaths[i]) {
-                //dup2(pipe_fd[1], STDERR_FILENO);
+                dup2(pipe_fd[1], STDERR_FILENO);
                 freopen("/dev/null", "w", stdout);
                 char* newLoc = malloc(strlen(currenetPaths[i]) + 10);
                 strcpy(newLoc, currenetPaths[i]);
@@ -60,12 +60,12 @@ int main(int argc, char* argv[])
             }
     } else {
         sleep(1);
-        dup2(pipe_fd[0], STDIN_FILENO);
-        int flag = fcntl(STDIN_FILENO, F_GETFL);
+        //dup2(pipe_fd[0], STDIN_FILENO);
+        int flag = fcntl(pipe_fd[0], F_GETFL);
         flag |= O_NONBLOCK;
-        fcntl(STDIN_FILENO, F_SETFL, flag);
+        fcntl(pipe_fd[0], F_SETFL, flag);
 
-        char s[512];
+        char s[512],s1[512];
         node stat[128];
         double tot = 0.0;
 
@@ -81,7 +81,11 @@ int main(int argc, char* argv[])
         int f = 0;
 
         while (1) {
-            if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
+            //if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
+            if (read(pipe_fd[0],s1, sizeof(s1)) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
+            int iii = 0;
+            for (; iii < 512 && s1[iii] == '\n'; iii++) s[iii] = s1[iii];
+            s[iii] = '\0';
             //printf("%s\n", s);
             int i2 = strlen(s), i3 = strlen(s);
             while (s[i2] != '<' && i2 >= 0) --i2;
