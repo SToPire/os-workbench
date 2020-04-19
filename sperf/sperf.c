@@ -76,8 +76,9 @@ int main(int argc, char* argv[])
                 strcpy(stat[i].name, "");
             }
             tot = 0.0;
-            while (fgets(s, 512, stdin)) {
-                if (strlen(s) <= 1) continue;
+            int ret;
+            while ((ret = read(pipe_fd[0], s, sizeof(s))) && waitpid(pid, &status, WNOHANG) != pid) {
+                if (ret<=0) continue;
                 int i2 = strlen(s), i3 = strlen(s);
                 while (s[i2] != '<' && i2 >= 0) --i2;
                 while (s[i3] != '>' && i3 >= 0) --i3;
