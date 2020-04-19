@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
                 int i2 = strlen(s), i3 = strlen(s);
                 while (s[i2] != '<' && i2 >= 0) --i2;
                 while (s[i3] != '>' && i3 >= 0) --i3;
-                if (i2 < 0 || i3 < 0) break;
+                if (i2 < 0 || i3 < 0) continue;
                 char ts[64];
                 int tscnt = 0;
                 for (int i = i2 + 1; i < i3; i++) ts[tscnt++] = s[i];
