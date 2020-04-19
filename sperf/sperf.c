@@ -36,6 +36,7 @@ int main(int argc, char* argv[])
             break;
         }
     }
+    exec_envp[envCnt] = NULL;
     int pipe_fd[2];
     if (pipe(pipe_fd) < 0) {
         printf("pipe create error\n");
