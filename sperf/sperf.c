@@ -70,14 +70,13 @@ int main(int argc, char* argv[])
 
         int cnt = 0;
 
+        int status;
+        for (int i = 0; i < 128; i++) {
+            stat[i].t = 0.0;
+            strcpy(stat[i].name, "");
+        }
+        tot = 0.0;
         while (1) {
-            int status;
-            for (int i = 0; i < 128; i++) {
-                stat[i].t = 0.0;
-                strcpy(stat[i].name, "");
-            }
-            tot = 0.0;
-            int ret;
             //if ((ret = read(STDIN_FILENO, s, sizeof(s))) <= 0 && waitpid(pid, &status, WNOHANG) == pid) break;
             if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
             //printf("%s\n", s);
@@ -109,7 +108,7 @@ int main(int argc, char* argv[])
                 }
             }
             tot += t;
-            printf("%s:%f\n", name, t);
+           // printf("%s:%f\n", name, t);
             //if (++cnt == 100000) break;
             //if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
 
