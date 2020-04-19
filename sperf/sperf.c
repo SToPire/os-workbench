@@ -107,7 +107,9 @@ int main(int argc, char* argv[])
                     printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
                 }
             }
+            puts("==========================");
             for (int i = 1; i <= 80; i++) putc(0, stdout);
+            fflush(stdout);
         }
     }
 }
