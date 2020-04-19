@@ -71,6 +71,7 @@ int main(int argc, char* argv[])
         int cnt = 0;
 
         int status;
+    //l:
         for (int i = 0; i < 128; i++) {
             stat[i].t = 0.0;
             strcpy(stat[i].name, "");
@@ -79,7 +80,7 @@ int main(int argc, char* argv[])
 
         int f = 0;
         //while (1)
-        l:{
+        {
             while (1) {
                 if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
                 //printf("%s\n", s);
@@ -111,11 +112,11 @@ int main(int argc, char* argv[])
                     }
                 }
                 tot += t;
-                if (++cnt == 1000){
-                    f = 1;
-                    break;
-                }
-                f = 0;
+                // if (++cnt == 1000){
+                //     f = 1;
+                //     break;
+                // }
+                // f = 0;
             }
             for (int i = 0; i < 128; i++) {
                 if (strcmp(stat[i].name, "") != 0) {
@@ -125,7 +126,7 @@ int main(int argc, char* argv[])
             for (int i = 1; i <= 80; i++) putc(0, stdout);
             puts("==========================");
             fflush(stdout);
-            if (f) goto l;
+            //if (f) goto l;
 
         }
     }
