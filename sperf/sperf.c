@@ -109,6 +109,7 @@ int main(int argc, char* argv[])
                 }
             }
             tot += t;
+            printf("%s:%f\n", name, t);
             //if (++cnt == 100000) break;
             //if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
 
@@ -118,9 +119,9 @@ int main(int argc, char* argv[])
             //     if (waitpid(pid, &status, WNOHANG) == pid) break;
         }
         for (int i = 0; i < 128; i++) {
-            //if (strcmp(stat[i].name, "") != 0) {
+            if (strcmp(stat[i].name, "") != 0) {
                 printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
-            //}
+            }
         }
     }
 }
