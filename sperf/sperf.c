@@ -111,16 +111,16 @@ int main(int argc, char* argv[])
             tot += t;
             //if (++cnt == 100000) break;
             //if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
-        
 
-        //     puts("==========================");
-        //     for (int i = 1; i <= 80; i++) putc(0, stdout);
-        //     fflush(stdout);
-        //     if (waitpid(pid, &status, WNOHANG) == pid) break;
-    }
+            //     puts("==========================");
+            //     for (int i = 1; i <= 80; i++) putc(0, stdout);
+            //     fflush(stdout);
+            //     if (waitpid(pid, &status, WNOHANG) == pid) break;
+        }
         for (int i = 0; i < 128; i++) {
             if (strcmp(stat[i].name, "") != 0) {
                 printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
             }
         }
+    }
 }
