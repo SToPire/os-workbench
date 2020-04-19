@@ -76,7 +76,8 @@ int main(int argc, char* argv[])
             strcpy(stat[i].name, "");
         }
         tot = 0.0;
-        while (waitpid(pid, &status, WNOHANG) != pid) {
+        //while (waitpid(pid, &status, WNOHANG) != pid) 
+        {
             while (1) {
                 if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
                 //printf("%s\n", s);
