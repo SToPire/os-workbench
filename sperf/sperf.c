@@ -69,7 +69,6 @@ int main(int argc, char* argv[])
         node stat[128];
         double tot = 0.0;
 
-        int cnt = 0;
 
         int status;
     l:
@@ -78,6 +77,7 @@ int main(int argc, char* argv[])
             strcpy(stat[i].name, "");
         }
         tot = 0.0;
+        int cnt = 0;
 
         int f = 0;
         //while (1)
