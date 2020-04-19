@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
                     }
                 }
                 tot += t;
-                if (++cnt == 1000){
+                if (++cnt == 10){
                     f = 1;
                     break;
                 }
