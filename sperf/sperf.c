@@ -77,7 +77,8 @@ int main(int argc, char* argv[])
             }
             //tot = 0.0;
             int ret;
-            if ((ret = read(STDIN_FILENO, s, sizeof(s))) <= 0 && waitpid(pid, &status, WNOHANG) == pid) break;
+            //if ((ret = read(STDIN_FILENO, s, sizeof(s))) <= 0 && waitpid(pid, &status, WNOHANG) == pid) break;
+            if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
             printf("%s\n", s);
             //     while ((ret = read(pipe_fd[0], s, sizeof(s))) && waitpid(pid, &status, WNOHANG) != pid) {
             //         if (ret<=0) continue;
