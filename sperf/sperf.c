@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
             puts("==========================");
             fflush(stdout);
             //if (f) goto l;
-            while (waitpid(pid, &status, WNOHANG) != pid){
+            while (waitpid(pid, &status, WNOHANG) ==0){
                 printf("hhhhh\n");
             }
         }
