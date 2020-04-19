@@ -3,12 +3,23 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <signal.h>
 
 typedef struct __node {
     char name[64];
     double t;
 } node;
 
+void handle(int sig)
+{
+    if (sig == SIGCHLD) {
+        int pid;
+        int status;
+        while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
+        }
+    }
+}
 int main(int argc, char* argv[])
 {
     char* exec_argv[argc + 2];
@@ -43,6 +54,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+    signal(SIGCHLD, handle);
     __pid_t pid = fork();
     if (pid == 0) {  //children
         for (int i = 0; i < 32; i++)
@@ -64,7 +76,7 @@ int main(int argc, char* argv[])
 
         int cnt = 0;
 
-        while (1) {
+        while (kill(pid,0)>=0) {
             for (int i = 0; i < 128; i++) {
                 stat[i].t = 0.0;
                 strcpy(stat[i].name, "");
