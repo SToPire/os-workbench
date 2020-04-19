@@ -69,7 +69,6 @@ int main(int argc, char* argv[])
         node stat[128];
         double tot = 0.0;
 
-
         int status;
     l:
         for (int i = 0; i < 128; i++) {
@@ -83,13 +82,20 @@ int main(int argc, char* argv[])
         //while (1)
         {
             while (1) {
+                strcpy(s, "");
                 if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
                 //printf("%s\n", s);
-
+                if (strcmp(s, "") == 0) {
+                    ++cnt;
+                    continue;
+                }
                 int i2 = strlen(s), i3 = strlen(s);
                 while (s[i2] != '<' && i2 >= 0) --i2;
                 while (s[i3] != '>' && i3 >= 0) --i3;
-                if (i2 < 0 || i3 < 0) continue;
+                if (i2 < 0 || i3 < 0) {
+                    ++cnt;
+                    continue;
+                }
                 char ts[64];
                 int tscnt = 0;
                 for (int i = i2 + 1; i < i3; i++) ts[tscnt++] = s[i];
@@ -99,11 +105,16 @@ int main(int argc, char* argv[])
                 int i1 = 0;
                 char name[128];
                 while (s[i1] != '(') ++i1;
-                if (i1 > 128) continue;
+                if (i1 > 128) {
+                    ++cnt;
+                    continue;
+                }
                 for (int i = 0; i < i1; ++i) name[i] = s[i];
                 name[i1] = '\0';
-                if (!(name[0] >= 'a' && name[0]<='z')) continue;
-
+                if (!(name[0] >= 'a' && name[0] <= 'z')) {
+                    ++cnt;
+                    continue;
+                }
                 for (int i = 0; i < 127; ++i) {
                     if (strcmp(stat[i].name, name) == 0) {
                         stat[i].t += t;
@@ -115,7 +126,8 @@ int main(int argc, char* argv[])
                     }
                 }
                 tot += t;
-                if (++cnt == 100){
+                ++cnt;
+                if (cnt == 1000) {
                     f = 1;
                     break;
                 }
@@ -129,7 +141,6 @@ int main(int argc, char* argv[])
             puts("==========================");
             fflush(stdout);
             if (f) goto l;
-
         }
     }
 }
