@@ -23,9 +23,10 @@ int main(int argc, char* argv[])
     char* currenetPaths[32] = {NULL};
     char* exec_envp[128];
     exec_envp[0] = "2>/dev/null";
+    exec_envp[1] = "1>/dev/null";
 
     extern char** environ;
-    int envCnt = 1;
+    int envCnt = 2;
     for (char** i = environ; *i != NULL; i++) {
         exec_envp[envCnt++] = *i;
         if (strncmp(*i, "PATH=", 5) == 0) {
