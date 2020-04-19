@@ -76,51 +76,48 @@ int main(int argc, char* argv[])
             strcpy(stat[i].name, "");
         }
         tot = 0.0;
-        while (1) {
-            //if ((ret = read(STDIN_FILENO, s, sizeof(s))) <= 0 && waitpid(pid, &status, WNOHANG) == pid) break;
-            if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
-            //printf("%s\n", s);
+        while (waitpid(pid, &status, WNOHANG) != pid) {
+            while (1) {
+                if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
+                //printf("%s\n", s);
 
-            int i2 = strlen(s), i3 = strlen(s);
-            while (s[i2] != '<' && i2 >= 0) --i2;
-            while (s[i3] != '>' && i3 >= 0) --i3;
-            if (i2 < 0 || i3 < 0) break;
-            char ts[64];
-            int tscnt = 0;
-            for (int i = i2 + 1; i < i3; i++) ts[tscnt++] = s[i];
-            ts[tscnt] = '\0';
-            double t = strtod(ts, 0);
+                int i2 = strlen(s), i3 = strlen(s);
+                while (s[i2] != '<' && i2 >= 0) --i2;
+                while (s[i3] != '>' && i3 >= 0) --i3;
+                if (i2 < 0 || i3 < 0) break;
+                char ts[64];
+                int tscnt = 0;
+                for (int i = i2 + 1; i < i3; i++) ts[tscnt++] = s[i];
+                ts[tscnt] = '\0';
+                double t = strtod(ts, 0);
 
-            int i1 = 0;
-            char name[64];
-            while (s[i1] != '(') ++i1;
-            for (int i = 0; i < i1; ++i) name[i] = s[i];
-            name[i1] = '\0';
+                int i1 = 0;
+                char name[64];
+                while (s[i1] != '(') ++i1;
+                for (int i = 0; i < i1; ++i) name[i] = s[i];
+                name[i1] = '\0';
 
-            for (int i = 0; i < 127; ++i) {
-                if (strcmp(stat[i].name, name) == 0) {
-                    stat[i].t += t;
-                    break;
-                } else if (strcmp(stat[i].name, "") == 0) {
-                    strcpy(stat[i].name, name);
-                    stat[i].t += t;
-                    break;
+                for (int i = 0; i < 127; ++i) {
+                    if (strcmp(stat[i].name, name) == 0) {
+                        stat[i].t += t;
+                        break;
+                    } else if (strcmp(stat[i].name, "") == 0) {
+                        strcpy(stat[i].name, name);
+                        stat[i].t += t;
+                        break;
+                    }
+                }
+                tot += t;
+                //if (++cnt == 100000) break;
+            }
+            for (int i = 0; i < 128; i++) {
+                if (strcmp(stat[i].name, "") != 0) {
+                    printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
                 }
             }
-            tot += t;
-           // printf("%s:%f\n", name, t);
-            //if (++cnt == 100000) break;
-            //if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
-
-            //     puts("==========================");
-            //     fflush(stdout);
-            //     if (waitpid(pid, &status, WNOHANG) == pid) break;
+            for (int i = 1; i <= 80; i++) putc(0, stdout);
+            puts("==========================");
+            fflush(stdout);
         }
-        for (int i = 0; i < 128; i++) {
-            if (strcmp(stat[i].name, "") != 0) {
-                printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
-            }
-        }
-        for (int i = 1; i <= 80; i++) putc(0, stdout);
     }
 }
