@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <signal.h>
-
+#include <fcntl.h>
 typedef struct __node {
     char name[64];
     double t;
@@ -69,7 +69,10 @@ int main(int argc, char* argv[])
     } else {
         sleep(1);
         dup2(pipe_fd[0], STDIN_FILENO);
-        //waitpid(pid,0,0);
+        int flag = fcntl(STDIN_FILENO, F_GETFL);
+        flag |= O_NONBLOCK;
+        fcntl(STDIN_FILENO, F_SETFL, flag);
+
         char s[512];
         node stat[128];
         double tot = 0.0;
