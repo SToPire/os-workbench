@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
                     }
                 }
                 tot += t;
-                if (++cnt == 1000) break;
+                if (++cnt == 10000) break;
                 if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
             }
             for (int i = 0; i < 128; i++) {
