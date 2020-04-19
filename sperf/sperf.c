@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 
         char s[512];
         node stat[128];
-        //double tot = 0.0;
+        double tot = 0.0;
 
         int cnt = 0;
 
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
                 stat[i].t = 0.0;
                 strcpy(stat[i].name, "");
             }
-            //tot = 0.0;
+            tot = 0.0;
             int ret;
             //if ((ret = read(STDIN_FILENO, s, sizeof(s))) <= 0 && waitpid(pid, &status, WNOHANG) == pid) break;
             if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
