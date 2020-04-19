@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
             }
             //tot = 0.0;
             int ret;
-            if((ret = read(pipe_fd[0],s,sizeof(s)))){
+            if ((ret = read(pipe_fd[0], s, sizeof(s))) && waitpid(pid, &status, WNOHANG) != pid) {
                 printf("%s||||||||||||||||||||||||||||\n", s);
             }
         //     while ((ret = read(pipe_fd[0], s, sizeof(s))) && waitpid(pid, &status, WNOHANG) != pid) {
