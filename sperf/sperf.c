@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
                 strcpy(stat[i].name, "");
             }
             tot = 0.0;
-            while (fgets(s, 512, stdin) &&) {
+            while (fgets(s, 512, stdin)) {
                 if (strlen(s) <= 1) continue;
                 int i2 = strlen(s), i3 = strlen(s);
                 while (s[i2] != '<' && i2 >= 0) --i2;
