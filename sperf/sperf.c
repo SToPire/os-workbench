@@ -125,19 +125,19 @@ int main(int argc, char* argv[])
         fflush(stdout);
         if (f) goto l;
         int cc = 0;
-        while (1) {
-            if (waitpid(pid, &status, WNOHANG) == pid) break;
-            fgets(s, 512, stdin);
-            if (++cc == 1000000) {
-                for (int i = 0; i < 128; i++) {
-                    if (strcmp(stat[i].name, "") != 0) {
-                        printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
-                    }
-                }
-                for (int i = 1; i <= 80; i++) putc(0, stdout);
-                fflush(stdout);
-                cc = 0;
-            }
-        }
+        // while (1) {
+        //     if (waitpid(pid, &status, WNOHANG) == pid) break;
+        //     fgets(s, 512, stdin);
+        //     if (++cc == 1000000) {
+        //         for (int i = 0; i < 128; i++) {
+        //             if (strcmp(stat[i].name, "") != 0) {
+        //                 printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
+        //             }
+        //         }
+        //         for (int i = 1; i <= 80; i++) putc(0, stdout);
+        //         fflush(stdout);
+        //         cc = 0;
+        //     }
+        // }
     }
 }
