@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 
         while (1) {
             //if (fgets(s, sizeof(s), stdin) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
-            if (read(pipe_fd[0],s1, sizeof(s1)) == NULL && waitpid(pid, &status, WNOHANG) == pid) break;
+            if (read(pipe_fd[0],s1, sizeof(s1)) < 0 && waitpid(pid, &status, WNOHANG) == pid) break;
             int iii = 0;
             for (; iii < 512 && s1[iii] == '\n'; iii++) s[iii] = s1[iii];
             s[iii] = '\0';
