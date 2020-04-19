@@ -26,9 +26,11 @@ int main(int argc, char* argv[])
     char* currenetPaths[32] = {NULL};
 
     extern char** environ;
-    for (char** i = environ; *i != NULL; i++)
+    int envCnt = 0;
+    for (char** i = environ; *i != NULL; i++) {
+        exec_envp[envCnt++] = *i;
         if (strncmp(*i, "PATH=", 5) == 0) {
-            exec_envp[0] = *i;
+            //exec_envp[0] = *i;
             char* tmp = malloc(strlen(*i));
             strcpy(tmp, *i + 5);
             strtok(tmp, ":");
@@ -37,7 +39,7 @@ int main(int argc, char* argv[])
                 ;
             break;
         }
-
+    }
     int pipe_fd[2];
     if (pipe(pipe_fd) < 0) {
         printf("pipe create error\n");
