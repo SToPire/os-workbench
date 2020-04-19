@@ -58,10 +58,10 @@ int main(int argc, char* argv[])
             }
     } else {
         sleep(1);
-        //dup2(pipe_fd[0], STDIN_FILENO);
-        int flag = fcntl(pipe_fd[0], F_GETFL);
+        dup2(pipe_fd[0], STDIN_FILENO);
+        int flag = fcntl(STDIN_FILENO, F_GETFL);
         flag |= O_NONBLOCK;
-        fcntl(pipe_fd[0], F_SETFL, flag);
+        fcntl(STDIN_FILENO, F_SETFL, flag);
 
         char s[512];
         node stat[128];
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
             }
             //tot = 0.0;
             int ret;
-            if ((ret = read(pipe_fd[0], s, sizeof(s))) <= 0 && waitpid(pid, &status, WNOHANG) == pid) break;
+            if ((ret = read(STDIN_FILENO, s, sizeof(s))) <= 0 && waitpid(pid, &status, WNOHANG) == pid) break;
             printf("%s\n", s);
             //     while ((ret = read(pipe_fd[0], s, sizeof(s))) && waitpid(pid, &status, WNOHANG) != pid) {
             //         if (ret<=0) continue;
