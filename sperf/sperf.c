@@ -126,8 +126,8 @@ int main(int argc, char* argv[])
         //if (f) goto l;
         int cc = 0;
         while (1) {
-            dup2(pipe_fd[0], "/dev/null");
             if (waitpid(pid, &status, WNOHANG) == pid) break;
+            fgets(s, 512, stdin);
             if (++cc == 1000000) {
                 for (int i = 0; i < 128; i++) {
                     if (strcmp(stat[i].name, "") != 0) {
