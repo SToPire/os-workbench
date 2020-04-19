@@ -58,10 +58,10 @@ int main(int argc, char* argv[])
             }
     } else {
         sleep(1);
-        dup2(pipe_fd[0], STDIN_FILENO);
-        int flag = fcntl(STDIN_FILENO, F_GETFL);
+        //dup2(pipe_fd[0], STDIN_FILENO);
+        int flag = fcntl(pipe_fd[0], F_GETFL);
         flag |= O_NONBLOCK;
-        fcntl(STDIN_FILENO, F_SETFL, flag);
+        fcntl(pipe_fd[0], F_SETFL, flag);
 
         char s[512];
         node stat[128];
