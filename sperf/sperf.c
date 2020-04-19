@@ -124,8 +124,18 @@ int main(int argc, char* argv[])
         puts("==========================");
         fflush(stdout);
         //if (f) goto l;
+        int cc = 0;
         while (waitpid(pid, &status, WNOHANG) == 0) {
-            printf("%d %d\n", waitpid(pid, &status, WNOHANG),pid);
+            if(++cc==1000000){
+                for (int i = 0; i < 128; i++) {
+                    if (strcmp(stat[i].name, "") != 0) {
+                        printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
+                    }
+                }
+                for (int i = 1; i <= 80; i++) putc(0, stdout);
+                fflush(stdout);
+                cc = 0;
+            }
         }
     }
 }
