@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
         for (int i = 0; i < 32; i++)
             if (currenetPaths[i]) {
                 dup2(pipe_fd[1], STDERR_FILENO);
-                //freopen("/dev/null", "w", stdout);
+                freopen("/dev/null", "w", stdout);
                 char* newLoc = malloc(strlen(currenetPaths[i]) + 10);
                 strcpy(newLoc, currenetPaths[i]);
                 strcat(newLoc, "/strace");
@@ -125,18 +125,18 @@ int main(int argc, char* argv[])
         fflush(stdout);
         //if (f) goto l;
         int cc = 0;
-        while (1) {
-            if (waitpid(pid, &status, WNOHANG) == pid) break;
-            if (++cc == 1000000) {
-                for (int i = 0; i < 128; i++) {
-                    if (strcmp(stat[i].name, "") != 0) {
-                        printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
-                    }
-                }
-                for (int i = 1; i <= 80; i++) putc(0, stdout);
-                fflush(stdout);
-                cc = 0;
-            }
-        }
+        // while (1) {
+        //     if (waitpid(pid, &status, WNOHANG) == pid) break;
+        //     if (++cc == 1000000) {
+        //         for (int i = 0; i < 128; i++) {
+        //             if (strcmp(stat[i].name, "") != 0) {
+        //                 printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
+        //             }
+        //         }
+        //         for (int i = 1; i <= 80; i++) putc(0, stdout);
+        //         fflush(stdout);
+        //         cc = 0;
+        //     }
+        // }
     }
 }
