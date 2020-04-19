@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     exec_argv[argc + 1] = NULL;
 
     char* currenetPaths[32] = {NULL};
-    char* exec_envp[128];
+    char* exec_envp[72];
 
     extern char** environ;
     int envCnt = 0;
