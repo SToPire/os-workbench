@@ -113,7 +113,6 @@ int main(int argc, char* argv[])
             //if (strcmp(s, "+++ exited with 0 +++\n") == 0) break;
 
             //     puts("==========================");
-            //     for (int i = 1; i <= 80; i++) putc(0, stdout);
             //     fflush(stdout);
             //     if (waitpid(pid, &status, WNOHANG) == pid) break;
         }
@@ -122,5 +121,6 @@ int main(int argc, char* argv[])
                 printf("%s(%.0f%%)\n", stat[i].name, 100 * stat[i].t / tot);
             }
         }
+        for (int i = 1; i <= 80; i++) putc(0, stdout);
     }
 }
