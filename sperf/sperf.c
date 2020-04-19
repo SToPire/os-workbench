@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 
         int cnt = 0;
 
-        while (kill(pid,0)>=0) {
+        while (1) {
             for (int i = 0; i < 128; i++) {
                 stat[i].t = 0.0;
                 strcpy(stat[i].name, "");
