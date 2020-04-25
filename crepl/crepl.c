@@ -46,9 +46,12 @@ int main(int argc, char* argv[])
                 fprintf(stderr, "%s\n", dlerror());
                 exit(EXIT_FAILURE);
             }
-            WRAPPER W;
-            W = (WRAPPER)dlsym(handle, wrapper_name);
-            printf("%d\n", W());
+            if (strncmp(line, "int", 3) == 0) {
+            } else {
+                WRAPPER W;
+                W = (WRAPPER)dlsym(handle, wrapper_name);
+                printf("%d\n", W());
+            }
             //printf("Got %zu chars.\n", strlen(line));  // WTF?
         }
     }
