@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     // char* exec_envp[] = {NULL, NULL};
     // exec_envp[0] = path;
 
-    char* exec_argc[] = {"-fPIC", "-shared", "/tmp/tmp.c", "-o", "tmp/tmp.o"};
+    char* exec_argc[] = {"-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.o"};
     __pid_t pid = fork();
     if(pid==0){
         execvp("gcc", exec_argc);
