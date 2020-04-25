@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
         sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
         FILE* fp = fopen(Cname, "w+");
 
+
         char wrapper[4096 + 64], wrapper_name[32];
         if (strncmp(line, "int", 3) == 0) {
             fputs(line, fp);
@@ -41,14 +42,13 @@ int main(int argc, char* argv[])
         } else {
             while (waitpid(pid, NULL, WNOHANG) != pid)
                 ;
-            void* handle = dlopen(Soname, RTLD_NOW);
+            void* handle = dlopen(Soname, RTLD_LAZY);
             if (!handle) {
                 fprintf(stderr, "%s\n", dlerror());
                 exit(EXIT_FAILURE);
             }
             if (strncmp(line, "int", 3) == 0) {
-                WRAPPER W;
-                printf("%d\n", f());
+                static WRAPPER f = (WRAPPER)dlsym(handle, "f");
             } else {
                 WRAPPER W;
                 W = (WRAPPER)dlsym(handle, wrapper_name);
