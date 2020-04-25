@@ -5,12 +5,10 @@
 #include<sys/wait.h>
 
 int main(int argc, char *argv[]) {
-    //char* exec_argv[] = {"gcc","-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.so"};
-    char* exec_argv[] = {"gcc","-v",NULL};
+    char* exec_argv[] = {"gcc","-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.so",NULL};
     __pid_t pid = fork();
     if(pid==0){
         execvp("gcc", exec_argv);
-        //execvp("ls",exec_argv);
     } else {
         while(waitpid(pid,NULL,WNOHANG)!=pid)
             ;
