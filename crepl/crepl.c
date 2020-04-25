@@ -17,7 +17,6 @@ int main(int argc, char* argv[])
 {
     static char line[4096];
     while (1) {
-        printf("%d", funcsCnt);
         printf("crepl> ");
         fflush(stdout);
         if (!fgets(line, sizeof(line), stdin)) {
@@ -32,19 +31,19 @@ int main(int argc, char* argv[])
         char wrapper[4096 + 64], wrapper_name[32];
         char fun_name[4096];
         if (strncmp(line, "int", 3) == 0) {
-            strcpy(fun_name, line + 4);
-            int i = 0;
-            for (; fun_name[i] != '(';++i)
-                ;
-            fun_name[i] = '\0';
+            // strcpy(fun_name, line + 4);
+            // int i = 0;
+            // for (; fun_name[i] != '(';++i)
+            //     ;
+            // fun_name[i] = '\0';
             strcpy(funcs[funcsCnt++], line);
 
             for (int i = 0; i < funcsCnt; ++i) {
                 fputs(funcs[i], fp);
             }
-            sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
-            sprintf(wrapper, "int __expr_wrapper_%d(){return %s();}", FILECNT, fun_name);
-            fputs(wrapper, fp);
+            // sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
+            // sprintf(wrapper, "int __expr_wrapper_%d(){return %s();}", FILECNT, fun_name);
+            // fputs(wrapper, fp);
 
         } else {
             for (int i = 0; i < funcsCnt; ++i) {
@@ -89,6 +88,7 @@ int main(int argc, char* argv[])
                 fprintf(stderr, "%s\n", dlerror());
                 exit(EXIT_FAILURE);
             }
+
             if (strncmp(line, "int", 3) == 0) {
                 ;
             } else {
