@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <dlfcn.h>
+#include <fcntl.h>
 
 int FILECNT = 0;
 
@@ -11,8 +12,15 @@ typedef int (*WRAPPER)();
 
 char funcs[100][4096];
 int funcsCnt = 0;
+
 int main(int argc, char* argv[])
 {
+    int pipe_fd[2];
+    if (pipe(pipe_fd) < 0) {
+        printf("pipe create error\n");
+        return -1;
+    }
+
     static char line[4096];
     while (1) {
         printf("crepl> ");
@@ -43,10 +51,18 @@ int main(int argc, char* argv[])
         char* exec_argv[] = {"gcc", "-w", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
         __pid_t pid = fork();
         if (pid == 0) {
+            dup2(pipe_fd[1], STDERR_FILENO);
             execvp("gcc", exec_argv);
         } else {
             while (waitpid(pid, NULL, WNOHANG) != pid)
                 ;
+
+            int flag = fcntl(pipe_fd[0,F_GETFL);
+            flag |= O_NONBLOCK;
+            fcntl(pipe_fd[0], F_SETFL, flag);
+            char ERR[16];
+            if (read(pipe_fd[0], ERR, 1) == 1) continue;
+
             void* handle = dlopen(Soname, RTLD_LAZY);
             if (!handle) {
                 fprintf(stderr, "%s\n", dlerror());
