@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
         } else {
             while (waitpid(pid, NULL, WNOHANG) != pid)
                 ;
-            void* handle = dlopen("/tmp/tmp.so", RTLD_LAZY);
+            void* handle = dlopen(Soname, RTLD_LAZY);
             if (!handle) {
                 fprintf(stderr, "%s\n", dlerror());
                 exit(EXIT_FAILURE);
