@@ -53,10 +53,11 @@ int main(int argc, char* argv[])
                 printf("%d\n", f());
 
             } else {
-                WRAPPER W;
-                W = (WRAPPER)dlsym(handle, wrapper_name);
-            printf("HERE\n");
-                printf("%d\n", W());
+                printf("%d\n", f());
+
+                // WRAPPER W;
+                // W = (WRAPPER)dlsym(handle, wrapper_name);
+                // printf("%d\n", W());
             }
             dlclose(handle);
         }
