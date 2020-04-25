@@ -23,28 +23,36 @@ int main(int argc, char* argv[])
             break;
         }
 
-        char Cname[32], Soname[32];
-        sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
-        sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
-        FILE* fp = fopen(Cname, "w+");
+        // char Cname[32], Soname[32];
+        // sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
+        // sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
+        // FILE* fp = fopen(Cname, "w+");
+        char Cname[] = "/tmp/XXXXXX";
+        int fd = mkstemp(Cname);
+        char Soname[32];
+        sprintf(Soname, "%s.so", Cname);
 
         char wrapper[4096 + 64], wrapper_name[32];
         char fun_name[4096];
         if (strncmp(line, "int", 3) == 0) {
             strcpy(funcs[funcsCnt++], line);
             for (int i = 0; i < funcsCnt; ++i) {
-                fputs(funcs[i], fp);
+                //fputs(funcs[i], fp);
+                write(fd, funcs[i], sizeof(funcs[i]));
             }
         } else {
             for (int i = 0; i < funcsCnt; ++i) {
-                fputs(funcs[i], fp);
+                //fputs(funcs[i], fp);
+                write(fd, funcs[i], sizeof(funcs[i]));
             }
             sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
             sprintf(wrapper, "int __expr_wrapper_%d(){return %s;}", FILECNT, line);
-            fputs(wrapper, fp);
+            //fputs(wrapper, fp);
+            write(fd, funcs[i], sizeof(funcs[i]));
         }
-
-        fclose(fp);
+        
+        close(fd);
+        //fclose(fp);
 
         char* exec_argv[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
 
