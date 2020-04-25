@@ -3,7 +3,9 @@
 #include<stdlib.h>
 
 int main(int argc, char *argv[]) {
-    printf("%s\n", getenv("PATH"));
+    char s1[128] = getenv("PATH");
+    char s2[128] = "PATH=";
+    strcat(s2, s1);
 
     static char line[4096];
     while (1) {
