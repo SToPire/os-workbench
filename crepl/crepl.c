@@ -29,13 +29,10 @@ int main(int argc, char* argv[])
         FILE* fp = fopen(Cname, "w+");
 
         char wrapper[4096 + 64], wrapper_name[32];
-        char fun_name[32];
+        char fun_name[4096];
         if (strncmp(line, "int", 3) == 0) {
-            int ii = 0,nameCnt=0;
-            while(++ii != '(')
-                ;
-            ii -= 5;
-            strncpy(fun_name, line + 4, ii);
+            
+            strcpy(fun_name, line + 4);
             puts(fun_name);
             //strcpy(funcs[funcsCnt++], line);
         } else {
