@@ -10,11 +10,12 @@ int main(int argc, char *argv[]) {
     // char* exec_envp[] = {NULL, NULL};
     // exec_envp[0] = path;
 
-    char* exec_argc[] = {"-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.so"};
+    //char* exec_argv[] = {"-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.so"};
+    char* exec_argv[] = {NULL};
     __pid_t pid = fork();
     if(pid==0){
-        //execvp("gcc", exec_argc);
-        execvp("ls",NULL);
+        //execvp("gcc", exec_argv);
+        execvp("ls",exec_argv);
     } else {
         while(waitpid(pid,NULL,WNOHANG)!=pid)
             ;
