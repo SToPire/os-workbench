@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
                 WRAPPER W;
                 W = (WRAPPER)dlsym(handle, wrapper_name);
                 printf("%d\n", W());
-                dlclose(handle);
+                //dlclose(handle);
             }
         }
     }
