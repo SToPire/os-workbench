@@ -50,16 +50,12 @@ int main(int argc, char* argv[])
             }
             if (strncmp(line, "int", 3) == 0) {
                 f = (WRAPPER)dlsym(handle, "f");
-                printf("%d\n", f());
-
             } else {
-                printf("%d\n", f());
-
-                // WRAPPER W;
-                // W = (WRAPPER)dlsym(handle, wrapper_name);
-                // printf("%d\n", W());
+                WRAPPER W;
+                W = (WRAPPER)dlsym(handle, wrapper_name);
+                printf("%d\n", W());
+                dlclose(handle);
             }
-            //dlclose(handle);
         }
     }
 }
