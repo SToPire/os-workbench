@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
         // FILE* fp = fopen(Cname, "w+");
         char Cname[32] = "/tmp/crepl-XXXXXX";
         int fd = mkstemp(Cname);
-        char Soname[32];
+        char Soname[40];
         sprintf(Soname, "%s.so", Cname);
         strcat(Cname, ".c");
 
