@@ -13,6 +13,7 @@ int main(int argc, char *argv[]) {
     if(pid==0){
         execvp("gcc", exec_argc);
     } else {
+        sleep(1);
         static char line[4096];
         while (1) {
             printf("crepl> ");
