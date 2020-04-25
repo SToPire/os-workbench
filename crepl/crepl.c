@@ -33,22 +33,21 @@ int main(int argc, char* argv[])
         sprintf(Soname, "%s.so", Cname);
 
         char wrapper[4096 + 64], wrapper_name[32];
-        char fun_name[4096];
         if (strncmp(line, "int", 3) == 0) {
             strcpy(funcs[funcsCnt++], line);
             for (int i = 0; i < funcsCnt; ++i) {
                 //fputs(funcs[i], fp);
-                write(fd, funcs[i], sizeof(funcs[i]));
+                write(fd, funcs[i], strlen(funcs[i]));
             }
         } else {
             for (int i = 0; i < funcsCnt; ++i) {
                 //fputs(funcs[i], fp);
-                write(fd, funcs[i], sizeof(funcs[i]));
+                write(fd, funcs[i], strlen(funcs[i]));
             }
             sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
             sprintf(wrapper, "int __expr_wrapper_%d(){return %s;}", FILECNT, line);
             //fputs(wrapper, fp);
-            write(fd,wrapper, sizeof(wrapper));
+            write(fd, wrapper, strlen(wrapper));
         }
 
         close(fd);
@@ -58,7 +57,7 @@ int main(int argc, char* argv[])
 
         int pipe_fd[2];
         if (pipe(pipe_fd) < 0) {
-            fprintf(stderr,"pipe create error\n");
+            fprintf(stderr, "pipe create error\n");
             exit(EXIT_FAILURE);
         }
 
