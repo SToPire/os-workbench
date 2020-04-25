@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
             sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
             sprintf(wrapper, "int __expr_wrapper_%d(){return %s;}", FILECNT, line);
             //fputs(wrapper, fp);
-            write(fd,wrapper, sizeof(funcs[i]));
+            write(fd,wrapper, sizeof(wrapper));
         }
 
         close(fd);
