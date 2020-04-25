@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
 
         char prefix[] = "FILE-XXXXXX";
         int fd = mkstemp(prefix);
+        printf("%s", prefix);
         char* exec_argv[] = {"gcc", "-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.so", NULL};
         __pid_t pid = fork();
         if (pid == 0) {
