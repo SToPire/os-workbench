@@ -28,11 +28,10 @@ int main(int argc, char* argv[])
 
         char wrapper[4096 + 64], wrapper_name[32];
         if (strncmp(line, "int", 3) == 0) {
-            fputs(line, fp);
             strcpy(funcs[funcsCnt++], line);
         } else {
             for (int i = 0; i < funcsCnt; ++i) {
-                fputs(line, fp);
+                fputs(funcs[i], fp);
             }
             sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
             sprintf(wrapper, "int __expr_wrapper_%d(){return %s;}", FILECNT, line);
