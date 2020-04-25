@@ -31,12 +31,11 @@ int main(int argc, char* argv[])
         char wrapper[4096 + 64], wrapper_name[32];
         char fun_name[32];
         if (strncmp(line, "int", 3) == 0) {
-            int ii = 0,i=4;
+            int ii = 0,nameCnt=0;
             while(++ii != '(')
                 ;
-            for (; i < ii;i++)
-                fun_name[i - 4] = line[i];
-            fun_name[i] = '\0';
+            ii -= 5;
+            strncpy(fun_name, line + 4, ii);
             puts(fun_name);
             //strcpy(funcs[funcsCnt++], line);
         } else {
