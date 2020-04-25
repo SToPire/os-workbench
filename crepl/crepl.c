@@ -5,10 +5,10 @@
 #include <sys/wait.h>
 #include <dlfcn.h>
 
-
 int FILECNT = 0;
 
 typedef int (*FUN)();
+typedef void (*WRAPPER)();
 int main(int argc, char* argv[])
 {
     static char line[4096];
@@ -19,11 +19,20 @@ int main(int argc, char* argv[])
             break;
         }
 
-        char Cname[32],Soname[32];
+        char Cname[32], Soname[32];
         sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
         sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
         FILE* fp = fopen(Cname, "w+");
-        fputs(line,fp);
+
+        char wrapper[4096 + 64], wrapper_name[32];
+        if (strncmp(line, "int", 3) == 0) {
+            fputs(line, fp);
+        } else {
+            sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
+            sprintf(wrapper, "__expr_wrapper_%d(){return %s;}", FILECNT, line);
+            fputs(wrapper, fp);
+        }
+
         fclose(fp);
 
         char* exec_argv[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
@@ -38,10 +47,12 @@ int main(int argc, char* argv[])
                 fprintf(stderr, "%s\n", dlerror());
                 exit(EXIT_FAILURE);
             }
-            FUN F;
-            F = (FUN)dlsym(handle, "f");
-            printf("output:%d\n", F());
-
+            // FUN F;
+            // F = (FUN)dlsym(handle, "f");
+            // printf("output:%d\n", F());
+            WRAPPER W;
+            W = (WRAPPER)dlsym(handle, wrapper_name);
+            printf("output:%d\n", W());
             printf("Got %zu chars.\n", strlen(line));  // WTF?
         }
     }
