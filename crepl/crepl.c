@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
 
         fclose(fp);
 
-        char* exec_argv[] = {"gcc", "-w", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
+        char* exec_argv[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
 
         int pipe_fd[2];
         if (pipe(pipe_fd) < 0) {
