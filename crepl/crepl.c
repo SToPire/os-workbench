@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
         } else {
             while (waitpid(pid, NULL, WNOHANG) != pid)
                 ;
-            void* handle = dlopen(Soname, RTLD_LAZY);
+            void* handle = dlopen(Soname, RTLD_NOW);
             if (!handle) {
                 fprintf(stderr, "%s\n", dlerror());
                 exit(EXIT_FAILURE);
