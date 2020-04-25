@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
         // sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
         // sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
         // FILE* fp = fopen(Cname, "w+");
-        char Cname[] = "/tmp/XXXXXX";
+        char Cname[] = "/tmp/crepl-XXXXXX";
         int fd = mkstemp(Cname);
         char Soname[32];
         sprintf(Soname, "%s.so", Cname);
