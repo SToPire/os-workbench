@@ -46,13 +46,10 @@ int main(int argc, char* argv[])
                 fprintf(stderr, "%s\n", dlerror());
                 exit(EXIT_FAILURE);
             }
-            // FUN F;
-            // F = (FUN)dlsym(handle, "f");
-            // printf("output:%d\n", F());
             WRAPPER W;
             W = (WRAPPER)dlsym(handle, wrapper_name);
-            printf("output:%d\n", W());
-            printf("Got %zu chars.\n", strlen(line));  // WTF?
+            printf("%d\n", W());
+            //printf("Got %zu chars.\n", strlen(line));  // WTF?
         }
     }
 }
