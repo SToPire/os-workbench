@@ -44,7 +44,6 @@ int main(int argc, char* argv[])
             while (waitpid(pid, NULL, WNOHANG) != pid)
                 ;
             void* handle = dlopen(Soname, RTLD_LAZY);
-            printf("HERE\n");
             if (!handle) {
                 fprintf(stderr, "%s\n", dlerror());
                 exit(EXIT_FAILURE);
@@ -56,6 +55,7 @@ int main(int argc, char* argv[])
             } else {
                 WRAPPER W;
                 W = (WRAPPER)dlsym(handle, wrapper_name);
+            printf("HERE\n");
                 printf("%d\n", W());
             }
             dlclose(handle);
