@@ -72,14 +72,14 @@ int main(int argc, char* argv[])
             while (waitpid(pid, NULL, WNOHANG) != pid)
                 ;
 
-            int flag = fcntl(pipe_fd[0],F_GETFL);
+            int flag = fcntl(pipe_fd[0], F_GETFL);
             flag |= O_NONBLOCK;
             fcntl(pipe_fd[0], F_SETFL, flag);
             char ERR[16];
-            if (read(pipe_fd[0], ERR, 1) == 1){
+            if (read(pipe_fd[0], ERR, 1) == 1) {
                 close(pipe_fd[0]);
                 close(pipe_fd[1]);
-                --funcsCnt;
+                if (strncmp(line, "int", 3) == 0) --funcsCnt;
                 continue;
             }
 
