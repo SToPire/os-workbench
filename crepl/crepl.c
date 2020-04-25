@@ -3,7 +3,7 @@
 #include<stdlib.h>
 
 int main(int argc, char *argv[]) {
-    char s1[128];
+    char s1[256];
     sprintf(s1, "PATH=%s", getenv("PATH"));
     puts(s1);
 
