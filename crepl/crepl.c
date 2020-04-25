@@ -7,8 +7,7 @@
 
 int FILECNT = 0;
 
-typedef int (*FUN)();
-typedef void (*WRAPPER)();
+typedef int (*WRAPPER)();
 int main(int argc, char* argv[])
 {
     static char line[4096];
@@ -29,7 +28,7 @@ int main(int argc, char* argv[])
             fputs(line, fp);
         } else {
             sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
-            sprintf(wrapper, "__expr_wrapper_%d(){return %s;}", FILECNT, line);
+            sprintf(wrapper, "int __expr_wrapper_%d(){return %s;}", FILECNT, line);
             fputs(wrapper, fp);
         }
 
