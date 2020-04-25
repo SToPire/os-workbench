@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 
         __pid_t pid = fork();
         if (pid == 0) {
-            dup2(pipe_fd[1], STDERR_FILENO);
+            //dup2(pipe_fd[1], STDERR_FILENO);
             execvp("gcc", exec_argv);
         } else {
             while (waitpid(pid, NULL, WNOHANG) != pid)
