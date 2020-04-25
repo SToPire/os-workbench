@@ -27,11 +27,11 @@ int main(int argc, char* argv[])
         // sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
         // sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
         // FILE* fp = fopen(Cname, "w+");
-        char Cname[32] = "/tmp/crepl-XXXXXX";
-        int fd = mkstemp(Cname);
-        char Soname[40];
-        sprintf(Soname, "%s.so", Cname);
-        strcat(Cname, ".c");
+        char name[32] = "/tmp/crepl-XXXXXX";
+        int fd = mkstemp(name);
+        char Soname[40],Cname[40];
+        sprintf(Soname, "%s.so", name);
+        sprintf(Cname, "%s.c", name);
 
         char wrapper[4096 + 64], wrapper_name[32];
         if (strncmp(line, "int", 3) == 0) {
@@ -52,6 +52,7 @@ int main(int argc, char* argv[])
         }
 
         close(fd);
+        rename(name, Cname);
         //fclose(fp);
 
         char* exec_argv[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
