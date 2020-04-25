@@ -2,6 +2,8 @@
 #include <string.h>
 #include<stdlib.h>
 #include<unistd.h>
+#include<sys/wait.h>
+
 int main(int argc, char *argv[]) {
     // char path[256];
     // sprintf(path, "PATH=%s", getenv("PATH"));
@@ -13,7 +15,8 @@ int main(int argc, char *argv[]) {
     if(pid==0){
         execvp("gcc", exec_argc);
     } else {
-        sleep(1);
+        while(waitpid(pid,NULL,WNOHANG)!=pid)
+            ;
         static char line[4096];
         while (1) {
             printf("crepl> ");
