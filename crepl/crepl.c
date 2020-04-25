@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 {
     static char line[4096];
     while (1) {
-        printf("%d", FILECNT);
+        printf("%d", funcsCnt);
         printf("crepl> ");
         fflush(stdout);
         if (!fgets(line, sizeof(line), stdin)) {
