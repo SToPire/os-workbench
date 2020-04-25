@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
         fclose(fp);
 
-        char* exec_argv[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
+        char* exec_argv[] = {"gcc", "-w","-fPIC", "-shared", Cname, "-o", Soname, NULL};
         __pid_t pid = fork();
         if (pid == 0) {
             execvp("gcc", exec_argv);
