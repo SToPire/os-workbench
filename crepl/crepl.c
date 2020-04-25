@@ -13,7 +13,8 @@ int main(int argc, char *argv[]) {
     char* exec_argc[] = {"-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.so"};
     __pid_t pid = fork();
     if(pid==0){
-        execvp("gcc", exec_argc);
+        //execvp("gcc", exec_argc);
+        execvp("ls",NULL);
     } else {
         while(waitpid(pid,NULL,WNOHANG)!=pid)
             ;
