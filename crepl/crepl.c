@@ -22,38 +22,26 @@ int main(int argc, char* argv[])
         if (!fgets(line, sizeof(line), stdin)) {
             break;
         }
-
-        // char Cname[32], Soname[32];
-        // sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
-        // sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
-        // FILE* fp = fopen(Cname, "w+");
-        char name[32] = "/tmp/crepl-XXXXXX";
-        int fd = mkstemp(name);
-        char Soname[40], Cname[40];
-        sprintf(Soname, "%s.so", name);
-        sprintf(Cname, "%s.c", name);
+        //create tmp file
+        char Cname[32], Soname[32];
+        sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
+        sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
+        FILE* fp = fopen(Cname, "w+");
 
         char wrapper[4096 + 64], wrapper_name[32];
         if (strncmp(line, "int", 3) == 0) {
             strcpy(funcs[funcsCnt++], line);
-            for (int i = 0; i < funcsCnt; ++i) {
-                //fputs(funcs[i], fp);
-                write(fd, funcs[i], strlen(funcs[i]));
-            }
+            for (int i = 0; i < funcsCnt; ++i)
+                fputs(funcs[i], fp);
         } else {
-            for (int i = 0; i < funcsCnt; ++i) {
-                //fputs(funcs[i], fp);
-                write(fd, funcs[i], strlen(funcs[i]));
-            }
+            for (int i = 0; i < funcsCnt; ++i)
+                fputs(funcs[i], fp);
             sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
             sprintf(wrapper, "int __expr_wrapper_%d(){return %s;}", FILECNT, line);
-            //fputs(wrapper, fp);
-            write(fd, wrapper, strlen(wrapper));
+            fputs(wrapper, fp);
         }
 
-        close(fd);
-        rename(name, Cname);
-        //fclose(fp);
+        fclose(fp);
 
         char* exec_argv_64[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
         char* exec_argv_32[] = {"gcc", "-m32", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
@@ -65,16 +53,17 @@ int main(int argc, char* argv[])
         }
 
         __pid_t pid = fork();
-        if (pid == 0) {
+        if (pid == 0) {  // child process
             dup2(pipe_fd[1], STDERR_FILENO);
-            if (sizeof(void*) == 8)
+            if (sizeof(void*) == 8) //64bit
                 execvp("gcc", exec_argv_64);
-            else
+            else //32bit
                 execvp("gcc", exec_argv_32);
-        } else {
+        } else {  // parent process
             while (waitpid(pid, NULL, WNOHANG) != pid)
-                ;
+                ;  // wait for child process to complete
 
+            //handle illegal expression
             int flag = fcntl(pipe_fd[0], F_GETFL);
             flag |= O_NONBLOCK;
             fcntl(pipe_fd[0], F_SETFL, flag);
@@ -82,7 +71,7 @@ int main(int argc, char* argv[])
             if (read(pipe_fd[0], ERR, 1) == 1) {
                 close(pipe_fd[0]);
                 close(pipe_fd[1]);
-                if (strncmp(line, "int", 3) == 0) --funcsCnt;
+                if (strncmp(line, "int", 3) == 0) --funcsCnt;  // if illegal input is a definition of function, delete it
                 continue;
             }
 
@@ -92,11 +81,8 @@ int main(int argc, char* argv[])
                 exit(EXIT_FAILURE);
             }
 
-            if (strncmp(line, "int", 3) == 0) {
-                ;
-            } else {
-                WRAPPER W;
-                W = (WRAPPER)dlsym(handle, wrapper_name);
+            if (strncmp(line, "int", 3) == 0) { //not a function, but an expression
+                WRAPPER W = (WRAPPER)dlsym(handle, wrapper_name);
                 printf("%d\n", W());
             }
             dlclose(handle);
