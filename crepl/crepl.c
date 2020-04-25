@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<sys/wait.h>
-
+#include<dlfcn.h>
 int main(int argc, char *argv[]) {
     char* exec_argv[] = {"gcc","-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.so",NULL};
     __pid_t pid = fork();
@@ -12,15 +12,17 @@ int main(int argc, char *argv[]) {
     } else {
         while(waitpid(pid,NULL,WNOHANG)!=pid)
             ;
-        static char line[4096];
-        while (1) {
-            printf("crepl> ");
-            fflush(stdout);
-            if (!fgets(line, sizeof(line), stdin)) {
-                break;
-            }
-            printf("%s", line);
-            printf("Got %zu chars.\n", strlen(line));  // WTF?
-        }
+        dlopen("/tmp/tmp.c", RTLD_LAZY);
+        printf("output:%d\n", f());
+        // static char line[4096];
+        // while (1) {
+        //     printf("crepl> ");
+        //     fflush(stdout);
+        //     if (!fgets(line, sizeof(line), stdin)) {
+        //         break;
+        //     }
+        //     printf("%s", line);
+        //     printf("Got %zu chars.\n", strlen(line));  // WTF?
+        // }
     }
 }
