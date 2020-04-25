@@ -4,9 +4,8 @@
 
 int main(int argc, char *argv[]) {
     char s1[128];
-    strcpy(s1, getenv("PATH"));
-    char s2[128] = "PATH=";
-    strcat(s2, s1);
+    sprintf(s1, "PATH=%s", getenv("PATH"));
+    puts(s1);
 
     static char line[4096];
     while (1) {
