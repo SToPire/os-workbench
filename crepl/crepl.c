@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
         char Cname[32],Soname[32];
         sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
         sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
-        FILE* fp = fopen(Cname, "r");
+        FILE* fp = fopen(Cname, "w+");
         //fputs("int f(){return 233;}", fp);
 
         char* exec_argv[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
