@@ -5,7 +5,9 @@
 #include <sys/wait.h>
 #include <dlfcn.h>
 
-#define ROOT /tmp/
+
+int FILECNT = 0;
+
 typedef int (*FUN)();
 int main(int argc, char* argv[])
 {
@@ -16,12 +18,14 @@ int main(int argc, char* argv[])
         if (!fgets(line, sizeof(line), stdin)) {
             break;
         }
-        printf("%s", line);
 
-        char prefix[] = "FILE-XXXXXX";
-        int fd = mkstemp(prefix);
-        printf("%s", prefix);
-        char* exec_argv[] = {"gcc", "-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.so", NULL};
+        char Cname[32],Soname[32];
+        sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
+        sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
+        FILE* fd = fopen(Cname, "w");
+        fputs(line, fd);
+
+        char* exec_argv[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
         __pid_t pid = fork();
         if (pid == 0) {
             execvp("gcc", exec_argv);
