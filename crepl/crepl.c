@@ -9,7 +9,8 @@ int FILECNT = 0;
 
 typedef int (*WRAPPER)();
 
-WRAPPER f;
+char funcs[100][4096];
+int funcsCnt = 0;
 int main(int argc, char* argv[])
 {
     static char line[4096];
@@ -28,7 +29,11 @@ int main(int argc, char* argv[])
         char wrapper[4096 + 64], wrapper_name[32];
         if (strncmp(line, "int", 3) == 0) {
             fputs(line, fp);
+            strcpy(funcs[funcsCnt++], line);
         } else {
+            for (int i = 0; i < funcsCnt; ++i) {
+                fputs(line, fp);
+            }
             sprintf(wrapper_name, "__expr_wrapper_%d", FILECNT);
             sprintf(wrapper, "int __expr_wrapper_%d(){return %s;}", FILECNT, line);
             fputs(wrapper, fp);
@@ -36,7 +41,7 @@ int main(int argc, char* argv[])
 
         fclose(fp);
 
-        char* exec_argv[] = {"gcc", "-w","-fPIC", "-shared", Cname, "-o", Soname, NULL};
+        char* exec_argv[] = {"gcc", "-w", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
         __pid_t pid = fork();
         if (pid == 0) {
             execvp("gcc", exec_argv);
@@ -49,7 +54,7 @@ int main(int argc, char* argv[])
                 exit(EXIT_FAILURE);
             }
             if (strncmp(line, "int", 3) == 0) {
-                f = (WRAPPER)dlsym(handle, "f");
+                ;
             } else {
                 WRAPPER W;
                 W = (WRAPPER)dlsym(handle, wrapper_name);
