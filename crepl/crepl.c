@@ -29,8 +29,16 @@ int main(int argc, char* argv[])
         FILE* fp = fopen(Cname, "w+");
 
         char wrapper[4096 + 64], wrapper_name[32];
+        char fun_name[32];
         if (strncmp(line, "int", 3) == 0) {
-            strcpy(funcs[funcsCnt++], line);
+            int ii = 0,i=4;
+            while(++ii != '(')
+                ;
+            for (; i < ii;i++)
+                fun_name[i - 4] = line[i];
+            fun_name[i] = '\0';
+            puts(fun_name);
+            //strcpy(funcs[funcsCnt++], line);
         } else {
             for (int i = 0; i < funcsCnt; ++i) {
                 fputs(funcs[i], fp);
@@ -67,7 +75,7 @@ int main(int argc, char* argv[])
                 close(pipe_fd[1]);
                 continue;
             }
-            
+
             void* handle = dlopen(Soname, RTLD_LAZY);
             if (!handle) {
                 fprintf(stderr, "%s\n", dlerror());
