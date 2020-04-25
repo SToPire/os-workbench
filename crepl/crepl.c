@@ -8,6 +8,8 @@
 int FILECNT = 0;
 
 typedef int (*WRAPPER)();
+
+WRAPPER f;
 int main(int argc, char* argv[])
 {
     static char line[4096];
@@ -47,7 +49,6 @@ int main(int argc, char* argv[])
                 exit(EXIT_FAILURE);
             }
             if (strncmp(line, "int", 3) == 0) {
-                static WRAPPER f;
                 f = (WRAPPER)dlsym(handle, "f");
             } else {
                 WRAPPER W;
