@@ -27,10 +27,11 @@ int main(int argc, char* argv[])
         // sprintf(Cname, "/tmp/crepl-%d.c", ++FILECNT);
         // sprintf(Soname, "/tmp/crepl-%d.so", FILECNT);
         // FILE* fp = fopen(Cname, "w+");
-        char Cname[] = "/tmp/crepl-XXXXXX";
+        char Cname[32] = "/tmp/crepl-XXXXXX";
         int fd = mkstemp(Cname);
         char Soname[32];
         sprintf(Soname, "%s.so", Cname);
+        strcat(Cname, ".c");
 
         char wrapper[4096 + 64], wrapper_name[32];
         if (strncmp(line, "int", 3) == 0) {
