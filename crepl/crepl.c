@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
                 exit(EXIT_FAILURE);
             }
             if (strncmp(line, "int", 3) == 0) {
-                static WRAPPER f = (WRAPPER)dlsym(handle, "f");
+                WRAPPER f = (WRAPPER)dlsym(handle, "f");
             } else {
                 WRAPPER W;
                 W = (WRAPPER)dlsym(handle, wrapper_name);
