@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     // exec_envp[0] = path;
 
     //char* exec_argv[] = {"-fPIC", "-shared", "/tmp/tmp.c", "-o", "/tmp/tmp.so"};
-    char* exec_argv[] = {NULL};
+    char* exec_argv[] = {"ls",NULL};
     __pid_t pid = fork();
     if(pid==0){
         //execvp("gcc", exec_argv);
