@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
             while (waitpid(pid, NULL, WNOHANG) != pid)
                 ;
 
-            int flag = fcntl(pipe_fd[0,F_GETFL);
+            int flag = fcntl(pipe_fd[0],F_GETFL);
             flag |= O_NONBLOCK;
             fcntl(pipe_fd[0], F_SETFL, flag);
             char ERR[16];
