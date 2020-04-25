@@ -3,18 +3,24 @@
 #include<stdlib.h>
 
 int main(int argc, char *argv[]) {
-    char s1[256];
-    sprintf(s1, "PATH=%s", getenv("PATH"));
-    puts(s1);
+    // char path[256];
+    // sprintf(path, "PATH=%s", getenv("PATH"));
+    // char* exec_envp[] = {NULL, NULL};
+    // exec_envp[0] = path;
 
-    static char line[4096];
-    while (1) {
-        printf("crepl> ");
-        fflush(stdout);
-        if (!fgets(line, sizeof(line), stdin)) {
-            break;
+    __pid_t pid = fork();
+    if(pid==0){
+        execvp("gcc", "-fPIC -shared /tmp/tmp.c -o /tmp/tmp.o ");
+    } else {
+        static char line[4096];
+        while (1) {
+            printf("crepl> ");
+            fflush(stdout);
+            if (!fgets(line, sizeof(line), stdin)) {
+                break;
+            }
+            printf("%s", line);
+            printf("Got %zu chars.\n", strlen(line));  // WTF?
         }
-        printf("%s", line);
-        printf("Got %zu chars.\n", strlen(line));  // WTF?
-  }
+    }
 }
