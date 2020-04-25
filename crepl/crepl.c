@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
         // FILE* fp = fopen(Cname, "w+");
         char name[32] = "/tmp/crepl-XXXXXX";
         int fd = mkstemp(name);
-        char Soname[40],Cname[40];
+        char Soname[40], Cname[40];
         sprintf(Soname, "%s.so", name);
         sprintf(Cname, "%s.c", name);
 
@@ -55,7 +55,8 @@ int main(int argc, char* argv[])
         rename(name, Cname);
         //fclose(fp);
 
-        char* exec_argv[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
+        char* exec_argv_64[] = {"gcc", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
+        char* exec_argv_64[] = {"gcc", "-m32", "-fPIC", "-shared", Cname, "-o", Soname, NULL};
 
         int pipe_fd[2];
         if (pipe(pipe_fd) < 0) {
@@ -66,7 +67,10 @@ int main(int argc, char* argv[])
         __pid_t pid = fork();
         if (pid == 0) {
             dup2(pipe_fd[1], STDERR_FILENO);
-            execvp("gcc", exec_argv);
+            if (sizeof(void*) == 8)
+                execvp("gcc", exec_argv_64);
+            else
+                execvp("gcc", exec_argv_32);
         } else {
             while (waitpid(pid, NULL, WNOHANG) != pid)
                 ;
