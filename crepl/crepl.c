@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
                 exit(EXIT_FAILURE);
             }
 
-            if (strncmp(line, "int", 3) == 0) { //not a function, but an expression
+            if (strncmp(line, "int", 3) != 0) { //not a function, but an expression
                 WRAPPER W = (WRAPPER)dlsym(handle, wrapper_name);
                 printf("%d\n", W());
             }
