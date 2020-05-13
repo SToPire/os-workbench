@@ -24,6 +24,8 @@ void spin_lock(spinlock_t* lk)
     while (_atomic_xchg(&lk->locked, 1))
         ;
     lk->cpu = _cpu();
+
+    printf("spin_lock from cpu %d\n", _cpu());
 }
 
 void spin_unlock(spinlock_t* lk)
@@ -32,6 +34,7 @@ void spin_unlock(spinlock_t* lk)
     lk->cpu = 0;
     _atomic_xchg(&lk->locked, 0);
     popcli();
+    printf("spin_unlock from cpu %d\n", _cpu());
 }
 
 int holding(spinlock_t* lk)
