@@ -1,5 +1,5 @@
 #include <common.h>
-#include <lock.h>
+#include <spinlock.h>
 
 #define HDR_SIZE 1024
 #define PAGE_SIZE 8192

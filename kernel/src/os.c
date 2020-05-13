@@ -8,7 +8,7 @@ static void os_init()
 static void os_run()
 {
     _intr_write(1);
-    printf("%d\n", _cpu());
+    //printf("%d\n", _cpu());
     while (1)
         ;
 }
