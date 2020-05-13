@@ -49,6 +49,7 @@ void setUnit(page_t* page, int num, bool b)
     else
         page->bitmap[num / 64] &= ~((uint64_t)1 << (num % 64));
 }
+
 static void* kalloc(size_t size)
 {
     int sz = 1, cachenum = 0;
@@ -74,10 +75,9 @@ static void* kalloc(size_t size)
     }
 
     if (new_page) {
-        
         spin_lock(&fPHLock);
-        if (freePageHead == NULL) 
-            return NULL; 
+        if (freePageHead == NULL)
+            return NULL;
         page_t* tmp = freePageHead;
         freePageHead = freePageHead->nxt;
         spin_unlock(&fPHLock);
@@ -127,6 +127,23 @@ static void kfree(void* ptr)
     spin_unlock(&curPage->lock);
 }
 
+static void* kalloc_safe(size_t size)
+{
+    int i = _intr_read();
+    _intr_write(0);
+    void* ret = kalloc(size);
+    if (i) _intr_write(1);
+    return ret;
+}
+
+static void kfree_safe(void* ptr)
+{
+    int i = _intr_read();
+    _intr_write(0);
+    kfree(ptr);
+    if (i) _intr_write(1);
+}
+
 static void pmm_init()
 {
     uintptr_t pmsize = ((uintptr_t)_heap.end - (uintptr_t)_heap.start);
@@ -134,8 +151,8 @@ static void pmm_init()
 
     for (int i = CPU_NUM - 1; i >= 0; --i)
         kmem_cache[i] = (cache_t*)_heap.end - (CPU_NUM - i) * 13;
-    for (int i = 0; i < CPU_NUM; ++i) 
-        for (int j = 0; j < 13; ++j) 
+    for (int i = 0; i < CPU_NUM; ++i)
+        for (int j = 0; j < 13; ++j)
             kmem_cache[i][j].list = NULL;
 
     pages = (page_t*)_heap.start;
@@ -149,6 +166,6 @@ static void pmm_init()
 
 MODULE_DEF(pmm) = {
     .init = pmm_init,
-    .alloc = kalloc,
-    .free = kfree,
+    .alloc = kalloc_safe,
+    .free = kfree_safe,
 };
