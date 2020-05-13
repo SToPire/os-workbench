@@ -5,10 +5,11 @@ static void os_init()
 {
     pmm->init();
    // kmt->init();
-    _intr_write(0);
+   
 }
 static void os_run()
 {
+    _intr_write(0);
     spinlock_t lk;
     spin_init(&lk,NULL);
     if (_cpu() == 0) {
