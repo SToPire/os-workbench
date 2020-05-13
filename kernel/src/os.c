@@ -5,6 +5,7 @@ static void os_init()
 {
     pmm->init();
    // kmt->init();
+    _intr_write(0);
 }
 static void os_run()
 {
