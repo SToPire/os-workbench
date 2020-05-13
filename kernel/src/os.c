@@ -5,11 +5,11 @@ static void os_init()
     pmm->init();
    // kmt->init();
 }
-//static void* a[10];
 static void os_run()
 {
     _intr_write(1);
-    while(1)
+    printf("%d\n", _cpu());
+    while (1)
         ;
 }
 
