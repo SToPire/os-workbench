@@ -10,10 +10,11 @@ void pushcli();
 void popcli();
 int holding(spinlock_t* lk);
 
-void spin_init(spinlock_t* lk)
+void spin_init(spinlock_t* lk,const char* name)
 {
     lk->locked = 0;
     lk->cpu = 0;
+    //lk->name = name;
 }
 
 void spin_lock(spinlock_t* lk)
@@ -58,3 +59,15 @@ void popcli()
     if(cpustat[_cpu()].ncli==0 && cpustat[_cpu()].intena)
         _intr_write(1);
 }
+
+MODULE_DEF(kmt) = {
+    .init = NULL,
+    .create = NULL,
+    .teardown = NULL,
+    .spin_init = spin_init,
+    .spin_lock = spin_lock,
+    .spin_unlock = spin_unlock,
+    .sem_init = NULL,
+    .sem_wait = NULL,
+    .sem_signal = NULL,
+};
