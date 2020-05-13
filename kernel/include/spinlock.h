@@ -1,7 +1,7 @@
 #include <stdint.h>
 typedef struct spinlock {
     intptr_t locked;
-    //int cpu;
+    int cpu;
 } spinlock_t;
 
 void spin_init(spinlock_t* lk);
