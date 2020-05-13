@@ -3,6 +3,7 @@
 static void os_init()
 {
     pmm->init();
+    kmt->init();
 }
 //static void* a[10];
 static void os_run()
