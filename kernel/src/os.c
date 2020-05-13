@@ -9,7 +9,8 @@ static void os_init()
 static void os_run()
 {
     spinlock_t lk;
-    if (_cpu() == 0){
+    spin_init(&lk,NULL);
+    if (_cpu() == 0) {
         //spin_lock(&lk);
         putstr("0 is holding the lock\n");
         //spin_unlock(&lk);
