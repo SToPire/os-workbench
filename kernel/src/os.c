@@ -1,4 +1,5 @@
 #include <common.h>
+#include<spinlock.h>
 
 static void os_init()
 {
@@ -7,10 +8,15 @@ static void os_init()
 }
 static void os_run()
 {
-    _intr_write(1);
-    while (1){
-        if (_cpu() == 0) _putc('0');
-        if (_cpu() == 1) _putc('1');
+    spinlock_t lk;
+    if (_cpu() == 0){
+        spin_lock(&lk);
+        putstr("0 is holding the lock");
+        spin_unlock(&lk);
+    } else if (_cpu() == 1) {
+        spin_lock(&lk);
+        putstr("1 is holding the lock");
+        spin_unlock(&lk);
     }
 }
 
