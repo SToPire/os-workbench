@@ -21,4 +21,5 @@ _Context* os_trap(_Event ev, _Context* context)
 MODULE_DEF(os) = {
     .init = os_init,
     .run = os_run,
+    .trap = os_trap,
 };
