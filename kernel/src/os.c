@@ -1,17 +1,16 @@
 #include <common.h>
 #include<spinlock.h>
+spinlock_t lk;
 
 static void os_init()
 {
     pmm->init();
    // kmt->init();
-   
+    spin_init(&lk, NULL);  //for test
 }
 static void os_run()
 {
     _intr_write(0);
-    spinlock_t lk;
-    spin_init(&lk,NULL);
     if (_cpu() == 0) {
         spin_lock(&lk);
         putstr("0 is holding the lock\n");
