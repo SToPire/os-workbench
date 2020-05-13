@@ -8,9 +8,10 @@ static void os_init()
 static void os_run()
 {
     _intr_write(1);
-    //printf("%d\n", _cpu());
-    while (1)
-        ;
+    while (1){
+        if (_cpu() == 0) _putc('0');
+        if (_cpu() == 1) _putc('1');
+    }
 }
 
 _Context* os_trap(_Event ev, _Context* context)
