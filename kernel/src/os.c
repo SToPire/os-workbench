@@ -1,12 +1,29 @@
 #include <common.h>
-//spinlock_t lk;
+spinlock_t lk;
+
+void th1()
+{
+    spin_lock(&lk);
+    _putc('A');
+    spin_unlock(&lk);
+}
+void th2()
+{
+    spin_lock(&lk);
+    _putc('B');
+    spin_unlock(&lk);
+}
 
 static void os_init()
 {
     pmm->init();
     kmt->init();
-    //spin_init(&lk, NULL);  //for test
+    spin_init(&lk, NULL);  //for test
+
+    kmt->create(pmm->alloc(sizeof(task_t)), "th1", th1, NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)), "th2", th2, NULL);
 }
+
 static void os_run()
 {
     _intr_write(0);
