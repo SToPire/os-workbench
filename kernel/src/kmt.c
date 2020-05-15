@@ -36,6 +36,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     if (_cpu() == 1) printf("FICKSDASDASDASD\n");
     if (!current) {
         current = TASKS[0];
+        if(_cpu() == 1) printf("HERE\n");
     } else {
         current->context = _Context;
     }
