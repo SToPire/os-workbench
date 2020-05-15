@@ -6,6 +6,7 @@ struct task {
         struct {
             const char* name;
             int next;
+            int num;
             _Context* context;
         };
         uint8_t stack[4096];
