@@ -8,6 +8,6 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     task->next = (TASKS_P + 1) % 32;
     TASKS[TASKS_P] = task;
     TASKS_P = (TASKS_P + 1) % 32;
-    //pmm->alloc(1);
+    pmm->alloc(1);
     return 0;
 }
