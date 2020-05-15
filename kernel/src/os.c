@@ -38,6 +38,8 @@ static void os_run()
     //     putstr("1 is holding the lock\n");
     //     spin_unlock(&lk);
     // }
+    printf("here");
+
     _yield();
 
     
