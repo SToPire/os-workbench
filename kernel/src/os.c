@@ -3,7 +3,7 @@ spinlock_t lk;
 
 void th1()
 {
-    assert(_cpu() == 0);
+    //assert(_cpu() == 0);
     while (1) {
         spin_lock(&lk);
         assert(_intr_read() == 0);
@@ -15,7 +15,7 @@ void th1()
 }
 void th2()
 {
-    assert(_cpu() == 1);
+    //assert(_cpu() == 1);
     while (1) {
         spin_lock(&lk);
         assert(_intr_read() == 0);
