@@ -26,7 +26,6 @@ static void os_init()
 
 static void os_run()
 {
-    printf("HERE\n");
     _intr_write(1);
     // if (_cpu() == 0) {
     //     spin_lock(&lk);
@@ -45,6 +44,8 @@ static void os_run()
 
 _Context* os_trap(_Event ev, _Context* context)
 {
+    printf("HERE\n");
+
     return scheduler(ev,context);
 }
 void on_irq(int seq, int event, handler_t handler)
