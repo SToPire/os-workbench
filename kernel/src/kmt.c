@@ -11,7 +11,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     spin_lock(&bigLock);
     task->name = name;
     _Area stack = (_Area){&task->context + 1, task + 1};
-   // printf("%p %p\n", &task->context + 1, task + 1);
+   printf("%p %p\n", &task->context + 1, task + 1);
     task->context = _kcontext(stack, entry, arg);
     // task->next = (TASKS_P + 1) % 32;
     task->next = 0;
@@ -37,6 +37,8 @@ _Context* scheduler(_Event ev, _Context* _Context)
     }
     do {
         current = TASKS[current->next];
+       // printf("HERE\n");
+
     } while ((current - TASKS[0]) % _ncpu() != _cpu());
 
     return current->context;
