@@ -1,6 +1,4 @@
-#include<kmt.h>
-#include<kernel.h>
-#include<spinlock.h>
+#include<common.h>
 spinlock_t bigLock;
 
 void kmt_init()
