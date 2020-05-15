@@ -18,6 +18,7 @@ void spin_init(spinlock_t* lk,const char* name)
 
 void spin_lock(spinlock_t* lk)
 {
+    printf("%d is approaching:\n", _cpu());
     pushcli();
     panic_on(holding(lk), "Trying to hold a lock which already held by this cpu");  
     while (_atomic_xchg(&lk->locked, 1))
