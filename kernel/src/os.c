@@ -19,6 +19,9 @@ static void os_run()
     //     putstr("1 is holding the lock\n");
     //     spin_unlock(&lk);
     // }
+
+
+
     while(1)
         ;
 }
@@ -27,9 +30,14 @@ _Context* os_trap(_Event ev, _Context* context)
 {
     return context;
 }
+void on_irq(int seq, int event, handler_t handler)
+{
+
+}
 
 MODULE_DEF(os) = {
     .init = os_init,
     .run = os_run,
     .trap = os_trap,
+    .on_irq = on_irq,
 };
