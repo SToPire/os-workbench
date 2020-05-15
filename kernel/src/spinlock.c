@@ -24,12 +24,12 @@ void spin_lock(spinlock_t* lk)
         ;
     lk->cpu = _cpu();
 
-    // printf("spin_lock from cpu %d\n", _cpu());
+     printf("spin_lock from cpu %d\n", _cpu());
 }
 
 void spin_unlock(spinlock_t* lk)
 {
-    // printf("spin_unlock from cpu %d\n", _cpu());
+     printf("spin_unlock from cpu %d\n", _cpu());
     
     panic_on(!holding(lk), "releasing a unheld lock");
     lk->cpu = 0;
