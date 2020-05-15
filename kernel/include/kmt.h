@@ -12,8 +12,8 @@ struct task {
     };
 };
 
-// int kmt_create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
-// {
-//     task->name = name;
-//     return 0;
-// }
+int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
+{
+    task->name = name;
+    return 0;
+}
