@@ -4,6 +4,7 @@ spinlock_t bigLock;
 void kmt_init()
 {
     spin_init(&bigLock,NULL);
+    
 }
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
@@ -19,6 +20,21 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+struct cpu_local{
+    task_t* current;
+} cpu_local[8];
+#define current cpu_local[_cpu()].current
 
 MODULE_DEF(kmt) = {
     .init = kmt_init,
