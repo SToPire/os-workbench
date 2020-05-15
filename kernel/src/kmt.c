@@ -41,6 +41,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     }
     do {
         if(_cpu() == 1) printf("HERE\n");
+        printf("%p %p %p\n", current, TASKS[0], TASKS[1]);
         current = TASKS[current->next];
     } while ((current - TASKS[0]) % _ncpu() != _cpu());
 
