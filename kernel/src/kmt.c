@@ -1,10 +1,9 @@
-#include<common.h>
+#include <common.h>
 spinlock_t bigLock;
 
 void kmt_init()
 {
-    spin_init(&bigLock,NULL);
-    
+    spin_init(&bigLock, NULL);
 }
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
@@ -21,29 +20,23 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     return 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-struct cpu_local{
+struct cpu_local {
     task_t* current;
 } cpu_local[8];
 #define current cpu_local[_cpu()].current
 
-_Context* scheduler(_Event ev, _Context*_Context)
+_Context* scheduler(_Event ev, _Context* _Context)
 {
-    if (!current) current = TASKS[0];
-    else
+    if (!current) {
+        printf("HERE\n");
+
+        current = TASKS[0];
+    } else {
         current->context = _Context;
-    do{
+    }
+    do {
         current = TASKS[current->next];
-    } while((current - TASKS[0]) % _ncpu() != _cpu());
+    } while ((current - TASKS[0]) % _ncpu() != _cpu());
     return current->context;
 }
 
