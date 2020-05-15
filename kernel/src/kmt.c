@@ -33,7 +33,6 @@ struct cpu_local {
 
 _Context* scheduler(_Event ev, _Context* _Context)
 {
-    if (_cpu() == 1) printf("FICKSDASDASDASD\n");
     if (!current) {
         current = TASKS[0];
     } else {
