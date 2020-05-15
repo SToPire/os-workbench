@@ -28,6 +28,7 @@ static void os_init()
 
 static void os_run()
 {
+    printf("\nhere\n");
     _intr_write(1);
     // if (_cpu() == 0) {
     //     spin_lock(&lk);
@@ -38,7 +39,6 @@ static void os_run()
     //     putstr("1 is holding the lock\n");
     //     spin_unlock(&lk);
     // }
-    printf("here");
 
     _yield();
 
