@@ -1,5 +1,4 @@
 #include <common.h>
-//#include<spinlock.h>
 spinlock_t lk;
 
 static void os_init()
