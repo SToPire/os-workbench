@@ -12,7 +12,7 @@ int holding(spinlock_t* lk);
 void spin_init(spinlock_t* lk, const char* name)
 {
     lk->locked = 0;
-    lk->cpu = 0;
+    lk->cpu = -1;
     //lk->name = name;
 }
 
@@ -36,8 +36,7 @@ void spin_unlock(spinlock_t* lk)
     printf("spin_unlock from cpu %d\n", _cpu());
 
     panic_on(!holding(lk), "releasing a unheld lock");
-    lk->cpu = 0;
-    printf("CONFIRM:lk->cpu=%d now\n", lk->cpu);
+    lk->cpu = -1;
     _atomic_xchg(&lk->locked, 0);
     popcli();
 }
