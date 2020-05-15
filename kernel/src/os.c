@@ -28,7 +28,7 @@ static void os_init()
 
 static void os_run()
 {
-    _intr_write(1);
+    _intr_write(0);
     printf("\nhere\n");
     // if (_cpu() == 0) {
     //     spin_lock(&lk);
