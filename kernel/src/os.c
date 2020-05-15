@@ -20,7 +20,7 @@ static void os_init()
     kmt->init();
     spin_init(&lk, NULL);  //for test
 
-    //kmt->create(pmm->alloc(sizeof(task_t)), "th1", th1, NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)), "th1", th1, NULL);
     //kmt->create(pmm->alloc(sizeof(task_t)), "th2", th2, NULL);
 }
 
@@ -44,8 +44,8 @@ static void os_run()
 
 _Context* os_trap(_Event ev, _Context* context)
 {
-    return context;
-    //return scheduler(ev,context);
+    //return context;
+    return scheduler(ev,context);
 }
 void on_irq(int seq, int event, handler_t handler)
 {
