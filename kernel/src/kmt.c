@@ -38,6 +38,8 @@ _Context* scheduler(_Event ev, _Context* _Context)
         printf("HERE\n");
 
     } while ((current - TASKS[0]) % _ncpu() != _cpu());
+
+    assert(current != TASKS[0]);
     return current->context;
 }
 
