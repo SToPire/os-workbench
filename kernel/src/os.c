@@ -26,7 +26,7 @@ static void os_init()
 
 static void os_run()
 {
-    _intr_write(1);
+    _intr_write(0);
     // if (_cpu() == 0) {
     //     spin_lock(&lk);
     //     putstr("0 is holding the lock\n");
