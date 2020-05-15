@@ -6,6 +6,7 @@ int main() {
   _cte_init(os->trap);
   //_vme_init(pmm->alloc, pmm->free);
   os->init();
+  printf("SSSSS");
   _mpe_init(os->run);
   return 1;
 }
