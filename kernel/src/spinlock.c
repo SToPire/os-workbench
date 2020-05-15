@@ -54,6 +54,7 @@ void pushcli()
     if(cpustat[_cpu()].ncli==0)
         cpustat[_cpu()].intena = i;
     ++cpustat[_cpu()].ncli;
+    assert(cpustat[_cpu()].ncli < 100);
 }
 
 void popcli()
