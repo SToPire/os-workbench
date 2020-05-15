@@ -11,7 +11,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     spin_lock(&bigLock);
     task->name = name;
     _Area stack = (_Area){&task->context + 1, task + 1};
-   printf("%p %p %p\n", &task, &task->context + 1, task + 1);
+   printf("%p %p %p\n", task, &task->context + 1, task + 1);
     task->context = _kcontext(stack, entry, arg);
     // task->next = (TASKS_P + 1) % 32;
     task->next = 0;
