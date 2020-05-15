@@ -3,9 +3,13 @@ spinlock_t lk;
 
 void th1()
 {
-    spin_lock(&lk);
-    _putc('A');
-    spin_unlock(&lk);
+    while (1) {
+        spin_lock(&lk);
+        printf("This is th1 shouting!\n");
+        spin_unlock(&lk);
+        for (volatile int i = 1; i < 100000; i++)
+            ;
+    }
 }
 void th2()
 {
@@ -39,18 +43,15 @@ static void os_run()
     // }
 
     _yield();
-
-    
 }
 
 _Context* os_trap(_Event ev, _Context* context)
 {
     //return context;
-    return scheduler(ev,context);
+    return scheduler(ev, context);
 }
 void on_irq(int seq, int event, handler_t handler)
 {
-
 }
 
 MODULE_DEF(os) = {
