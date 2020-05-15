@@ -4,7 +4,7 @@ spinlock_t lk;
 void th1()
 {
     spin_lock(&lk);
-    while(1)_putc('A');
+    _putc('A');
     spin_unlock(&lk);
 }
 void th2()
