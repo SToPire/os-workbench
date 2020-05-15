@@ -12,4 +12,7 @@ struct task {
     };
 };
 
+task_t TASKS[32];
+
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg);
+void teardown(task_t* task);
