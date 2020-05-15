@@ -28,7 +28,7 @@ static void os_run()
 
 _Context* os_trap(_Event ev, _Context* context)
 {
-    return context;
+    return scheduler(ev,context);
 }
 void on_irq(int seq, int event, handler_t handler)
 {
