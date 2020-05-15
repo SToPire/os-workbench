@@ -29,13 +29,14 @@ struct cpu_local {
 _Context* scheduler(_Event ev, _Context* _Context)
 {
     if (!current) {
-        printf("HERE\n");
         current = TASKS[0];
     } else {
         current->context = _Context;
     }
     do {
         current = TASKS[current->next];
+        printf("HERE\n");
+
     } while ((current - TASKS[0]) % _ncpu() != _cpu());
     return current->context;
 }
