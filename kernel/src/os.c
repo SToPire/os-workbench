@@ -5,7 +5,7 @@ void th1()
 {
     while (1) {
         spin_lock(&lk);
-        printf("This is th1 shouting!\n");
+        printf("This is th1 running in CPU %d!\n",_cpu());
         spin_unlock(&lk);
         for (volatile int i = 1; i < 100000; i++)
             ;
@@ -15,7 +15,7 @@ void th2()
 {
     while (1) {
         spin_lock(&lk);
-        printf("This is th2 shouting!\n");
+        printf("This is th2 running in CPU %d!\n",_cpu());
         spin_unlock(&lk);
         for (volatile int i = 1; i < 100000; i++)
             ;
