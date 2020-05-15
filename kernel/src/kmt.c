@@ -39,8 +39,8 @@ _Context* scheduler(_Event ev, _Context* _Context)
         current = TASKS[current->next];
         printf("%p %p %p\n", current, TASKS[0] ,current-TASKS[0]);
         printf("_ncpu: %d _cpu:%d\n", _ncpu(), _cpu());
-        printf("%d\n", 0 % 1);
-    } while (((current - TASKS[0]) % _ncpu() )!= _cpu());
+        printf("%d\n", (current - TASKS[0]) % _ncpu());
+    } while ((current - TASKS[0]) % _ncpu() != _cpu());
 
     return current->context;
 }
