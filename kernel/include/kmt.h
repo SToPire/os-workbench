@@ -1,5 +1,5 @@
 #include <am.h>
-typedef struct task task_t;
+//typedef struct task task_t;
 
 struct task {
     union {
