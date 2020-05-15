@@ -16,7 +16,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     // task->next = (TASKS_P + 1) % 32;
     task->next = 0;
     TASKS[TASKS_P] = task;
-    printf("%d\n", TASKS_P);
+    printf("%p\n", TASKS[TASKS_P]);
     TASKS_P = (TASKS_P + 1) % 32;
     spin_unlock(&bigLock);
 
