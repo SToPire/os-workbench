@@ -4,7 +4,7 @@
 static void os_init()
 {
     pmm->init();
-   // kmt->init();
+    kmt->init();
     //spin_init(&lk, NULL);  //for test
 }
 static void os_run()
