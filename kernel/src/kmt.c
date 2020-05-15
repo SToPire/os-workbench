@@ -17,7 +17,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     if (TASKS_P == 1) task->next = 0;
     //task->next = (TASKS_P + 1) % 32;
 
-    
+
     TASKS[TASKS_P] = task;
     //printf("%p\n", TASKS[TASKS_P]);
     TASKS_P = (TASKS_P + 1) % 32;
@@ -33,6 +33,7 @@ struct cpu_local {
 
 _Context* scheduler(_Event ev, _Context* _Context)
 {
+    if (_cpu() == 1) printf("FICKSDASDASDASD\n");
     if (!current) {
         current = TASKS[0];
     } else {
