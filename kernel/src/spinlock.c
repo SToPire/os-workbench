@@ -1,5 +1,4 @@
 #include <common.h>
-//#include <spinlock.h>
 
 struct _cpustat{
     int ncli;
