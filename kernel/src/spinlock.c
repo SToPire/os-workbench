@@ -64,13 +64,7 @@ void popcli()
 }
 
 MODULE_DEF(kmt) = {
-    .init = NULL,
-    .create = NULL,
-    .teardown = NULL,
     .spin_init = spin_init,
     .spin_lock = spin_lock,
     .spin_unlock = spin_unlock,
-    .sem_init = NULL,
-    .sem_wait = NULL,
-    .sem_signal = NULL,
 };
