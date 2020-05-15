@@ -63,8 +63,3 @@ void popcli()
         _intr_write(1);
 }
 
-MODULE_DEF(kmt) = {
-    .spin_init = spin_init,
-    .spin_lock = spin_lock,
-    .spin_unlock = spin_unlock,
-};

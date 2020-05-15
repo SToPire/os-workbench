@@ -26,4 +26,10 @@ MODULE_DEF(kmt) = {
     .init = kmt_init,
     .create = create,
     .teardown = NULL,
+    .spin_init = spin_init,
+    .spin_lock = spin_lock,
+    .spin_unlock = spin_unlock,
+    .sem_init = NULL,
+    .sem_wait = NULL,
+    .sem_signal = NULL,
 };
