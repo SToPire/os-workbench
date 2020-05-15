@@ -22,7 +22,7 @@ static void os_init()
 
     //task_t* tt = pmm->alloc(sizeof(task_t));
     task_t tt;
-    kmt->create(&tt, "th1", th1, NULL);
+    kmt->create(&tt, NULL, th1, NULL);
     //kmt->create(pmm->alloc(sizeof(task_t)), "th2", th2, NULL);
 }
 
