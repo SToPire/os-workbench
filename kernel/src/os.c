@@ -3,6 +3,7 @@ spinlock_t lk;
 
 void th1()
 {
+    assert(_cpu() == 0);
     while (1) {
         spin_lock(&lk);
         printf("This is th1 running in CPU %d!\n",_cpu());
@@ -13,6 +14,7 @@ void th1()
 }
 void th2()
 {
+    assert(_cpu() == 1);
     while (1) {
         spin_lock(&lk);
         printf("This is th2 running in CPU %d!\n",_cpu());
