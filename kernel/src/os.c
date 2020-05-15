@@ -6,6 +6,7 @@ void th1()
     assert(_cpu() == 0);
     while (1) {
         spin_lock(&lk);
+        assert(_intr_read() == 0);
         printf("This is th1 running in CPU %d!\n",_cpu());
         spin_unlock(&lk);
         for (volatile int i = 1; i < 100000; i++)
@@ -17,7 +18,8 @@ void th2()
     assert(_cpu() == 1);
     while (1) {
         spin_lock(&lk);
-        printf("This is th2 running in CPU %d!\n",_cpu());
+        assert(_intr_read() == 0);
+        printf("This is th2 running in CPU %d!\n", _cpu());
         spin_unlock(&lk);
         for (volatile int i = 1; i < 100000; i++)
             ;
