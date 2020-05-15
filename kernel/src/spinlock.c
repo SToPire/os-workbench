@@ -33,9 +33,11 @@ void spin_lock(spinlock_t* lk)
 
 void spin_unlock(spinlock_t* lk)
 {
+    printf("spin_unlock from cpu %d\n", _cpu());
+
     panic_on(!holding(lk), "releasing a unheld lock");
     lk->cpu = 0;
-    printf("spin_unlock from cpu %d\n", _cpu());
+    printf("CONFIRM:lk->cpu=%d now\n", lk->cpu);
     _atomic_xchg(&lk->locked, 0);
     popcli();
 }
