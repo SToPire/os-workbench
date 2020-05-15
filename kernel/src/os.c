@@ -4,10 +4,10 @@ spinlock_t lk;
 void th1()
 {
     while (1) {
-        // spin_lock(&lk);
-        // printf("This is th1 shouting!\n");
-        // spin_unlock(&lk);
-        // for (volatile int i = 1; i < 100000; i++)
+        spin_lock(&lk);
+        printf("This is th1 shouting!\n");
+        spin_unlock(&lk);
+        for (volatile int i = 1; i < 100000; i++)
             ;
     }
 }
