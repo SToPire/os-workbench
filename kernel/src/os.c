@@ -13,9 +13,13 @@ void th1()
 }
 void th2()
 {
-    spin_lock(&lk);
-    _putc('B');
-    spin_unlock(&lk);
+    while (1) {
+        spin_lock(&lk);
+        printf("This is th2 shouting!\n");
+        spin_unlock(&lk);
+        for (volatile int i = 1; i < 100000; i++)
+            ;
+    }
 }
 
 static void os_init()
@@ -24,7 +28,7 @@ static void os_init()
     kmt->init();
     spin_init(&lk, NULL);  //for test
 
-    kmt->create(pmm->alloc(sizeof(task_t)), NULL, th1, NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)), "th1", th1, NULL);
     //kmt->create(pmm->alloc(sizeof(task_t)), "th2", th2, NULL);
 }
 
