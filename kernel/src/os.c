@@ -20,8 +20,9 @@ static void os_init()
     kmt->init();
     spin_init(&lk, NULL);  //for test
 
-    task_t* tt = pmm->alloc(sizeof(task_t));
-    kmt->create(tt, "th1", th1, NULL);
+    //task_t* tt = pmm->alloc(sizeof(task_t));
+    task_t tt;
+    kmt->create(&tt, "th1", th1, NULL);
     //kmt->create(pmm->alloc(sizeof(task_t)), "th2", th2, NULL);
 }
 
