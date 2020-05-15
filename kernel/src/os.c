@@ -38,8 +38,7 @@ static void os_run()
     // }
     _yield();
 
-    while(1)
-        ;
+    
 }
 
 _Context* os_trap(_Event ev, _Context* context)
