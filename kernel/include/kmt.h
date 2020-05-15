@@ -1,5 +1,5 @@
-#include <am.h>
-//typedef struct task task_t;
+#include<am.h>
+typedef struct task task_t;
 
 struct task {
     union {
@@ -12,8 +12,4 @@ struct task {
     };
 };
 
-int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
-{
-    task->name = name;
-    return 0;
-}
+int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg);
