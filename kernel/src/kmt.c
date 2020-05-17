@@ -18,18 +18,18 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     task->context = _kcontext(stack, entry, arg);
 
     if (MAX_TASKS == TASKS_CNT) panic("No more TASKS can be created!");
-    if (TASKS_CNT++ == 0) // first task in os
+    if (TASKS_CNT++ == 0)  // first task in os
         TASKS_HEAD = TASKS_FREE;
-    else 
+    else
         TASKS[TASKS_LAST_CREATE]->next = TASKS_FREE;
     task->num = TASKS_FREE;
     task->next = TASKS_HEAD;
     TASKS[TASKS_FREE] = task;
     TASKS_LAST_CREATE = TASKS_FREE;
 
-    for (int i = 1; i <= 32; i++) { // update TASKS_FREE
-        if (TASKS[(TASKS_FREE + i) % 32]->using != 1) {
-            TASKS_FREE = (TASKS_FREE + i) % 32;
+    for (int i = 1; i <= MAX_TASKS; i++) {  // update TASKS_FREE
+        if (TASKS[(TASKS_FREE + i) % MAX_TASKS]->using != 1) {
+            TASKS_FREE = (TASKS_FREE + i) % MAX_TASKS;
             break;
         }
     }
@@ -37,6 +37,21 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     kmt->spin_unlock(&bigLock);
 
     return 0;
+}
+
+void teardown(task_t* task)
+{
+    int tmp;
+    for (int i = 0; i < MAX_TASKS; i++) {
+        if (TASKS[i]->next == task->num){
+            tmp = TASKS[i]->num;
+            break;
+        }
+        if (i == MAX_TASKS - 1) panic("Illegal teardown");
+    }
+    TASKS[tmp]->next = task->next;
+    tmp = task->num;
+    memset(TASKS[tmp],0,sizeof(task_t));
 }
 
 struct cpu_local {
