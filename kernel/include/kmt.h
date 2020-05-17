@@ -7,6 +7,7 @@ struct task {
             const char* name;
             int next;
             int num;
+            int using;
             _Context* context;
         };
         uint8_t stack[4096];
@@ -15,7 +16,6 @@ struct task {
 
 #define MAX_TASKS 32
 task_t* TASKS[MAX_TASKS];
-int TASKS_P;
 int TASKS_FREE;
 int TASKS_HEAD;
 int TASKS_CNT;
