@@ -50,7 +50,6 @@ void teardown(task_t* task)
         }
         if (i == MAX_TASKS - 1) panic("Illegal teardown");
     }
-    printf("%d\n", tmp);
     TASKS[tmp]->next = task->next;
     tmp = task->num;
     memset(TASKS[tmp],0,sizeof(task_t));
