@@ -30,7 +30,8 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
             break;
         }
     }
-    printf("%d %d %d\n", TASKS_FREE, TASKS_HEAD, TASKS_CNT);
+    //printf("%d %d %d\n", TASKS_FREE, TASKS_HEAD, TASKS_CNT);
+    printf("%d %d", TASKS[0]->next, TASKS[0]->num);
     spin_unlock(&bigLock);
 
     return 0;
