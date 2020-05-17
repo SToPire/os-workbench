@@ -20,9 +20,11 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     if (MAX_TASKS == TASKS_CNT) panic("No more TASKS can be created!");
     if (TASKS_CNT++ == 0)
         TASKS_HEAD = TASKS_FREE;
-
+    else
+        TASKS[TASKS_LAST_CREATE]->next = TASKS_FREE;
     task->next = TASKS_HEAD;
     TASKS[TASKS_FREE] = task;
+    TASKS_LAST_CREATE = TASKS_FREE;
 
     for (int i = 1; i <= 32; i++) {
         if (TASKS[(TASKS_FREE + i) % 32]->using != 1) {

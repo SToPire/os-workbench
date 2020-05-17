@@ -19,6 +19,7 @@ task_t* TASKS[MAX_TASKS];
 int TASKS_FREE;
 int TASKS_HEAD;
 int TASKS_CNT;
+int TASKS_LAST_CREATE;
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg);
 void teardown(task_t* task);
