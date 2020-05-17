@@ -25,7 +25,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     int nxt = TASKS[TASKS_FREE]->next;
     TASKS[TASKS_FREE] = task;
     TASKS_FREE = nxt;
-
+    printf("%d %d %d \n", TASKS_FREE, TASKS_HEAD, TASKS_CNT);
     spin_unlock(&bigLock);
 
     return 0;
