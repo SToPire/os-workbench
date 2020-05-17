@@ -45,10 +45,13 @@ static void os_init()
 
     task_t* t1 = pmm->alloc(sizeof(task_t));
     task_t* t2 = pmm->alloc(sizeof(task_t));
+    task_t* t3 = pmm->alloc(sizeof(task_t));
 
     kmt->create(t1, "th1", th1, NULL);
     kmt->create(t2, "th2", th2, NULL);
-    kmt->teardown(t1);
+    kmt->create(t3, "th3", th3, NULL);
+
+    //kmt->teardown(t1);
 }
 
 static void os_run()
