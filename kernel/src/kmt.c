@@ -53,7 +53,7 @@ void teardown(task_t* task)
     TASKS[tmp]->next = task->next;
     if (TASKS_LAST_CREATE == task->num) TASKS_LAST_CREATE = tmp;
     if (TASKS_HEAD == task->num) TASKS_HEAD = task->next;
-    
+
     tmp = task->num;
     memset(TASKS[tmp], 0, sizeof(task_t));
     --TASKS_CNT;
@@ -68,7 +68,7 @@ struct cpu_local {
 _Context* scheduler(_Event ev, _Context* _Context)
 {
     if (!current) {
-        current = TASKS[0];
+        current = TASKS[TASKS_HEAD];
     } else {
         current->context = _Context;
     }
