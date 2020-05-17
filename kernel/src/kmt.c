@@ -6,7 +6,6 @@ void kmt_init()
     spin_init(&bigLock, NULL);
     for (int i = 0; i < 32;i++){
         TASKS[i]->next = (i + 1) % 32;
-        printf("%d\n", TASKS[i]->next);
     }
 }
 
@@ -26,7 +25,8 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     int nxt = TASKS[TASKS_FREE]->next;
     TASKS[TASKS_FREE] = task;
     TASKS_FREE = nxt;
-    printf("%d %d %d \n", TASKS_FREE, TASKS_HEAD, TASKS_CNT);
+    printf("%d\n", nxt);
+    //printf("%d %d %d \n", TASKS_FREE, TASKS_HEAD, TASKS_CNT);
     spin_unlock(&bigLock);
 
     return 0;
