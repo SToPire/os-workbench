@@ -1,20 +1,30 @@
-#include<am.h>
+#include <am.h>
 typedef struct task task_t;
 
 enum {
-    INVALID, READY, SLEEPING,
+    INVALID,
+    READY,
+    SLEEPING,
 };
+// struct task {
+//     union {
+//         struct {
+//             const char* name;
+//             int next;
+//             int num;
+//             int status;
+//             _Context* context;
+//         };
+//         uint8_t stack[4096];
+//     };
+// };
 struct task {
-    union {
-        struct {
-            const char* name;
-            int next;
-            int num;
-            int status;
-            _Context* context;
-        };
-        uint8_t stack[4096];
-    };
+    const char* name;
+    int next;
+    int num;
+    int status;
+    _Context* context;
+    _Area stack;
 };
 
 #define MAX_TASKS 32

@@ -1,4 +1,5 @@
 #include <common.h>
+#define STACK_SIZE 4096
 spinlock_t bigLock;
 
 void kmt_init()
@@ -14,8 +15,10 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     kmt->spin_lock(&bigLock);
     task->name = name;
     task->status = READY;
-    _Area stack = (_Area){&task->context + 1, task + 1};
-    task->context = _kcontext(stack, entry, arg);
+    //_Area stack = (_Area){&task->context + 1, task + 1};
+    task->stack.start = pmm->alloc(STACK_SIZE);
+    task->stack.end = task->stack.start + STACK_SIZE;
+    task->context = _kcontext(task->stack, entry, arg);
 
     if (MAX_TASKS == TASKS_CNT) panic("No more TASKS can be created!");
     if (TASKS_CNT++ == 0)  // first task in os
