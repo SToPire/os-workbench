@@ -3,7 +3,7 @@ spinlock_t bigLock;
 
 void kmt_init()
 {
-    spin_init(&bigLock, NULL);
+    kmt->spin_init(&bigLock, NULL);
     for (int i = 0; i < 32; i++) {
         TASKS[i]->next = (i + 1) % 32;
     }
@@ -11,7 +11,7 @@ void kmt_init()
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
 {
-    spin_lock(&bigLock);
+    kmt->spin_lock(&bigLock);
     task->name = name;
     task->using = 1;
     _Area stack = (_Area){&task->context + 1, task + 1};
@@ -20,22 +20,21 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     if (MAX_TASKS == TASKS_CNT) panic("No more TASKS can be created!");
     if (TASKS_CNT++ == 0) // first task in os
         TASKS_HEAD = TASKS_FREE;
-    else // 
+    else 
         TASKS[TASKS_LAST_CREATE]->next = TASKS_FREE;
     task->num = TASKS_FREE;
     task->next = TASKS_HEAD;
     TASKS[TASKS_FREE] = task;
     TASKS_LAST_CREATE = TASKS_FREE;
 
-    for (int i = 1; i <= 32; i++) {
+    for (int i = 1; i <= 32; i++) { // update TASKS_FREE
         if (TASKS[(TASKS_FREE + i) % 32]->using != 1) {
             TASKS_FREE = (TASKS_FREE + i) % 32;
             break;
         }
     }
-    //printf("%d %d %d\n", TASKS_FREE, TASKS_HEAD, TASKS_CNT);
-    printf("%d %d", TASKS[0]->num, TASKS[1]->num);
-    spin_unlock(&bigLock);
+
+    kmt->spin_unlock(&bigLock);
 
     return 0;
 }
