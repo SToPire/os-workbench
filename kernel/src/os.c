@@ -34,9 +34,10 @@ static void os_init()
 
     kmt->create(pmm->alloc(sizeof(task_t)), "th1", th1, NULL);
     //kmt->create(pmm->alloc(sizeof(task_t)), "th2", th2, NULL);
-    task_t t;
-    kmt->create(&t, "th2", th2, NULL);
-    kmt->teardown(&t);
+    task_t t1,t2;
+    kmt->create(&t1, "th1", th1, NULL);
+    kmt->create(&t2, "th2", th2, NULL);
+    kmt->teardown(&t1);
 }
 
 static void os_run()
