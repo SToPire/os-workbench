@@ -44,7 +44,7 @@ void teardown(task_t* task)
     kmt->spin_lock(&bigLock);
     int tmp;
     for (int i = 0; i < MAX_TASKS; i++) {
-        if (TASKS[i]->next == task->num){
+        if (TASKS[i]->next == task->num) {
             tmp = TASKS[i]->num;
             break;
         }
@@ -53,7 +53,7 @@ void teardown(task_t* task)
     printf("%d\n", tmp);
     TASKS[tmp]->next = task->next;
     tmp = task->num;
-    memset(TASKS[tmp],0,sizeof(task_t));
+    memset(TASKS[tmp], 0, sizeof(task_t));
     kmt->spin_unlock(&bigLock);
 }
 
@@ -71,7 +71,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     }
     do {
         current = TASKS[current->next];
-    } while ((current->num) % _ncpu() != _cpu());
+    } while ((current->num) % _ncpu() != _cpu() || TASKS[current->num]->using != 1);
 
     return current->context;
 }
