@@ -32,8 +32,11 @@ static void os_init()
     kmt->init();
     spin_init(&lk, NULL);  //for test
 
-    kmt->create(pmm->alloc(sizeof(task_t)), "th1", th1, NULL);
-    kmt->create(pmm->alloc(sizeof(task_t)), "th2", th2, NULL);
+    task_t* t1 = pmm->alloc(sizeof(task_t));
+    task_t* t2 = pmm->alloc(sizeof(task_t));
+
+    kmt->create(t1, "th1", th1, NULL);
+    kmt->create(t2, "th2", th2, NULL);
    // kmt->teardown(&t2);
 }
 
