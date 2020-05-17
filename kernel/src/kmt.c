@@ -18,10 +18,11 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     task->context = _kcontext(stack, entry, arg);
 
     if (MAX_TASKS == TASKS_CNT) panic("No more TASKS can be created!");
-    if (TASKS_CNT++ == 0)
+    if (TASKS_CNT++ == 0) // first task in os
         TASKS_HEAD = TASKS_FREE;
-    else
+    else // 
         TASKS[TASKS_LAST_CREATE]->next = TASKS_FREE;
+    task->num = TASKS_FREE;
     task->next = TASKS_HEAD;
     TASKS[TASKS_FREE] = task;
     TASKS_LAST_CREATE = TASKS_FREE;
