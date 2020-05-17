@@ -13,7 +13,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
 {
     kmt->spin_lock(&bigLock);
     task->name = name;
-    task->using = 1;
+    task->status = READY;
     _Area stack = (_Area){&task->context + 1, task + 1};
     task->context = _kcontext(stack, entry, arg);
 
@@ -28,7 +28,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     TASKS_LAST_CREATE = TASKS_FREE;
 
     for (int i = 1; i <= MAX_TASKS; i++) {  // update TASKS_FREE
-        if (TASKS[(TASKS_FREE + i) % MAX_TASKS]->using != 1) {
+        if (!TASKS[(TASKS_FREE + i) % MAX_TASKS] || TASKS[(TASKS_FREE + i) % MAX_TASKS]->status == INVALID) {
             TASKS_FREE = (TASKS_FREE + i) % MAX_TASKS;
             break;
         }
@@ -74,7 +74,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     }
     do {
         current = TASKS[current->next];
-    } while ((current->num) % _ncpu() != _cpu() || TASKS[current->num]->using != 1);
+    } while ((current->num) % _ncpu() != _cpu() || TASKS[current->num]->status != READY);
 
     return current->context;
 }

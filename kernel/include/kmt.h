@@ -1,13 +1,16 @@
 #include<am.h>
 typedef struct task task_t;
 
+enum {
+    INVALID, READY, SLEEPING,
+};
 struct task {
     union {
         struct {
             const char* name;
             int next;
             int num;
-            int using;
+            int status;
             _Context* context;
         };
         uint8_t stack[4096];
