@@ -4,6 +4,9 @@ spinlock_t bigLock;
 void kmt_init()
 {
     spin_init(&bigLock, NULL);
+    for (int i = 0; i < 32;i++){
+        TASKS[i]->next = (i + 1) % 32;
+    }
 }
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
@@ -14,13 +17,15 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     //printf("%p %p %p\n", task, &task->context + 1, task + 1);
     task->context = _kcontext(stack, entry, arg);
 
-    if (TASKS_P == 1) task->next = 0;
-    if (TASKS_P == 0) task->next = 1;
-    //task->next = (TASKS_P + 1) % 32;
+    if (MAX_TASKS == TASKS_CNT) panic("No more TASKS can be created!");
+    if (TASKS_CNT++ == 0)
+        TASKS_HEAD = TASKS_FREE;
 
-    TASKS[TASKS_P] = task;
-    task->num = TASKS_P;
-    TASKS_P = (TASKS_P + 1) % 32;
+    task->next = TASKS_HEAD;
+    int nxt = TASKS[TASKS_FREE]->next;
+    TASKS[TASKS_FREE] = task;
+    TASKS_FREE = nxt;
+
     spin_unlock(&bigLock);
 
     return 0;
