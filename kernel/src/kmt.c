@@ -41,6 +41,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
 
 void teardown(task_t* task)
 {
+    kmt->spin_lock(&bigLock);
     int tmp;
     for (int i = 0; i < MAX_TASKS; i++) {
         if (TASKS[i]->next == task->num){
@@ -52,6 +53,7 @@ void teardown(task_t* task)
     TASKS[tmp]->next = task->next;
     tmp = task->num;
     memset(TASKS[tmp],0,sizeof(task_t));
+    kmt->spin_unlock(&bigLock);
 }
 
 struct cpu_local {
