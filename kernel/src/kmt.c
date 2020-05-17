@@ -79,7 +79,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
 MODULE_DEF(kmt) = {
     .init = kmt_init,
     .create = create,
-    .teardown = NULL,
+    .teardown = teardown,
     .spin_init = spin_init,
     .spin_lock = spin_lock,
     .spin_unlock = spin_unlock,
