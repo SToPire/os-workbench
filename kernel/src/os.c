@@ -25,7 +25,18 @@ void th2()
             ;
     }
 }
-
+void th3()
+{
+    //assert(_cpu() == 0);
+    while (1) {
+        spin_lock(&lk);
+        assert(_intr_read() == 0);
+        printf("This is th3 running in CPU %d!\n", _cpu());
+        spin_unlock(&lk);
+        for (volatile int i = 1; i < 100000; i++)
+            ;
+    }
+}
 static void os_init()
 {
     pmm->init();
