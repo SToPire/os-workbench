@@ -37,7 +37,7 @@ static void os_init()
 
     kmt->create(t1, "th1", th1, NULL);
     kmt->create(t2, "th2", th2, NULL);
-   // kmt->teardown(&t2);
+    kmt->teardown(t2);
 }
 
 static void os_run()
