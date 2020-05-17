@@ -5,8 +5,8 @@ void kmt_init()
 {
     spin_init(&bigLock, NULL);
     for (int i = 0; i < 32;i++){
-        printf("here");
         TASKS[i]->next = (i + 1) % 32;
+        printf("%d\n", TASKS[i]->next);
     }
 }
 
