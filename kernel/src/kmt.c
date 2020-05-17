@@ -5,9 +5,6 @@ spinlock_t bigLock;
 void kmt_init()
 {
     kmt->spin_init(&bigLock, NULL);
-    for (int i = 0; i < 32; i++) {
-        TASKS[i]->next = (i + 1) % 32;
-    }
 }
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
