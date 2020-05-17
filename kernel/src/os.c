@@ -51,6 +51,7 @@ static void os_init()
     kmt->create(t2, "th2", th2, NULL);
     kmt->create(t3, "th3", th3, NULL);
 
+    TASKS[0]->status = SLEEPING;
 }
 
 static void os_run()
