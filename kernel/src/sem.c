@@ -6,6 +6,9 @@ void sem_init(sem_t* sem, const char* name, int value)
     sem->name = name;
     sem->value = value;
     spin_init(&sem->lock, NULL);
+    memset(sem->queue, 0, sizeof(sem->queue));
+    sem->front = sem->end = 0;
+    printf("%d\n", sizeof(sem->queue));
     spin_unlock(&bigSemLock);
 }
 
