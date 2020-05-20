@@ -6,6 +6,7 @@ sem_t empty, fill;
 void producer(void* arg)
 {
     while (1) {
+        printf("producer:\n");
         P(&empty);
         _putc('(');
         V(&fill);
@@ -14,6 +15,8 @@ void producer(void* arg)
 void consumer(void* arg)
 {
     while (1) {
+        printf("consumer:\n");
+
         P(&fill);
         _putc(')');
         V(&empty);
