@@ -1,15 +1,15 @@
 #include <common.h>
 #define STACK_SIZE 4096
-spinlock_t bigLock;
+spinlock_t bigKmtLock;
 
 void kmt_init()
 {
-    kmt->spin_init(&bigLock, NULL);
+    kmt->spin_init(&bigKmtLock, NULL);
 }
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
 {
-    kmt->spin_lock(&bigLock);
+    kmt->spin_lock(&bigKmtLock);
     task->name = name;
     task->status = READY;
     //_Area stack = (_Area){&task->context + 1, task + 1};
@@ -34,14 +34,14 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
         }
     }
 
-    kmt->spin_unlock(&bigLock);
+    kmt->spin_unlock(&bigKmtLock);
 
     return 0;
 }
 
 void teardown(task_t* task)
 {
-    kmt->spin_lock(&bigLock);
+    kmt->spin_lock(&bigKmtLock);
     int tmp;
     for (int i = 0; i < MAX_TASKS; i++) {
         if (TASKS[i]->next == task->num) {
@@ -59,7 +59,7 @@ void teardown(task_t* task)
     pmm->free(task->stack.start);
     memset(TASKS[tmp], 0, sizeof(task_t));
     --TASKS_CNT;
-    kmt->spin_unlock(&bigLock);
+    kmt->spin_unlock(&bigKmtLock);
 }
 
 struct cpu_local {

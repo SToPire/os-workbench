@@ -1,4 +1,5 @@
 typedef struct semaphore{
+    const char* name;
     int value;
     spinlock_t lock;
 } sem_t;
