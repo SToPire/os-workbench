@@ -1,5 +1,6 @@
 #include <common.h>
 spinlock_t lk;
+sem_t sema;
 
 void th1()
 {
@@ -41,7 +42,9 @@ static void os_init()
 {
     pmm->init();
     kmt->init();
-    spin_init(&lk, NULL);  //for test
+
+    //spin_init(&lk, NULL);  //for test
+    sem_init(&sema, NULL, 0);
 
     task_t* t1 = pmm->alloc(sizeof(task_t));
     task_t* t2 = pmm->alloc(sizeof(task_t));
