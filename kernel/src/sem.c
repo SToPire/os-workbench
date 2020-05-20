@@ -37,6 +37,7 @@ void sem_wait(sem_t* sem)
 void sem_signal(sem_t* sem)
 {
     spin_lock(&bigSemLock);
+    printf("sem_signal:%s\n", sem->name);
 
     spin_lock(&sem->lock);
     sem->value++;
