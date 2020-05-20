@@ -78,8 +78,6 @@ static void os_init()
         kmt->create(pmm->alloc(sizeof(task_t)), "producer", producer, NULL);
     for (int i = 0; i < 5; i++)  // 5 个消费者
         kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
-    kmt->create(pmm->alloc(sizeof(task_t)), "producer", producer, NULL);
-    kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
 }
 
 static void os_run()
