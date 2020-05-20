@@ -72,12 +72,14 @@ static void os_init()
     // kmt->create(t2, "th2", th2, NULL);
     // kmt->create(t3, "th3", th3, NULL);
 
-    kmt->sem_init(&empty, "empty", 1);  // 缓冲区大小为 5
-    kmt->sem_init(&fill, "fill", 0);
-    for (int i = 0; i < 4; i++)  // 4 个生产者
-        kmt->create(pmm->alloc(sizeof(task_t)), "producer", producer, NULL);
-    for (int i = 0; i < 5; i++)  // 5 个消费者
-        kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
+    // kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
+    // kmt->sem_init(&fill, "fill", 0);
+    // for (int i = 0; i < 4; i++)  // 4 个生产者
+    //     kmt->create(pmm->alloc(sizeof(task_t)), "producer", producer, NULL);
+    // for (int i = 0; i < 5; i++)  // 5 个消费者
+    //     kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)), "producer", producer, NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
 }
 
 static void os_run()
