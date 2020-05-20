@@ -1,6 +1,24 @@
 #include <common.h>
 spinlock_t lk;
-sem_t sema;
+sem_t empty, fill;
+#define P kmt->sem_wait
+#define V kmt->sem_signal
+void producer(void* arg)
+{
+    while (1) {
+        P(&empty);
+        _putc('(');
+        V(&fill);
+    }
+}
+void consumer(void* arg)
+{
+    while (1) {
+        P(&fill);
+        _putc(')');
+        V(&empty);
+    }
+}
 
 void th1()
 {
@@ -46,27 +64,25 @@ static void os_init()
     //spin_init(&lk, NULL);  //for test
     //sem_init(&sema, NULL, 0);
 
-    task_t* t1 = pmm->alloc(sizeof(task_t));
-    task_t* t2 = pmm->alloc(sizeof(task_t));
-    task_t* t3 = pmm->alloc(sizeof(task_t));
+    // task_t* t1 = pmm->alloc(sizeof(task_t));
+    // task_t* t2 = pmm->alloc(sizeof(task_t));
+    // task_t* t3 = pmm->alloc(sizeof(task_t));
 
-    kmt->create(t1, "th1", th1, NULL);
-    kmt->create(t2, "th2", th2, NULL);
-    kmt->create(t3, "th3", th3, NULL);
+    // kmt->create(t1, "th1", th1, NULL);
+    // kmt->create(t2, "th2", th2, NULL);
+    // kmt->create(t3, "th3", th3, NULL);
+
+    kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
+    kmt->sem_init(&fill, "fill", 0);
+    for (int i = 0; i < 4; i++)  // 4 个生产者
+        kmt->create(pmm->alloc(sizeof(task_t)), "producer", producer, NULL);
+    for (int i = 0; i < 5; i++)  // 5 个消费者
+        kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
 }
 
 static void os_run()
 {
     _intr_write(1);
-    // if (_cpu() == 0) {
-    //     spin_lock(&lk);
-    //     putstr("0 is holding the lock\n");
-    //     spin_unlock(&lk);
-    // } else if (_cpu() == 1) {
-    //     spin_lock(&lk);
-    //     putstr("1 is holding the lock\n");
-    //     spin_unlock(&lk);
-    // }
 
     _yield();
 }

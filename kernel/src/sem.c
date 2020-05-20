@@ -18,14 +18,33 @@ void sem_wait(sem_t* sem)
     spin_lock(&bigSemLock);
 
     spin_lock(&sem->lock);
+    bool flag = true;
     sem->value--;
     if (sem->value < 0) {
         current->status = SLEEPING;
+        sem->queue[sem->front] = current->num;
+        sem->front = (sem->front + 1) % QSIZE;
+        flag = false;
     }
-    
+    spin_unlock(&sem->lock);
+    if(flag == false){
+        _yield();
+    }
+
     spin_unlock(&bigSemLock);
 }
 
 void sem_signal(sem_t* sem)
 {
+    spin_lock(&bigSemLock);
+
+    spin_lock(&sem->lock);
+    sem->value++;
+    if(sem->front != sem->end){
+        TASKS[sem->end]->status = READY;
+        sem->end = (sem->end + 1) % QSIZE;
+    }
+    spin_unlock(&sem->lock);
+
+    spin_unlock(&bigSemLock);
 }

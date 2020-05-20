@@ -1,9 +1,10 @@
-typedef struct semaphore{
+#define QSIZE 32
+typedef struct semaphore {
     const char* name;
     int value;
     spinlock_t lock;
 
-    int queue[32];
+    int queue[QSIZE];
     int front, end;
 } sem_t;
 
