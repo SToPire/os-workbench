@@ -18,6 +18,7 @@ void sem_wait(sem_t* sem)
     spin_lock(&bigSemLock);
     printf("P:%s\n", sem->name);
     spin_lock(&sem->lock);
+    printf("Afterthelock\n");
     bool flag = true;
     sem->value--;
     if (sem->value < 0) {
