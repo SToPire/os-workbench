@@ -16,7 +16,7 @@ void sem_init(sem_t* sem, const char* name, int value)
 void sem_wait(sem_t* sem)
 {
     spin_lock(&bigSemLock);
-    printf("P:%s\n", sem->name);
+    //printf("P:%s\n", sem->name);
     spin_lock(&sem->lock);
     bool flag = true;
     sem->value--;
@@ -25,29 +25,29 @@ void sem_wait(sem_t* sem)
         sem->queue[sem->front] = current->num;
         sem->front = (sem->front + 1) % QSIZE;
         flag = false;
-        printf("%d %d %d\n", sem->front, sem->end,sem->queue[0]);
+        //printf("%d %d %d\n", sem->front, sem->end,sem->queue[0]);
     }
     spin_unlock(&sem->lock);
-    if(flag == false){
+    if (flag == false) {
         spin_unlock(&bigSemLock);
-    printf("p0:%d p1:%d\n",TASKS[0]->status,TASKS[1]->status);
+        //printf("p0:%d p1:%d\n",TASKS[0]->status,TASKS[1]->status);
         _yield();
     }
 
-    if(flag==true)spin_unlock(&bigSemLock);
+    if (flag == true) spin_unlock(&bigSemLock);
 }
 
 void sem_signal(sem_t* sem)
 {
     spin_lock(&bigSemLock);
-    printf("V:%s\n", sem->name);
+    //printf("V:%s\n", sem->name);
 
     spin_lock(&sem->lock);
     sem->value++;
-    if(sem->front != sem->end){
+    if (sem->front != sem->end) {
         TASKS[sem->queue[sem->end]]->status = READY;
         sem->end = (sem->end + 1) % QSIZE;
-        printf("%d %d\n", sem->front, sem->end);
+        //printf("%d %d\n", sem->front, sem->end);
     }
     spin_unlock(&sem->lock);
 
