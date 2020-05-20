@@ -8,7 +8,7 @@ void th1()
     while (1) {
         spin_lock(&lk);
         assert(_intr_read() == 0);
-        //printf("This is th1 running in CPU %d!\n",_cpu());
+        printf("This is th1 running in CPU %d!\n",_cpu());
         spin_unlock(&lk);
         for (volatile int i = 1; i < 100000; i++)
             ;
@@ -20,7 +20,7 @@ void th2()
     while (1) {
         spin_lock(&lk);
         assert(_intr_read() == 0);
-        //printf("This is th2 running in CPU %d!\n", _cpu());
+        printf("This is th2 running in CPU %d!\n", _cpu());
         spin_unlock(&lk);
         for (volatile int i = 1; i < 100000; i++)
             ;
@@ -32,7 +32,7 @@ void th3()
     while (1) {
         spin_lock(&lk);
         assert(_intr_read() == 0);
-        //printf("This is th3 running in CPU %d!\n", _cpu());
+        printf("This is th3 running in CPU %d!\n", _cpu());
         spin_unlock(&lk);
         for (volatile int i = 1; i < 100000; i++)
             ;
@@ -44,7 +44,7 @@ static void os_init()
     kmt->init();
 
     //spin_init(&lk, NULL);  //for test
-    sem_init(&sema, NULL, 0);
+    //sem_init(&sema, NULL, 0);
 
     task_t* t1 = pmm->alloc(sizeof(task_t));
     task_t* t2 = pmm->alloc(sizeof(task_t));
