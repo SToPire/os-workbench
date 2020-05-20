@@ -88,7 +88,7 @@ MODULE_DEF(kmt) = {
     .spin_init = spin_init,
     .spin_lock = spin_lock,
     .spin_unlock = spin_unlock,
-    .sem_init = NULL,
-    .sem_wait = NULL,
-    .sem_signal = NULL,
+    .sem_init = sem_init,
+    .sem_wait = sem_wait,
+    .sem_signal = sem_signal,
 };
