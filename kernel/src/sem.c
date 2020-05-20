@@ -1,24 +1,25 @@
-#include<common.h>
+#include <common.h>
 spinlock_t bigSemLock;
 void sem_init(sem_t* sem, const char* name, int value)
 {
     spin_lock(&bigSemLock);
     sem->name = name;
     sem->value = value;
-    spin_init(&sem->lock,NULL);
+    spin_init(&sem->lock, NULL);
     spin_unlock(&bigSemLock);
 }
 
 void sem_wait(sem_t* sem)
 {
     spin_lock(&bigSemLock);
-    
-
-    
+    spin_lock(&sem->lock);
+    sem->value--;
+    if (sem->value < 0) {
+        current->status = SLEEPING;
+    }
     spin_unlock(&bigSemLock);
 }
 
 void sem_signal(sem_t* sem)
 {
-
 }
