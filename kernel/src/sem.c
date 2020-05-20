@@ -25,6 +25,7 @@ void sem_wait(sem_t* sem)
         sem->queue[sem->front] = current->num;
         sem->front = (sem->front + 1) % QSIZE;
         flag = false;
+        printf("%d %d\n", sem->front, sem->end);
     }
     spin_unlock(&sem->lock);
     if(flag == false){
