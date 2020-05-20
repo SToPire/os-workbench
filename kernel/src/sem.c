@@ -28,8 +28,8 @@ void sem_wait(sem_t* sem)
     }
     spin_unlock(&sem->lock);
     if(flag == false){
-    printf("here?\n");
         spin_unlock(&bigSemLock);
+    printf("here?\n");
         _yield();
     }
 
