@@ -4,5 +4,6 @@
 
 #include<spinlock.h>
 #include<kmt.h>
+#include<sem.h>
 
 _Context* scheduler(_Event ev, _Context* _Context);
