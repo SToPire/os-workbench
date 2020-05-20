@@ -46,8 +46,8 @@ void sem_signal(sem_t* sem)
     sem->value++;
     if(sem->front != sem->end){
         TASKS[sem->queue[sem->end]]->status = READY;
-        printf("%d %d\n", sem->front, sem->end);
         sem->end = (sem->end + 1) % QSIZE;
+        printf("%d %d\n", sem->front, sem->end);
     }
     spin_unlock(&sem->lock);
 
