@@ -26,8 +26,8 @@ void sem_wait(sem_t* sem)
         sem->front = (sem->front + 1) % QSIZE;
         flag = false;
     }
-    printf("here?\n");
     spin_unlock(&sem->lock);
+    printf("here?\n");
     if(flag == false){
         spin_unlock(&bigSemLock);
         _yield();
