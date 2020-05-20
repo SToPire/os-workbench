@@ -16,7 +16,7 @@ void sem_init(sem_t* sem, const char* name, int value)
 void sem_wait(sem_t* sem)
 {
     spin_lock(&bigSemLock);
-    printf("sem_wait:%s\n", sem->name);
+    printf("P:%s\n", sem->name);
     spin_lock(&sem->lock);
     bool flag = true;
     sem->value--;
@@ -28,6 +28,7 @@ void sem_wait(sem_t* sem)
     }
     spin_unlock(&sem->lock);
     if(flag == false){
+        printf("FUCK\n");
         _yield();
     }
 
@@ -37,7 +38,7 @@ void sem_wait(sem_t* sem)
 void sem_signal(sem_t* sem)
 {
     spin_lock(&bigSemLock);
-    printf("sem_signal:%s\n", sem->name);
+    printf("V:%s\n", sem->name);
 
     spin_lock(&sem->lock);
     sem->value++;
