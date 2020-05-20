@@ -29,7 +29,7 @@ void sem_wait(sem_t* sem)
     spin_unlock(&sem->lock);
     if(flag == false){
         spin_unlock(&bigSemLock);
-    printf("here?\n");
+    printf("p0:%d p1:%d\n",TASKS[0]->status,TASKS[1]->status);
         _yield();
     }
 
