@@ -34,7 +34,7 @@ void sem_wait(sem_t* sem)
         _yield();
     }
 
-    spin_unlock(&bigSemLock);
+    if(flag==true)spin_unlock(&bigSemLock);
 }
 
 void sem_signal(sem_t* sem)
