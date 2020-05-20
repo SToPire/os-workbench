@@ -28,7 +28,7 @@ void sem_wait(sem_t* sem)
     }
     spin_unlock(&sem->lock);
     if(flag == false){
-        printf("FUCK\n");
+        spin_unlock(&bigSemLock);
         _yield();
     }
 
