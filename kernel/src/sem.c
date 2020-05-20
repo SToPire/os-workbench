@@ -11,7 +11,11 @@ void sem_init(sem_t* sem, const char* name, int value)
 
 void sem_wait(sem_t* sem)
 {
+    spin_lock(&bigSemLock);
+    
 
+    
+    spin_unlock(&bigSemLock);
 }
 
 void sem_signal(sem_t* sem)

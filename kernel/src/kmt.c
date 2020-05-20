@@ -62,10 +62,6 @@ void teardown(task_t* task)
     kmt->spin_unlock(&bigKmtLock);
 }
 
-struct cpu_local {
-    task_t* current;
-} cpu_local[8];
-#define current cpu_local[_cpu()].current
 
 _Context* scheduler(_Event ev, _Context* _Context)
 {
