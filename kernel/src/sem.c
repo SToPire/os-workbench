@@ -21,13 +21,13 @@ void sem_wait(sem_t* sem)
     bool flag = true;
     sem->value--;
     if (sem->value < 0) {
-        _intr_write(0);
+        //_intr_write(0);
         current->status = SLEEPING;
         sem->queue[sem->front] = current->num;
         sem->front = (sem->front + 1) % QSIZE;
         flag = false;
         printf("%d %d\n", sem->front, sem->end);
-        _intr_write(1);
+        //_intr_write(1);
     }
     spin_unlock(&sem->lock);
     if(flag == false){
