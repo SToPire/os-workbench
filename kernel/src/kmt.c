@@ -95,7 +95,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
             TASKS_PTR = TASKS[i->next]->num;
             break;
         }
-        assert(j == 20);
+        assert(j <= 20);
     }
     if (current) {
         printf("second if\n");
