@@ -1,5 +1,6 @@
 #include <common.h>
 #define STACK_SIZE 4096
+spinlock_t slock;
 
 int TASKS_PTR;
 void kmt_init()
@@ -7,6 +8,7 @@ void kmt_init()
     kmt->spin_init(&bigKmtLock, NULL);
     memset(INTR, 0, sizeof(INTR));
     os->on_irq(MAX_INTR, _EVENT_NULL, scheduler);
+    spin_init(&slock, NULL);
 }
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
@@ -78,9 +80,9 @@ void teardown(task_t* task)
 
 //     return current->context;
 // }
-
 _Context* scheduler(_Event ev, _Context* _Context)
 {
+    spin_lock(&slock);
     if (cpu_local[_cpu()].sticky != NULL) {
         cpu_local[_cpu()].sticky->sticky = 0;
         //printf("first if        %d %d %d\n", cpu_local[_cpu()].sticky->num, cpu_local[_cpu()].sticky->status, cpu_local[_cpu()].sticky->sticky);
@@ -109,6 +111,8 @@ _Context* scheduler(_Event ev, _Context* _Context)
     current->status = RUNNING;
     //printf("i:%d\n", i->num);
     //printf("%d %d %d\n", TASKS[0]->sticky, TASKS[1]->sticky, TASKS[2]->sticky);
+    spin_unlock(&slock);
+
     return current->context;
 }
 
