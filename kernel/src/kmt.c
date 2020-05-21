@@ -111,6 +111,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     //printf("%d %d %d\n", TASKS[0]->sticky, TASKS[1]->sticky, TASKS[2]->sticky);
     // spin_unlock(&slock);
 
+    assert(current->context != NULL);
     return current->context;
 }
 
