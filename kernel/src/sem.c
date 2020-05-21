@@ -6,7 +6,7 @@ void sem_init(sem_t* sem, const char* name, int value)
 
     sem->name = name;
     sem->value = value;
-    spin_init(&sem->lock, NULL);
+    spin_init(&sem->lock, sem->name);
     memset(sem->queue, 0, sizeof(sem->queue));
     sem->front = sem->end = 0;
 
@@ -28,6 +28,7 @@ void sem_wait(sem_t* sem)
         //printf("%d %d %d\n", sem->front, sem->end,sem->queue[0]);
     }
     spin_unlock(&sem->lock);
+    printf("P-value:%d\n", sem->value);
     if (flag == false) {
         spin_unlock(&bigSemLock);
         //printf("p0:%d p1:%d\n",TASKS[0]->status,TASKS[1]->status);
@@ -49,6 +50,8 @@ void sem_signal(sem_t* sem)
         sem->end = (sem->end + 1) % QSIZE;
         //printf("%d %d\n", sem->front, sem->end);
     }
+    printf("V-value:%d\n", sem->value);
+
     spin_unlock(&sem->lock);
 
     spin_unlock(&bigSemLock);
