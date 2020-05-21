@@ -81,6 +81,7 @@ void teardown(task_t* task)
 
 _Context* scheduler(_Event ev, _Context* _Context)
 {
+    printf("here\n");
     if (cpu_local[_cpu()].sticky != NULL) {
         cpu_local[_cpu()].sticky->sticky = 0;
         cpu_local[_cpu()].sticky = NULL;
