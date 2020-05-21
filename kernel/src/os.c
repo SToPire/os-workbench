@@ -93,6 +93,7 @@ _Context* os_trap(_Event ev, _Context* context)
     _Context* next = NULL;
     for (int i = 0; i <= MAX_INTR;i++) {
         if (INTR[i].valid == 1 && (INTR[i].event == _EVENT_NULL || INTR[i].event == ev.event)) {
+            printf("here:%d\n", i);
             _Context* r = INTR[i].handler(ev, context);
             panic_on(r && next, "returning multiple contexts");
             if (r) next = r;
