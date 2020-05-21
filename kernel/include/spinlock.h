@@ -2,7 +2,7 @@
 typedef struct spinlock {
     intptr_t locked;
     int cpu;
-    char* name;
+    const char* name;
 } spinlock_t;
 
 void spin_init(spinlock_t* lk,const char* name);

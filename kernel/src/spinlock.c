@@ -13,13 +13,14 @@ void spin_init(spinlock_t* lk, const char* name)
 {
     lk->locked = 0;
     lk->cpu = -1;
-    //lk->name = name;
+    lk->name = name;
 }
 
 void spin_lock(spinlock_t* lk)
 {
     pushcli();
-    panic_on(holding(lk), "Trying to hold a lock which already held by this cpu");
+    if(holding(lk))
+        printf("%s: Trying to hold a lock which already held by this cpu\n", lk->name);
     while (_atomic_xchg(&lk->locked, 1))
         ;
     lk->cpu = _cpu();
@@ -30,8 +31,9 @@ void spin_lock(spinlock_t* lk)
 void spin_unlock(spinlock_t* lk)
 {
     //printf("spin_unlock from cpu %d\n", _cpu());
+    if (!holding(lk))
+        printf("%s: releasing a unheld lock\n", lk->name);
 
-    panic_on(!holding(lk), "releasing a unheld lock");
     lk->cpu = -1;
     _atomic_xchg(&lk->locked, 0);
     popcli();

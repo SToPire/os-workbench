@@ -4,7 +4,7 @@
 int TASKS_PTR;
 void kmt_init()
 {
-    kmt->spin_init(&bigKmtLock, NULL);
+    kmt->spin_init(&bigKmtLock, "bigKmtLock");
     memset(INTR, 0, sizeof(INTR));
     os->on_irq(MAX_INTR, _EVENT_NULL, scheduler);
 }
@@ -80,7 +80,6 @@ void teardown(task_t* task)
 // }
 _Context* scheduler(_Event ev, _Context* _Context)
 {
-    // spin_lock(&slock);
     if (cpu_local[_cpu()].sticky != NULL) {
         cpu_local[_cpu()].sticky->sticky = 0;
         //printf("first if        %d %d %d\n", cpu_local[_cpu()].sticky->num, cpu_local[_cpu()].sticky->status, cpu_local[_cpu()].sticky->sticky);
@@ -109,9 +108,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     current->status = RUNNING;
     //printf("i:%d\n", i->num);
     //printf("%d %d %d\n", TASKS[0]->sticky, TASKS[1]->sticky, TASKS[2]->sticky);
-    // spin_unlock(&slock);
 
-    assert(current->context != NULL);
     return current->context;
 }
 
