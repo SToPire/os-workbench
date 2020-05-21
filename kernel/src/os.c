@@ -44,7 +44,7 @@ static void os_init()
 
     spin_init(&trapLock, NULL);
 
-    //spin_init(&lk, NULL);
+    spin_init(&lk, NULL);
     //sem_init(&sema, NULL, 0);
 
     task_t* t1 = pmm->alloc(sizeof(task_t));
