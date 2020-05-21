@@ -82,7 +82,7 @@ void teardown(task_t* task)
 _Context* scheduler(_Event ev, _Context* _Context)
 {
     if (cpu_local[_cpu()].sticky != NULL) {
-        printf("first if\n");
+        printf("first if        %d\n", cpu_local[_cpu()].sticky->num);
         cpu_local[_cpu()].sticky->sticky = 0;
         cpu_local[_cpu()].sticky = NULL;
     }
