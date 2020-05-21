@@ -82,16 +82,16 @@ _Context* scheduler(_Event ev, _Context* _Context)
 {
     if (cpu_local[_cpu()].sticky != NULL) {
         cpu_local[_cpu()].sticky->sticky = 0;
-        //printf("first if        %d %d %d\n", cpu_local[_cpu()].sticky->num, cpu_local[_cpu()].sticky->status, cpu_local[_cpu()].sticky->sticky);
+        printf("first if        %d %d %d\n", cpu_local[_cpu()].sticky->num, cpu_local[_cpu()].sticky->status, cpu_local[_cpu()].sticky->sticky);
         cpu_local[_cpu()].sticky = NULL;
     }
     task_t* i = TASKS[TASKS_PTR];
-    //printf("%d %d ptr:%d\n", TASKS[0]->status,TASKS[0]->sticky,TASKS_PTR);
+    printf("%d %d ptr:%d\n", TASKS[0]->status,TASKS[0]->sticky,TASKS_PTR);
     if(current){
         current->status = READY;
     }
     for (int j = 0; j < MAX_TASKS; j++, i = TASKS[i->next]) {
-        //printf("%d %d %d\n", i->num, i->status, i->sticky);
+        printf("%d %d %d\n", i->num, i->status, i->sticky);
         if (i->status == READY && i->sticky == 0) {
             TASKS_PTR = TASKS[i->next]->num;
             break;
@@ -99,15 +99,14 @@ _Context* scheduler(_Event ev, _Context* _Context)
         assert(j <= 20);
     }
     if (current) {
-        //printf("second if\n");
         current->context = _Context;
         current->sticky = 1;
         cpu_local[_cpu()].sticky = current;
     }
     current = i;
     current->status = RUNNING;
-    //printf("i:%d\n", i->num);
-    //printf("%d %d %d\n", TASKS[0]->sticky, TASKS[1]->sticky, TASKS[2]->sticky);
+    printf("i:%d\n", i->num);
+    printf("%d %d %d\n", TASKS[0]->sticky, TASKS[1]->sticky, TASKS[2]->sticky);
 
     return current->context;
 }
