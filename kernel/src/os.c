@@ -3,7 +3,6 @@ spinlock_t lk;
 
 void th1()
 {
-    //assert(_cpu() == 0);
     while (1) {
         spin_lock(&lk);
         assert(_intr_read() == 0);
@@ -15,7 +14,6 @@ void th1()
 }
 void th2()
 {
-    //assert(_cpu() == 1);
     while (1) {
         spin_lock(&lk);
         assert(_intr_read() == 0);
@@ -27,7 +25,6 @@ void th2()
 }
 void th3()
 {
-    //assert(_cpu() == 0);
     while (1) {
         spin_lock(&lk);
         assert(_intr_read() == 0);
@@ -42,10 +39,9 @@ static void os_init()
     pmm->init();
     kmt->init();
 
-    spin_init(&trapLock, NULL);
+    kmt->spin_init(&trapLock, NULL);
 
     spin_init(&lk, NULL);
-    //sem_init(&sema, NULL, 0);
 
     task_t* t1 = pmm->alloc(sizeof(task_t));
     task_t* t2 = pmm->alloc(sizeof(task_t));
@@ -66,18 +62,18 @@ static void os_run()
 _Context* os_trap(_Event ev, _Context* context)
 {
     kmt->spin_lock(&trapLock);
-    // _Context* next = NULL;
-    // for (int i = 0; i <= MAX_INTR;i++) {
-    //     if (INTR[i].valid == 1 && (INTR[i].event == _EVENT_NULL || INTR[i].event == ev.event)) {
-    //         _Context* r = INTR[i].handler(ev, context);
-    //         panic_on(r && next, "returning multiple contexts");
-    //         if (r) next = r;
-    //     }
-    // }
-    // panic_on(!next, "returning NULL context");
-    _Context* next = scheduler(ev, context);
+    _Context* next = NULL;
+    for (int i = 0; i <= MAX_INTR;i++) {
+        if (INTR[i].valid == 1 && (INTR[i].event == _EVENT_NULL || INTR[i].event == ev.event)) {
+            _Context* r = INTR[i].handler(ev, context);
+            panic_on(r && next, "returning multiple contexts");
+            if (r) next = r;
+        }
+    }
+    panic_on(!next, "returning NULL context");
     kmt->spin_unlock(&trapLock);
     return next;
+
 }
 void on_irq(int seq, int event, handler_t handler)
 {

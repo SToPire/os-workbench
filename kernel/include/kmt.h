@@ -14,10 +14,10 @@ struct task {
     int num;
     int status;
 
-    int sticky; 
-
     _Context* context;
     _Area stack;
+
+    int sticky; 
 };
 
 #define MAX_TASKS 32
