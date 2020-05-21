@@ -6,18 +6,7 @@ enum {
     READY,
     SLEEPING,
 };
-// struct task {
-//     union {
-//         struct {
-//             const char* name;
-//             int next;
-//             int num;
-//             int status;
-//             _Context* context;
-//         };
-//         uint8_t stack[4096];
-//     };
-// };
+
 struct task {
     const char* name;
     int next;
@@ -36,3 +25,10 @@ int TASKS_LAST_CREATE;
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg);
 void teardown(task_t* task);
+
+#define MAX_INTR 31
+struct _INTR{
+    int valid;
+    handler_t handler;
+    int event;
+} INTR[32];

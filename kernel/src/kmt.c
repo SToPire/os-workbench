@@ -5,6 +5,8 @@ spinlock_t bigKmtLock;
 void kmt_init()
 {
     kmt->spin_init(&bigKmtLock, NULL);
+    for (int i = 0; i < MAX_INTR; i++) INTR[i].valid = 0;
+    os->on_irq(MAX_INTR, _EVENT_NULL, scheduler);
 }
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
