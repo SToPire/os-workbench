@@ -92,18 +92,17 @@ static void os_run()
 
 _Context* os_trap(_Event ev, _Context* context)
 {
-    //spin_lock(&trapLock);
+    spin_lock(&trapLock);
     _Context* next = NULL;
     for (int i = 0; i <= MAX_INTR;i++) {
         if (INTR[i].valid == 1 && (INTR[i].event == _EVENT_NULL || INTR[i].event == ev.event)) {
-            printf("here:%d\n", i);
             _Context* r = INTR[i].handler(ev, context);
             panic_on(r && next, "returning multiple contexts");
             if (r) next = r;
         }
     }
     panic_on(!next, "returning NULL context");
-    //spin_unlock(&trapLock);
+    spin_unlock(&trapLock);
     return next;
 }
 void on_irq(int seq, int event, handler_t handler)
