@@ -47,13 +47,13 @@ static void os_init()
     spin_init(&lk, NULL);
     //sem_init(&sema, NULL, 0);
 
-    task_t* t1 = pmm->alloc(sizeof(task_t));
-    task_t* t2 = pmm->alloc(sizeof(task_t));
-    task_t* t3 = pmm->alloc(sizeof(task_t));
+    // task_t* t1 = pmm->alloc(sizeof(task_t));
+    // task_t* t2 = pmm->alloc(sizeof(task_t));
+    // task_t* t3 = pmm->alloc(sizeof(task_t));
 
-    kmt->create(t1, "th1", th1, NULL);
-    kmt->create(t2, "th2", th2, NULL);
-    kmt->create(t3, "th3", th3, NULL);
+    // kmt->create(t1, "th1", th1, NULL);
+    // kmt->create(t2, "th2", th2, NULL);
+    // kmt->create(t3, "th3", th3, NULL);
 }
 
 static void os_run()
