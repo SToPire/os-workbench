@@ -90,6 +90,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     printf("%d %d ptr:%d\n", TASKS[0]->status,TASKS[0]->sticky,TASKS_PTR);
 
     for (int j = 0; j < MAX_TASKS; j++, i = TASKS[i->next]) {
+        printf("%d %d %d\n", i->num, i->status, i->sticky);
         if (i->status == READY && i->sticky == 0) {
             TASKS_PTR = TASKS[i->next]->num;
             break;
