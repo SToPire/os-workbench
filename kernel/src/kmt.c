@@ -88,7 +88,9 @@ _Context* scheduler(_Event ev, _Context* _Context)
     }
     task_t* i = TASKS[TASKS_PTR];
     printf("%d %d ptr:%d\n", TASKS[0]->status,TASKS[0]->sticky,TASKS_PTR);
-
+    if(current){
+        current->status = READY;
+    }
     for (int j = 0; j < MAX_TASKS; j++, i = TASKS[i->next]) {
         printf("%d %d %d\n", i->num, i->status, i->sticky);
         if (i->status == READY && i->sticky == 0) {
@@ -99,7 +101,6 @@ _Context* scheduler(_Event ev, _Context* _Context)
     }
     if (current) {
         printf("second if\n");
-        current->status = READY;
         current->context = _Context;
         current->sticky = 1;
         cpu_local[_cpu()].sticky = current;
