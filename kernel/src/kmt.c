@@ -87,6 +87,8 @@ _Context* scheduler(_Event ev, _Context* _Context)
         cpu_local[_cpu()].sticky = NULL;
     }
     task_t* i = TASKS[TASKS_PTR];
+    printf("%d %d \n", TASKS[0]->status,TASKS[0]->sticky);
+
     for (int j = 0; j < MAX_TASKS; j++, i = TASKS[i->next]) {
         if (i->status == READY && i->sticky == 0) {
             TASKS_PTR = TASKS[i->next]->num;
