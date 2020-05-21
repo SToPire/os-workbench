@@ -106,7 +106,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     current = i;
     current->status = RUNNING;
     printf("i:%d\n", i->num);
-    printf("%d %d %d\n", TASKS[0]->sticky, TASKS[1]->sticky, TASKS[2]->sticky);
+    printf("%d %d %d %d\n", TASKS[0]->sticky, TASKS[1]->sticky, TASKS[2]->sticky, TASKS[3]->sticky);
 
     return current->context;
 }
