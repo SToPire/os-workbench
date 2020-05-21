@@ -5,6 +5,7 @@ enum {
     INVALID,
     READY,
     SLEEPING,
+    RUNNING,
 };
 
 struct task {

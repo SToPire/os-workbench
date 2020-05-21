@@ -99,11 +99,13 @@ _Context* scheduler(_Event ev, _Context* _Context)
     }
     if (current) {
         printf("second if\n");
+        current->status = READY;
         current->context = _Context;
         current->sticky = 1;
         cpu_local[_cpu()].sticky = current;
     }
     current = i;
+    current->status = RUNNING;
     printf("i:%d\n", i->num);
     printf("%d %d %d\n", TASKS[0]->sticky, TASKS[1]->sticky, TASKS[2]->sticky);
     return current->context;
