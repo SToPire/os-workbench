@@ -82,7 +82,7 @@ void teardown(task_t* task)
 _Context* scheduler(_Event ev, _Context* _Context)
 {
     if (cpu_local[_cpu()].sticky != NULL) {
-        printf("here\n");
+        printf("first if\n");
         cpu_local[_cpu()].sticky->sticky = 0;
         cpu_local[_cpu()].sticky = NULL;
     }
@@ -95,6 +95,8 @@ _Context* scheduler(_Event ev, _Context* _Context)
         assert(j == 20);
     }
     if (current) {
+        printf("second if\n");
+
         current->sticky = 1;
         cpu_local[_cpu()].sticky = current;
     }
