@@ -1,5 +1,6 @@
 #include <common.h>
 spinlock_t trapLock;
+spinlock_t lk;
 // sem_t empty, fill;
 // #define P kmt->sem_wait
 // #define V kmt->sem_signal
@@ -20,57 +21,59 @@ spinlock_t trapLock;
 //     }
 // }
 
-// void th1()
-// {
-//     //assert(_cpu() == 0);
-//     while (1) {
-//         spin_lock(&lk);
-//         assert(_intr_read() == 0);
-//         printf("This is th1 running in CPU %d!\n",_cpu());
-//         spin_unlock(&lk);
-//         for (volatile int i = 1; i < 100000; i++)
-//             ;
-//     }
-// }
-// void th2()
-// {
-//     //assert(_cpu() == 1);
-//     while (1) {
-//         spin_lock(&lk);
-//         assert(_intr_read() == 0);
-//         printf("This is th2 running in CPU %d!\n", _cpu());
-//         spin_unlock(&lk);
-//         for (volatile int i = 1; i < 100000; i++)
-//             ;
-//     }
-// }
-// void th3()
-// {
-//     //assert(_cpu() == 0);
-//     while (1) {
-//         spin_lock(&lk);
-//         assert(_intr_read() == 0);
-//         printf("This is th3 running in CPU %d!\n", _cpu());
-//         spin_unlock(&lk);
-//         for (volatile int i = 1; i < 100000; i++)
-//             ;
-//     }
-// }
+void th1()
+{
+    //assert(_cpu() == 0);
+    while (1) {
+        spin_lock(&lk);
+        assert(_intr_read() == 0);
+        printf("This is th1 running in CPU %d!\n",_cpu());
+        spin_unlock(&lk);
+        for (volatile int i = 1; i < 100000; i++)
+            ;
+    }
+}
+void th2()
+{
+    //assert(_cpu() == 1);
+    while (1) {
+        spin_lock(&lk);
+        assert(_intr_read() == 0);
+        printf("This is th2 running in CPU %d!\n", _cpu());
+        spin_unlock(&lk);
+        for (volatile int i = 1; i < 100000; i++)
+            ;
+    }
+}
+void th3()
+{
+    //assert(_cpu() == 0);
+    while (1) {
+        spin_lock(&lk);
+        assert(_intr_read() == 0);
+        printf("This is th3 running in CPU %d!\n", _cpu());
+        spin_unlock(&lk);
+        for (volatile int i = 1; i < 100000; i++)
+            ;
+    }
+}
 static void os_init()
 {
     pmm->init();
     kmt->init();
 
-    spin_init(&trapLock, NULL);  
+    spin_init(&trapLock, NULL);
+
+    spin_init(&lk, NULL);
     //sem_init(&sema, NULL, 0);
 
-    // task_t* t1 = pmm->alloc(sizeof(task_t));
-    // task_t* t2 = pmm->alloc(sizeof(task_t));
-    // task_t* t3 = pmm->alloc(sizeof(task_t));
+    task_t* t1 = pmm->alloc(sizeof(task_t));
+    task_t* t2 = pmm->alloc(sizeof(task_t));
+    task_t* t3 = pmm->alloc(sizeof(task_t));
 
-    // kmt->create(t1, "th1", th1, NULL);
-    // kmt->create(t2, "th2", th2, NULL);
-    // kmt->create(t3, "th3", th3, NULL);
+    kmt->create(t1, "th1", th1, NULL);
+    kmt->create(t2, "th2", th2, NULL);
+    kmt->create(t3, "th3", th3, NULL);
 
     // kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
     // kmt->sem_init(&fill, "fill", 0);
