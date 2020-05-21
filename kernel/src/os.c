@@ -89,7 +89,7 @@ static void os_run()
 
 _Context* os_trap(_Event ev, _Context* context)
 {
-    spin_lock(&trapLock);
+    //spin_lock(&trapLock);
     _Context* next = NULL;
     for (int i = 0; i <= MAX_INTR;i++) {
         if (INTR[i].event == _EVENT_NULL || INTR[i].event == ev.event) {
@@ -99,7 +99,7 @@ _Context* os_trap(_Event ev, _Context* context)
         }
     }
     panic_on(!next, "returning NULL context");
-    spin_unlock(&trapLock);
+    //spin_unlock(&trapLock);
     return next;
 }
 void on_irq(int seq, int event, handler_t handler)
