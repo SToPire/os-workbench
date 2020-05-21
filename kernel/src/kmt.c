@@ -85,6 +85,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     task_t* i = TASKS[TASKS_HEAD];
     for (int j = 0; j < MAX_TASKS; j++, i = TASKS[i->next]) {
         if (i->status == READY && i->sticky == 0) break;
+        assert(j == 20);
     }
     if(current){
         current->sticky = 1;
