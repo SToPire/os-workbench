@@ -1,11 +1,10 @@
 #include <common.h>
 #define STACK_SIZE 4096
-spinlock_t bigKmtLock;
 
 void kmt_init()
 {
     kmt->spin_init(&bigKmtLock, NULL);
-    for (int i = 0; i < MAX_INTR; i++) INTR[i].valid = 0;
+    memset(INTR, 0, sizeof(INTR));
     os->on_irq(MAX_INTR, _EVENT_NULL, scheduler);
 }
 
@@ -56,7 +55,6 @@ void teardown(task_t* task)
     if (TASKS_LAST_CREATE == task->num) TASKS_LAST_CREATE = tmp;
     if (TASKS_HEAD == task->num) TASKS_HEAD = task->next;
 
-
     tmp = task->num;
     pmm->free(task->stack.start);
     memset(TASKS[tmp], 0, sizeof(task_t));
@@ -64,18 +62,35 @@ void teardown(task_t* task)
     kmt->spin_unlock(&bigKmtLock);
 }
 
+// _Context* scheduler(_Event ev, _Context* _Context)
+// {
+//     if (!current) {
+//         current = TASKS[TASKS_HEAD];
+//     } else {
+//         current->context = _Context;
+//     }
+//     do {
+//         current = TASKS[current->next];
+//     } while ((current->num) % _ncpu() != _cpu() || TASKS[current->num]->status != READY);
+
+//     return current->context;
+// }
 
 _Context* scheduler(_Event ev, _Context* _Context)
 {
-    if (!current) {
-        current = TASKS[TASKS_HEAD];
-    } else {
-        current->context = _Context;
+    if (cpu_local[_cpu()].sticky != NULL) {
+        cpu_local[_cpu()].sticky->sticky = 0;
+        cpu_local[_cpu()].sticky = NULL;
     }
-    do {
-        current = TASKS[current->next];
-    } while ((current->num) % _ncpu() != _cpu() || TASKS[current->num]->status != READY);
-
+    task_t* i = TASKS[TASKS_HEAD];
+    for (int j = 0; j < MAX_TASKS; j++, i = TASKS[i->next]) {
+        if (i->status == READY && i->sticky == 0) break;
+    }
+    if(current){
+        current->sticky = 1;
+        cpu_local[_cpu()].sticky = current;
+    }
+    current = i;
     return current->context;
 }
 

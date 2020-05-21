@@ -12,6 +12,9 @@ struct task {
     int next;
     int num;
     int status;
+
+    int sticky; 
+
     _Context* context;
     _Area stack;
 };
@@ -32,3 +35,6 @@ struct _INTR{
     handler_t handler;
     int event;
 } INTR[32];
+
+spinlock_t trapLock;
+spinlock_t bigKmtLock;
