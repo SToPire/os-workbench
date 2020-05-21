@@ -101,6 +101,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
         cpu_local[_cpu()].sticky = current;
     }
     current = i;
+    printf("i:%d\n", i->num);
     printf("%d %d %d\n", TASKS[0]->sticky, TASKS[1]->sticky, TASKS[2]->sticky);
     return current->context;
 }
