@@ -17,7 +17,7 @@ struct task {
     _Context* context;
     _Area stack;
 
-    int sticky; 
+    //int sticky; 
 };
 
 #define MAX_TASKS 32
@@ -39,3 +39,8 @@ struct _INTR{
 
 spinlock_t trapLock;
 spinlock_t bigKmtLock;
+
+struct cpu_local {
+    task_t* current;
+    //task_t* sticky;
+} cpu_local[8];

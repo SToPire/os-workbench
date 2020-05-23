@@ -1,5 +1,6 @@
 #include <common.h>
 spinlock_t bigSemLock;
+#define current cpu_local[_cpu()].current
 void sem_init(sem_t* sem, const char* name, int value)
 {
     spin_lock(&bigSemLock);
@@ -28,7 +29,7 @@ void sem_wait(sem_t* sem)
         //printf("%d %d %d\n", sem->front, sem->end,sem->queue[0]);
     }
     spin_unlock(&sem->lock);
-    printf("P-value:%d\n", sem->value);
+    //printf("P-value:%d\n", sem->value);
     if (flag == false) {
         spin_unlock(&bigSemLock);
         //printf("p0:%d p1:%d\n",TASKS[0]->status,TASKS[1]->status);
@@ -50,7 +51,7 @@ void sem_signal(sem_t* sem)
         sem->end = (sem->end + 1) % QSIZE;
         //printf("%d %d\n", sem->front, sem->end);
     }
-    printf("V-value:%d\n", sem->value);
+    //printf("V-value:%d\n", sem->value);
 
     spin_unlock(&sem->lock);
 

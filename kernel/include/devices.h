@@ -1,9 +1,10 @@
 #include <common.h>
-
+#include<unistd.h>
+#include<amdev.h>
 typedef struct devops {
-  int (*init)(device_t *dev);
-  ssize_t (*read) (device_t *dev, off_t offset, void *buf, size_t count);
-  ssize_t (*write)(device_t *dev, off_t offset, const void *buf, size_t count);
+    int (*init)(device_t* dev);
+    ssize_t (*read)(device_t* dev, off_t offset, void* buf, size_t count);
+    ssize_t (*write)(device_t* dev, off_t offset, const void* buf, size_t count);
 } devops_t;
 extern devops_t tty_ops, fb_ops, sd_ops, input_ops;
 
