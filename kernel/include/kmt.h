@@ -29,6 +29,7 @@ int TASKS_LAST_CREATE;
 
 int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg);
 void teardown(task_t* task);
+_Context* scheduler(_Event ev, _Context* _Context);
 
 #define MAX_INTR 31
 struct _INTR{
