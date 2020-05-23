@@ -19,31 +19,31 @@
 //     }
 // }
 
-spinlock_t lk;
-void th(void* s)
-{
-    while (1) {
-        spin_lock(&lk);
-        assert(_intr_read() == 0);
-        printf("This is %s running in CPU %d!\n",(const char*)s,_cpu());
-        spin_unlock(&lk);
-        for (volatile int i = 1; i < 100000; i++)
-            ;
-    }
-}
-void th4(void* s){
-    kmt->create(pmm->alloc(sizeof(task_t)), "th5", th, "th5");
-    kmt->create(pmm->alloc(sizeof(task_t)), "th6", th, "th6");
-    kmt->create(pmm->alloc(sizeof(task_t)), "th7", th, "th7");
-    while (1) {
-        spin_lock(&lk);
-        assert(_intr_read() == 0);
-        printf("This is %s running in CPU %d!\n", (const char*)s, _cpu());
-        spin_unlock(&lk);
-        for (volatile int i = 1; i < 100000; i++)
-            ;
-    }
-}
+// spinlock_t lk;
+// void th(void* s)
+// {
+//     while (1) {
+//         spin_lock(&lk);
+//         assert(_intr_read() == 0);
+//         printf("This is %s running in CPU %d!\n",(const char*)s,_cpu());
+//         spin_unlock(&lk);
+//         for (volatile int i = 1; i < 100000; i++)
+//             ;
+//     }
+// }
+// void th4(void* s){
+//     kmt->create(pmm->alloc(sizeof(task_t)), "th5", th, "th5");
+//     kmt->create(pmm->alloc(sizeof(task_t)), "th6", th, "th6");
+//     kmt->create(pmm->alloc(sizeof(task_t)), "th7", th, "th7");
+//     while (1) {
+//         spin_lock(&lk);
+//         assert(_intr_read() == 0);
+//         printf("This is %s running in CPU %d!\n", (const char*)s, _cpu());
+//         spin_unlock(&lk);
+//         for (volatile int i = 1; i < 100000; i++)
+//             ;
+//     }
+// }
 static void os_init()
 {
     pmm->init();
@@ -54,14 +54,14 @@ static void os_init()
     //dev->init();
     // spin_init(&lk, NULL);
 
-    task_t* t1 = pmm->alloc(sizeof(task_t));
-    task_t* t2 = pmm->alloc(sizeof(task_t));
-    task_t* t3 = pmm->alloc(sizeof(task_t));
+    // task_t* t1 = pmm->alloc(sizeof(task_t));
+    // task_t* t2 = pmm->alloc(sizeof(task_t));
+    // task_t* t3 = pmm->alloc(sizeof(task_t));
 
-    kmt->create(t1, "th1", th, "th1");
-    kmt->create(t2, "th2", th, "th2");
-    kmt->create(t3, "th3", th, "th3");
-    kmt->create(pmm->alloc(sizeof(task_t)), "th4", th4, "th4");
+    // kmt->create(t1, "th1", th, "th1");
+    // kmt->create(t2, "th2", th, "th2");
+    // kmt->create(t3, "th3", th, "th3");
+    // kmt->create(pmm->alloc(sizeof(task_t)), "th4", th4, "th4");
 
     // kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
     // kmt->sem_init(&fill, "fill", 0);
@@ -80,20 +80,17 @@ static void os_run()
 
 _Context* os_trap(_Event ev, _Context* context)
 {
-    kmt->spin_lock(&trapLock);
-    // _Context* next = NULL;
-    // for (int i = 0; i <= MAX_INTR;i++) {
-    //     if (INTR[i].valid == 1 && (INTR[i].event == _EVENT_NULL || INTR[i].event == ev.event)) {
-    //         _Context* r = INTR[i].handler(ev, context);
-    //         panic_on(r && next, "returning multiple contexts");
-    //         if (r) next = r;
-    //     }
-    // }
-
-    _Context* next = scheduler(ev, context);
-
-    // panic_on(!next, "returning NULL context");
-    kmt->spin_unlock(&trapLock);
+    //kmt->spin_lock(&trapLock);
+    _Context* next = NULL;
+    for (int i = 0; i <= MAX_INTR;i++) {
+        if (INTR[i].valid == 1 && (INTR[i].event == _EVENT_NULL || INTR[i].event == ev.event)) {
+            _Context* r = INTR[i].handler(ev, context);
+            panic_on(r && next, "returning multiple contexts");
+            if (r) next = r;
+        }
+    }
+    panic_on(!next, "returning NULL context");
+    //kmt->spin_unlock(&trapLock);
     return next;
 }
 void on_irq(int seq, int event, handler_t handler)
