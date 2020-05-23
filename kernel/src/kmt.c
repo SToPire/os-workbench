@@ -1,7 +1,7 @@
 #include <common.h>
 #define STACK_SIZE 4096
 
-int TASKS_PTR;
+//int TASKS_PTR;
 void kmt_init()
 {
     kmt->spin_init(&bigKmtLock, "bigKmtLock");
@@ -36,7 +36,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
         }
     }
 
-    TASKS_PTR = TASKS_HEAD;
+    //TASKS_PTR = TASKS_HEAD;
 
     kmt->spin_unlock(&bigKmtLock);
 
@@ -75,7 +75,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     }
     do {
         current = TASKS[current->next];
-    } while ((current->num) % _ncpu() != _cpu() || TASKS[current->num]->status != READY);
+    } while ((current->num) % _ncpu() != _cpu() || current->status != READY);
 
     return current->context;
 }
