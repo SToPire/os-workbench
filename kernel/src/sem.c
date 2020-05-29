@@ -3,7 +3,7 @@ spinlock_t bigSemLock;
 #define current cpu_local[_cpu()].current
 void sem_init(sem_t* sem, const char* name, int value)
 {
-    spin_lock(&bigSemLock);
+   // spin_lock(&bigSemLock);
 
     sem->name = name;
     sem->value = value;
@@ -11,12 +11,12 @@ void sem_init(sem_t* sem, const char* name, int value)
     memset(sem->queue, 0, sizeof(sem->queue));
     sem->front = sem->end = 0;
 
-    spin_unlock(&bigSemLock);
+    //spin_unlock(&bigSemLock);
 }
 
 void sem_wait(sem_t* sem)
 {
-    spin_lock(&bigSemLock);
+    //spin_lock(&bigSemLock);
     //printf("P:%s\n", sem->name);
     spin_lock(&sem->lock);
     bool flag = true;
@@ -31,17 +31,17 @@ void sem_wait(sem_t* sem)
     spin_unlock(&sem->lock);
     //printf("P-value:%d\n", sem->value);
     if (flag == false) {
-        spin_unlock(&bigSemLock);
+       // spin_unlock(&bigSemLock);
         //printf("p0:%d p1:%d\n",TASKS[0]->status,TASKS[1]->status);
         _yield();
     }
 
-    if (flag == true) spin_unlock(&bigSemLock);
+    //if (flag == true) spin_unlock(&bigSemLock);
 }
 
 void sem_signal(sem_t* sem)
 {
-    spin_lock(&bigSemLock);
+    //spin_lock(&bigSemLock);
     //printf("V:%s\n", sem->name);
 
     spin_lock(&sem->lock);
@@ -55,5 +55,5 @@ void sem_signal(sem_t* sem)
 
     spin_unlock(&sem->lock);
 
-    spin_unlock(&bigSemLock);
+    //spin_unlock(&bigSemLock);
 }

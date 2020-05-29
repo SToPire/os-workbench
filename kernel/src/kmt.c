@@ -68,6 +68,8 @@ void teardown(task_t* task)
 #define current cpu_local[_cpu()].current
 _Context* scheduler(_Event ev, _Context* _Context)
 {
+    int c = _cpu();
+    int t = _ncpu();
     if (!current) {
         current = TASKS[TASKS_HEAD];
     } else {
@@ -75,7 +77,7 @@ _Context* scheduler(_Event ev, _Context* _Context)
     }
     do {
         current = TASKS[current->next];
-    } while ((current->num) % _ncpu() != _cpu() || current->status != READY);
+    } while ((current->num) % t != c || current->status != READY);
 
     return current->context;
 }
