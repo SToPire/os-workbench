@@ -37,7 +37,6 @@ struct fat_header {
 
     u8 padding[420];
     u16 signature;
-    int a;
 } __attribute__((packed));
 
 int main(int argc, char *argv[]) {
