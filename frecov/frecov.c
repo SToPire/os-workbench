@@ -40,6 +40,6 @@ struct fat_header {
 } __attribute__((packed));
 
 int main(int argc, char *argv[]) {
-    printf("%u\n", sizeof(struct fat_header));
+    printf("%lu\n", (long unsigned int)sizeof(struct fat_header));
     assert(sizeof(struct fat_header) == 512);
 }
