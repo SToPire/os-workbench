@@ -49,7 +49,6 @@ void* Mmap(char* name)
     int fd = open(name, O_RDONLY);
     fstat(fd, &fs);
     void* ret = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-    assert(ret != MAP_FAILED);
     close(fd);
     return ret;
 }
