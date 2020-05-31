@@ -6,7 +6,7 @@ typedef __uint8_t u8;
 typedef __uint16_t u16;
 typedef __uint32_t u32;
 
-struct fat_header {
+typedef  struct fat_header {
     u8 BS_jmpBoot[3];
     u8 BS_OEMName[8];
     u32 BPB_BytsPerSec : 16;
@@ -37,8 +37,8 @@ struct fat_header {
 
     u8 padding[420];
     u16 signature;
-} __attribute__((packed));
+} fat_header_t __attribute__((packed));
 
 int main(int argc, char *argv[]) {
-    assert(sizeof(struct fat_header) == 512);
+    assert(sizeof(fat_header_t) == 512);
 }
