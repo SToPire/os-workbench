@@ -52,5 +52,7 @@ void* Mmap(char* name)
     return mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
 }
 int main(int argc, char *argv[]) {
-    Mmap(argv[1]);
+    void * ImgPtr = Mmap(argv[1]);
+    fat_header_t* fht = (fat_header_t*)ImgPtr;
+    printf("%u\n", fht->BPB_BytsPerSec);
 }
