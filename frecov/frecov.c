@@ -15,4 +15,5 @@ struct fat_header {
 } __attribute__((packed));
 
 int main(int argc, char *argv[]) {
+    assert(sizeof(struct fat_header) == 512);
 }
