@@ -54,6 +54,8 @@ void* Mmap(char* name)
 }
 int main(int argc, char *argv[]) {
     void * ImgPtr = Mmap(argv[1]);
-    int BytesPerSector = ((fat_header_t*)ImgPtr)->BPB_BytsPerSec;
-    printf("%u\n", ((fat_header_t*)ImgPtr)->BPB_FATSz32);
+    fat_header_t* fhp = (fat_header_t*)ImgPtr;
+    printf("%u\n", fhp->BPB_FATSz32);
+
+    void* DataPtr = ImgPtr + fhp->BPB_;
 }
