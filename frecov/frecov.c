@@ -21,12 +21,12 @@ struct fat_header {
     u16 BPB_NumHeads;
     u32 BPB_HiddSec;
     u32 BPB_TotSec32;
-    // u32 BPB_FATSz32;
-    // u16 BPB_ExtFlags;
-    // u16 BPB_FSVer;
-    // u32 BPB_RootClus;
-    // u16 BPB_FSInfo;
-    // u16 BPB_BkBootSec;
+    u32 BPB_FATSz32;
+    u16 BPB_ExtFlags;
+    u16 BPB_FSVer;
+    u32 BPB_RootClus;
+    u16 BPB_FSInfo;
+    u16 BPB_BkBootSec;
     // u16 BPB_Reserved;
     // u8 BS_DrvNum;
     // u8 BS_Reserved1;
