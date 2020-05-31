@@ -39,7 +39,11 @@ typedef  struct fat_header {
     u16 signature;
 } __attribute__((packed)) fat_header_t;
 
+void* Mmap(char* name)
+{
+    struct stat fs;
+    return (void*)(0);
+}
 int main(int argc, char *argv[]) {
-    assert(sizeof(fat_header_t) == 512);
-    printf("%u", (unsigned)sizeof(fat_header_t));
+
 }
