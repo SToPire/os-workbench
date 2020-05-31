@@ -2,6 +2,9 @@
 #include<unistd.h>
 #include<assert.h>
 #include<sys/stat.h>
+#include<sys/types.h>
+#include<sys/fcntl.h>
+#include<sys/mman.h>
 
 typedef __uint8_t u8;
 typedef __uint16_t u16;
@@ -42,10 +45,12 @@ typedef  struct fat_header {
 
 void* Mmap(char* name)
 {
-    int fd = fopen(name, O_RDONLY);
     struct stat fs;
-    return (void*)(0);
+    int fd = open(name, O_RDONLY);    
+    fstat(fd, &fs);
+    close(fd);
+    return mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
 }
 int main(int argc, char *argv[]) {
-
+    Mmap(argv[1]);
 }
