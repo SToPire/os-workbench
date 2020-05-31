@@ -57,5 +57,5 @@ int main(int argc, char *argv[]) {
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     printf("%u\n", fhp->BPB_FATSz32);
 
-    void* DataPtr = ImgPtr + fhp->BPB_;
+    void* DataPtr = ImgPtr;
 }
