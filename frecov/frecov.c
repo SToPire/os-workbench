@@ -13,8 +13,8 @@ typedef __uint32_t u32;
 typedef  struct fat_header {
     u8 BS_jmpBoot[3];
     u8 BS_OEMName[8];
-    u32 BPB_BytsPerSec : 16;
-    u32 BPB_SecPerClus : 8;
+    u16 BPB_BytsPerSec;
+    u8 BPB_SecPerClus;
     u16 BPB_RsvdSecCnt;
     u8 BPB_NumFATs;
     u16 BPB_RootEntCnt;
