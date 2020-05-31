@@ -55,5 +55,5 @@ void* Mmap(char* name)
 int main(int argc, char *argv[]) {
     void * ImgPtr = Mmap(argv[1]);
     int BytesPerSector = ((fat_header_t*)ImgPtr)->BPB_BytsPerSec;
-    printf("%s\n", &(((fat_header_t*)ImgPtr)->BS_OEMNams));
+    printf("%s\n", &(((fat_header_t*)ImgPtr)->BS_OEMName));
 }
