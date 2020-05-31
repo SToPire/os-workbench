@@ -27,19 +27,18 @@ struct fat_header {
     u32 BPB_RootClus;
     u16 BPB_FSInfo;
     u16 BPB_BkBootSec;
-    // u16 BPB_Reserved;
-    // u8 BS_DrvNum;
-    // u8 BS_Reserved1;
-    // u8 BS_BootSig;
-    // u32 BS_VolID;
-    // u8 BS_VolLab[11];
-    // u8 BS_FilSysTyp[8];
+    u8 BPB_Reserved[12];
+    u8 BS_DrvNum;
+    u8 BS_Reserved1;
+    u8 BS_BootSig;
+    u32 BS_VolID;
+    u8 BS_VolLab[11];
+    u8 BS_FilSysTyp[8];
 
-    //u8 padding[420];
-    //u16 signature;
+    u8 padding[420];
+    u16 signature;
 } __attribute__((packed));
 
 int main(int argc, char *argv[]) {
-    printf("%lu\n", (long unsigned int)sizeof(struct fat_header));
-    //assert(sizeof(struct fat_header) == 512);
+    assert(sizeof(struct fat_header) == 512);
 }
