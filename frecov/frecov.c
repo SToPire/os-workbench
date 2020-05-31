@@ -37,7 +37,7 @@ typedef  struct fat_header {
 
     u8 padding[420];
     u16 signature;
-} fat_header_t __attribute__((packed));
+} __attribute__((packed)) fat_header_t;
 
 int main(int argc, char *argv[]) {
     assert(sizeof(fat_header_t) == 512);
