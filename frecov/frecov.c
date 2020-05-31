@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<unistd.h>
 #include<assert.h>
+#include<sys/stat.h>
 
 typedef __uint8_t u8;
 typedef __uint16_t u16;
@@ -41,6 +42,7 @@ typedef  struct fat_header {
 
 void* Mmap(char* name)
 {
+    int fd = open(name, O_RDONLY);
     struct stat fs;
     return (void*)(0);
 }
