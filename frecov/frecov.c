@@ -45,11 +45,16 @@ typedef  struct fat_header {
 
 void* Mmap(char* name)
 {
+    int fd = open(name, O_RDONLY);
+    assert(fd != -1);
+    
     struct stat fs;
-    int fd = open(name, O_RDONLY);    
     fstat(fd, &fs);
+    
+    void* ret = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    assert(ret != MAP_FAILED);
+
     close(fd);
-    return mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
 }
 int main(int argc, char *argv[]) {
     void * ImgPtr = Mmap(argv[1]);
