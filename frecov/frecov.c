@@ -41,4 +41,5 @@ typedef  struct fat_header {
 
 int main(int argc, char *argv[]) {
     assert(sizeof(fat_header_t) == 512);
+    printf("%u", (unsigned)sizeof(fat_header_t));
 }
