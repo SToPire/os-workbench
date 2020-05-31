@@ -42,7 +42,7 @@ typedef  struct fat_header {
 
 void* Mmap(char* name)
 {
-    int fd = open(name, O_RDONLY);
+    int fd = fopen(name, O_RDONLY);
     struct stat fs;
     return (void*)(0);
 }
