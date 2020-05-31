@@ -35,11 +35,11 @@ struct fat_header {
     u8 BS_VolLab[11];
     u8 BS_FilSysTyp[8];
 
-    u8 padding[420];
-    u16 signature;
+    //u8 padding[420];
+    //u16 signature;
 } __attribute__((packed));
 
 int main(int argc, char *argv[]) {
     printf("%lu\n", (long unsigned int)sizeof(struct fat_header));
-    assert(sizeof(struct fat_header) == 512);
+    //assert(sizeof(struct fat_header) == 512);
 }
