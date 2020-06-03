@@ -43,18 +43,16 @@ typedef  struct fat_header {
     u16 signature;
 } __attribute__((packed)) fat_header_t;
 
-void* Mmap(char* name)
-{
-    struct stat fs;
-    int fd = open(name, O_RDONLY);
-    fstat(fd, &fs);
-    void* ret = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-    close(fd);
-    return ret;
-}
 int main(int argc, char *argv[]) {
-    void * ImgPtr = Mmap(argv[1]);
+    struct stat fs;
+    int fd = open(argv[1], O_RDONLY);
+    fstat(fd, &fs);
+
+    void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
-    void* DataPtr = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
+    void* FirstDataSector = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
     printf("%u\n", fhp->BPB_FATSz32);
+    
+    close(fd);
+    return 0;
 }
