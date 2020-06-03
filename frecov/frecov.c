@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     struct stat fs;
     int fd = open(argv[1], O_RDONLY);
     fstat(fd, &fs);
-    assert(sizeof(sEntry_t) != 32);
+    assert(sizeof(sEntry_t) == 32);
     void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     void* FirstDataSector = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
