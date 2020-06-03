@@ -43,16 +43,35 @@ typedef  struct fat_header {
     u16 signature;
 } __attribute__((packed)) fat_header_t;
 
+typedef struct short_entry{
+    u8 DIR_Name[8];
+    u8 DIR_ExtName[3];
+    u8 DIR_Attr;
+    u8 DIR_NTRes;
+    u8 DIR_CrtTimeTenth;
+    u16 DIR_CrtTime;
+    u16 DIR_CrtDate;
+    u16 DIR_LstAccDate;
+    u16 DIR_FstClusHI;
+    u16 DIR_WrtTime;
+    u16 DIR_WrtDate;
+    u16 DIR_FstClusLO;
+    u32 DIR_FileSize;
+} __attribute__((packed)) sEntry_t;
+
 int main(int argc, char *argv[]) {
     struct stat fs;
     int fd = open(argv[1], O_RDONLY);
     fstat(fd, &fs);
-
+    assert(sizeof(sEntry_t) != 32);
     void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     void* FirstDataSector = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
-    printf("%u\n", fhp->BPB_FATSz32);
     
+
+
+
+    printf("%u\n", fhp->BPB_FATSz32);
     close(fd);
     return 0;
 }
