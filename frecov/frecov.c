@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
             }
             name[nameptr++] = '\0';
         } else {
-            printf("WWWWWWWWWWWWWWWW\n");
+            printf("WWWWWWWWWWWWWWWW:%d\n",right->DIR_Name[0]);
             for (int i = 0; i < 8; i++) name[nameptr++] = right->DIR_Name[i];
             name[nameptr++] = '.';
             for (int i = 0; i < 3; i++) name[nameptr++] = right->DIR_ExtName[i];
