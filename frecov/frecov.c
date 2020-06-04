@@ -100,7 +100,10 @@ int main(int argc, char* argv[])
                 for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
             }
         } else {
-            assert(0);
+            printf("WWWWWWWWWWWWWWWW\n");
+            for (int i = 0; i < 8; i++) name[nameptr++] = right->DIR_Name[i];
+            name[nameptr++] = '.';
+            for (int i = 0; i < 3; i++) name[nameptr++] = right->DIR_ExtName[i];
         }
         left = right + 1;
         printf("%s %d\n", name,cnt);
