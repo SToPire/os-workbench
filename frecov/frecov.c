@@ -80,10 +80,9 @@ int main(int argc, char *argv[]) {
     sEntry_t* t2 = (sEntry_t*)NthClusterAddr(FirstCluster);
     t2 += 2;
     printf("attr: %x ", t2->DIR_Attr);
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 11; i++)
         printf("%c", t2->DIR_Name[i]);
 
-    printf("%u\n", fhp->BPB_FATSz32);
     close(fd);
     return 0;
 }
