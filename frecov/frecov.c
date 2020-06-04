@@ -59,6 +59,7 @@ typedef struct short_entry{
     u32 DIR_FileSize;
 } __attribute__((packed)) sEntry_t;
 
+#define FirstSectorofCluster(N) (N - 2) * fhp->BPB_SecPerClus + FirstDataSector
 int main(int argc, char *argv[]) {
     struct stat fs;
     int fd = open(argv[1], O_RDONLY);
@@ -75,7 +76,11 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < 8; i++)
         printf("%c", test->DIR_Name[i]);
     u32 FirstCluster = (u32)(test->DIR_FstClusHI) << 16 | (u32)(test->DIR_FstClusLO);
-    printf("cluster num: %u\n",FirstCluster);
+
+    void* t2 = FirstSectorofCluster(FirstCluster);
+    printf("attr: %x ", t2->DIR_Attr);
+    for (int i = 0; i < 8; i++)
+        printf("%c", t2->DIR_Name[i]);
 
     printf("%u\n", fhp->BPB_FATSz32);
     close(fd);
