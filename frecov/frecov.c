@@ -1,16 +1,16 @@
-#include<stdio.h>
-#include<unistd.h>
-#include<assert.h>
-#include<sys/stat.h>
-#include<sys/types.h>
-#include<sys/fcntl.h>
-#include<sys/mman.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <assert.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/fcntl.h>
+#include <sys/mman.h>
 
 typedef __uint8_t u8;
 typedef __uint16_t u16;
 typedef __uint32_t u32;
 
-typedef  struct fat_header {
+typedef struct fat_header {
     u8 BS_jmpBoot[3];
     u8 BS_OEMName[8];
     u16 BPB_BytsPerSec;
@@ -43,7 +43,7 @@ typedef  struct fat_header {
     u16 signature;
 } __attribute__((packed)) fat_header_t;
 
-typedef struct short_entry{
+typedef struct short_entry {
     u8 DIR_Name[8];
     u8 DIR_ExtName[3];
     u8 DIR_Attr;
@@ -59,7 +59,7 @@ typedef struct short_entry{
     u32 DIR_FileSize;
 } __attribute__((packed)) sEntry_t;
 
-typedef struct long_entry{
+typedef struct long_entry {
     u8 LDIR_Ord;
     u16 LDIR_Name1[5];
     u8 LDIR_Attr;
@@ -71,8 +71,8 @@ typedef struct long_entry{
 } __attribute__((packed)) lEntry_t;
 
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataSector)
-int
-main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
     struct stat fs;
     int fd = open(argv[1], O_RDONLY);
     fstat(fd, &fs);
@@ -87,17 +87,25 @@ main(int argc, char* argv[]) {
     sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
     DirEntryBegin += 2;
     int cnt = 0;
-    for (sEntry_t* i = DirEntryBegin; (void*)i <= ImgPtr + fs.st_size && cnt<=2; i++,cnt++) {
-        printf("attr:%x ||", i->DIR_Attr);
-        if(i->DIR_Attr == 0xf){
-            lEntry_t* ptr = (lEntry_t*)i;
-            for (int i = 0; i < 5; i++) printf("%c", ptr->LDIR_Name1[i]);
-            for (int i = 0; i < 6; i++) printf("%c", ptr->LDIR_Name2[i]);
-            for (int i = 0; i < 2; i++) printf("%c", ptr->LDIR_Name3[i]);
-            printf("\n");
+    for (sEntry_t* left = DirEntryBegin; (void*)left <= ImgPtr + fs.st_size && cnt <= 2; cnt++) {
+        sEntry_t* right = left;
+        while (right->DIR_Attr != 0x20) ++right;
+        char name[128];
+        int nameptr = 0;
+
+        if (left != right) {
+            for (lEntry_t* i = (lEntry_t*)(right - 1); i >= left; i--) {
+                for (int j = 0; j < 5; i++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
+                for (int j = 0; j < 6; i++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
+                for (int j = 0; j < 2; i++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
+            }
         }
+        else{
+            assert(0);
+        }
+        printf("%s\n", name);
     }
 
-        close(fd);
+    close(fd);
     return 0;
 }
