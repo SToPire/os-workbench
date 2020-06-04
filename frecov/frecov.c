@@ -82,12 +82,11 @@ int main(int argc, char* argv[])
     void* FirstDataSector = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
 
     sEntry_t* DCIM = (sEntry_t*)FirstDataSector;
-    u32 FirstCluster = (u32)(DCIM->DIR_FstClusHI) << 16 | (u32)(DCIM->DIR_FstClusLO);
+    //u32 FirstCluster = (u32)(DCIM->DIR_FstClusHI) << 16 | (u32)(DCIM->DIR_FstClusLO);
 
-    sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(5);
+    //sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
     //DirEntryBegin += 2;
-    int cnt = 0;
-    for (sEntry_t* left = DirEntryBegin; (void*)left <= ImgPtr + fs.st_size; cnt++) {
+    for (sEntry_t* left = DirEntryBegin; (void*)left < (void*)DirEntryBegin + 4096; ) {
         sEntry_t* right = left;
         while (right->DIR_Attr != 0x20) ++right;
         char name[128];
@@ -111,8 +110,6 @@ int main(int argc, char* argv[])
             }
         }
         left = right + 1;
-        printf("%s %d\n", name,cnt);
-        if (cnt == 45) printf("ssss%dssss", (int)(left - DirEntryBegin));
     }
 
     close(fd);
