@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
     DirEntryBegin += 2;
     ;
-    for (sEntry_t* i = DirEntryBegin; i <= ImgPtr + fs.st_size;i++)
+    for (sEntry_t* i = DirEntryBegin; (void*)i <= ImgPtr + fs.st_size;i++)
         ;
 
         close(fd);
