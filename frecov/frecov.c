@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
     printf("attr: %x ", test->DIR_Attr);
     for (int i = 0; i < 8; i++)
         printf("%c", test->DIR_Name[i]);
-    u32 FirstCluster = (u32)(test->DIR_FstClusHI) << 16 + (u32)(test->DIR_FstClusLO);
+    u32 FirstCluster = (u32)(test->DIR_FstClusHI) << 16 | (u32)(test->DIR_FstClusLO);
     printf("cluster num: %u\n",FirstCluster);
 
     printf("%u\n", fhp->BPB_FATSz32);
