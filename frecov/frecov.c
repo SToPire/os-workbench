@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
                 while (right->DIR_Attr != 0x20) ++right;
                 char name[128];
                 int nameptr = 0;
-
+                printf("%d    ", (int)(right - left));
                 if (left != right) {
                     for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
                         for (int j = 0; j < 5; j++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
