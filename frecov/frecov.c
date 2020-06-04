@@ -87,6 +87,7 @@ int main(int argc, char* argv[])
     sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
     DirEntryBegin += 2;
     int cnt = 0;
+    printf("fuuck\n");
     // for (sEntry_t* left = DirEntryBegin; (void*)left <= ImgPtr + fs.st_size && cnt <= 2; cnt++) {
     //     sEntry_t* right = left;
     //     while (right->DIR_Attr != 0x20) ++right;
