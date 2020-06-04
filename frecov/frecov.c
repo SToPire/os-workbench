@@ -60,7 +60,14 @@ typedef struct short_entry{
 } __attribute__((packed)) sEntry_t;
 
 typedef struct long_entry{
-    u8 a[32];
+    u8 LDIR_Ord;
+    u16 LDIR_Name1[5];
+    u8 LDIR_Attr;
+    u8 LDIR_Type;
+    u8 LDIR_ChkSum;
+    u16 LDIR_Name2[6];
+    u16 LDIR_FstClusLO;
+    u16 LDIR_Name3[2];
 } __attribute__((packed)) lEntry_t;
 
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataSector)
@@ -84,7 +91,10 @@ main(int argc, char* argv[]) {
         printf("attr:%x ||", i->DIR_Attr);
         if(i->DIR_Attr == 0xf){
             lEntry_t* ptr = (lEntry_t*)i;
-            printf("%u %u %u %u %u  \n", ptr->a[1], ptr->a[2], ptr->a[3], ptr->a[4], ptr->a[5]);
+            for (int i = 1; i < 5; i++) printf("%c|", ptr->LDIR_Name1[i]);
+            for (int i = 1; i < 6; i++) printf("%c|", ptr->LDIR_Name2[i]);
+            for (int i = 1; i < 2; i++) printf("%c|", ptr->LDIR_Name3[i]);
+            printf("\n");
         }
     }
 
