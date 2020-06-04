@@ -91,9 +91,9 @@ main(int argc, char* argv[]) {
         printf("attr:%x ||", i->DIR_Attr);
         if(i->DIR_Attr == 0xf){
             lEntry_t* ptr = (lEntry_t*)i;
-            for (int i = 1; i < 5; i++) printf("%c|", ptr->LDIR_Name1[i]);
-            for (int i = 1; i < 6; i++) printf("%c|", ptr->LDIR_Name2[i]);
-            for (int i = 1; i < 2; i++) printf("%c|", ptr->LDIR_Name3[i]);
+            for (int i = 0; i < 5; i++) printf("%c", ptr->LDIR_Name1[i]);
+            for (int i = 0; i < 6; i++) printf("%c", ptr->LDIR_Name2[i]);
+            for (int i = 0; i < 2; i++) printf("%c", ptr->LDIR_Name3[i]);
             printf("\n");
         }
     }
