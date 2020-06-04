@@ -70,8 +70,10 @@ int main(int argc, char *argv[]) {
 
     sEntry_t* test = (sEntry_t*)FirstDataSector;
     //test = (sEntry_t*)((void*)test + 8 * 512);
+    test++;
     for (int i = 0; i < 8; i++)
         printf("%c\n", test->DIR_Name[i]);
+    
 
     printf("%u\n", fhp->BPB_FATSz32);
     close(fd);
