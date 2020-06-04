@@ -103,6 +103,7 @@ int main(int argc, char* argv[])
         else{
             assert(0);
         }
+        left = right + 1;
         printf("%s\n", name);
     }
 
