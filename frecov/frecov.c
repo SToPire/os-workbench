@@ -69,9 +69,7 @@ int main(int argc, char *argv[]) {
     void* FirstDataSector = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
 
     sEntry_t* test = (sEntry_t*)FirstDataSector;
-    test = (sEntry_t*)((void*)test + 8 * 512);
-    test = (sEntry_t*)((void*)test + 8 * 512);
-
+    //test = (sEntry_t*)((void*)test + 8 * 512);
     for (int i = 0; i < 8; i++)
         printf("%c\n", test->DIR_Name[i]);
 
