@@ -87,26 +87,27 @@ int main(int argc, char* argv[])
     sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
     DirEntryBegin += 2;
     int cnt = 0;
-    printf("fuuck\n");
-    // for (sEntry_t* left = DirEntryBegin; (void*)left <= ImgPtr + fs.st_size && cnt <= 2; cnt++) {
-    //     sEntry_t* right = left;
-    //     while (right->DIR_Attr != 0x20) ++right;
-    //     char name[128];
-    //     int nameptr = 0;
+    for (sEntry_t* left = DirEntryBegin; (void*)left <= ImgPtr + fs.st_size && cnt <= 2; cnt++) {
 
-    //     if (left != right) {
-    //         for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
-    //             for (int j = 0; j < 5; i++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
-    //             for (int j = 0; j < 6; i++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
-    //             for (int j = 0; j < 2; i++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
-    //         }
-    //     }
-    //     else{
-    //         assert(0);
-    //     }
-    //     left = right + 1;
-    //     printf("%s\n", name);
-    // }
+    printf("fuuck\n");
+        sEntry_t* right = left;
+        while (right->DIR_Attr != 0x20) ++right;
+        char name[128];
+        int nameptr = 0;
+
+        if (left != right) {
+            for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
+                for (int j = 0; j < 5; i++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
+                for (int j = 0; j < 6; i++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
+                for (int j = 0; j < 2; i++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
+            }
+        }
+        else{
+            assert(0);
+        }
+        left = right + 1;
+        printf("%s\n", name);
+    }
 
     close(fd);
     return 0;
