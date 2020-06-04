@@ -70,6 +70,18 @@ typedef struct long_entry {
     u16 LDIR_Name3[2];
 } __attribute__((packed)) lEntry_t;
 
+int isDirEntryCluster(void* addr)
+{
+    int cnt = 0;
+    for (char* i = (char*)addr; i <= (char*)addr + 4096 - 3; i++) {
+        if ((*i == 'b' || *i == 'B') && (*(i + 1) == 'm' || *(i + 1) == 'M') && (*(i + 2) == 'p' || *(i + 2) == 'P')) cnt++;
+    }
+    if (cnt >= 5)
+        return 1;
+    else
+        return 0;
+}
+
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataSector)
 int main(int argc, char* argv[])
 {
@@ -82,29 +94,31 @@ int main(int argc, char* argv[])
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
 
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
-        for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4096;) {
-            sEntry_t* right = left;
-            while (right->DIR_Attr != 0x20) ++right;
-            char name[128];
-            int nameptr = 0;
+        if (isDirEntryCluster(clusPtr)) {
+            for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4064;) {
+                sEntry_t* right = left;
+                while (right->DIR_Attr != 0x20) ++right;
+                char name[128];
+                int nameptr = 0;
 
-            if (left != right) {
-                for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
-                    for (int j = 0; j < 5; j++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
-                    for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
-                    for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
-                }
-                name[nameptr++] = '\0';
-            } else {
-                if (right->DIR_Name[0] == 0xE5 || right->DIR_Name[0] == 0x00) {
-                    ++left;
-                    continue;
+                if (left != right) {
+                    for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
+                        for (int j = 0; j < 5; j++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
+                        for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
+                        for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
+                    }
+                    name[nameptr++] = '\0';
                 } else {
-                    assert(0);
+                    if (right->DIR_Name[0] == 0xE5 || right->DIR_Name[0] == 0x00) {
+                        ++left;
+                        continue;
+                    } else {
+                        assert(0);
+                    }
                 }
+                left = right + 1;
+                printf("%s\n", name);
             }
-            left = right + 1;
-            printf("%s\n", name);
         }
     }
 
