@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
 
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
-        for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4064;) {
+        for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4096;) {
             sEntry_t* right = left;
             while (right->DIR_Attr != 0x20) ++right;
             char name[128];
