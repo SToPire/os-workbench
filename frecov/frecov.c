@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 
     sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
     //DirEntryBegin += 2;
-    for (sEntry_t* left = DirEntryBegin; (void*)left < (void*)DirEntryBegin + 4096; ) {
+    for (sEntry_t* left = DirEntryBegin; (void*)left < (void*)DirEntryBegin + 4092; ) {
         sEntry_t* right = left;
         while (right->DIR_Attr != 0x20) ++right;
         char name[128];
