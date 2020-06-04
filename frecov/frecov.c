@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
         int nameptr = 0;
 
         if (left != right) {
-            for (lEntry_t* i = (lEntry_t*)(right - 1); i >= left; i--) {
+            for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
                 for (int j = 0; j < 5; i++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
                 for (int j = 0; j < 6; i++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
                 for (int j = 0; j < 2; i++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
