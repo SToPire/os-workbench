@@ -108,6 +108,7 @@ int main(int argc, char* argv[])
             }
         }
         left = right + 1;
+        printf("%s\n", name);
     }
 
     close(fd);
