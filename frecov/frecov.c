@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
     for (sEntry_t* left = DirEntryBegin; (void*)left <= ImgPtr + fs.st_size && cnt <= 2; cnt++) {
         sEntry_t* right = left;
         while (right->DIR_Attr != 0x20) ++right;
-        printf("%d\n", right - left);
+        printf("%ld\n", right - left);
         printf("fuuck\n");
         char name[128];
         int nameptr = 0;
