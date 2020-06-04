@@ -90,16 +90,14 @@ int main(int argc, char* argv[])
     for (sEntry_t* left = DirEntryBegin; (void*)left <= ImgPtr + fs.st_size && cnt <= 2; cnt++) {
         sEntry_t* right = left;
         while (right->DIR_Attr != 0x20) ++right;
-        printf("%ld\n", (long)(right - left));
         char name[128];
         int nameptr = 0;
 
         if (left != right) {
-        printf("fuuck\n");
             for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
-                for (int j = 0; j < 5; i++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
-                for (int j = 0; j < 6; i++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
-                for (int j = 0; j < 2; i++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
+                for (int j = 0; j < 5; j++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
+                for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
+                for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
             }
         } else {
             assert(0);
