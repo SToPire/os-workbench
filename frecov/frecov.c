@@ -108,6 +108,7 @@ int main(int argc, char* argv[])
         }
         left = right + 1;
         printf("%s %d\n", name,cnt);
+        if (cnt == 45) printf("ssss%dssss", (int)(left - DirEntryBegin));
     }
 
     close(fd);
