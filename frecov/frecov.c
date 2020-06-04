@@ -76,7 +76,7 @@ int isDirEntryCluster(void* addr)
     for (char* i = (char*)addr; i <= (char*)addr + 4096 - 3; i++) {
         if ((*i == 'b' || *i == 'B') && (*(i + 1) == 'm' || *(i + 1) == 'M') && (*(i + 2) == 'p' || *(i + 2) == 'P')) cnt++;
     }
-    if (cnt >= 5)
+    if (cnt >= 3)
         return 1;
     else
         return 0;
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
                     continue;
                 }
                 sEntry_t* right = left;
-                while (right->DIR_Attr != 0x20) ++right;
+                while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + 4064) ++right;
                 char name[128];
                 int nameptr = 0;
 
