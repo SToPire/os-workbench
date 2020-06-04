@@ -70,6 +70,8 @@ int main(int argc, char *argv[]) {
 
     sEntry_t* test = (sEntry_t*)FirstDataSector;
     test = (sEntry_t*)((void*)test + 8 * 512);
+    test = (sEntry_t*)((void*)test + 8 * 512);
+
     for (int i = 0; i < 8; i++)
         printf("%c\n", test->DIR_Name[i]);
 
