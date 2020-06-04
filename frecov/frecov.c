@@ -104,10 +104,7 @@ int main(int argc, char* argv[])
 
                 if (left != right) {
                     for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
-                        if (right->DIR_Name[0] == 0xE5 || right->DIR_Name[0] == 0x00) {
-                            ++left;
-                            continue;
-                        }
+                        printf("%x ", i->LDIR_Ord);
                         for (int j = 0; j < 5; j++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
                         for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
                         for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
