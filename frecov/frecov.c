@@ -94,6 +94,7 @@ int main(int argc, char* argv[])
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
     FirstDataCluster += 4096 * 15317;
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
+        printf("fuckyou");
         if (isDirEntryCluster(clusPtr)) {
             printf("|||||||||||%d||||||||\n", (int)(clusPtr - FirstDataCluster)/4096);
             for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4064;) {
