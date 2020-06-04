@@ -99,6 +99,8 @@ int main(int argc, char* argv[])
                 for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
                 for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
             }
+            if(cnt==26)
+                for (int i = 0; i < 8; i++) printf(" %x ", right->DIR_Name[i]);
             name[nameptr++] = '\0';
         } else {
             printf("WWWWWWWWWWWWWWWW:%x\n",right->DIR_Name[0]);
