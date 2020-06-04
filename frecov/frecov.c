@@ -81,11 +81,6 @@ int main(int argc, char* argv[])
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
 
-    sEntry_t* DCIM = (sEntry_t*)FirstDataSector;
-    u32 FirstCluster = (u32)(DCIM->DIR_FstClusHI) << 16 | (u32)(DCIM->DIR_FstClusLO);
-
-    sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
-    //DirEntryBegin += 2;
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
         for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4064;) {
             sEntry_t* right = left;
