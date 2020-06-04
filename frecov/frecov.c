@@ -59,8 +59,13 @@ typedef struct short_entry{
     u32 DIR_FileSize;
 } __attribute__((packed)) sEntry_t;
 
+typedef struct long_entry{
+    u8 a[32];
+} __attribute__((packed)) lEntry_t;
+
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataSector)
-int main(int argc, char *argv[]) {
+int
+main(int argc, char* argv[]) {
     struct stat fs;
     int fd = open(argv[1], O_RDONLY);
     fstat(fd, &fs);
@@ -76,7 +81,11 @@ int main(int argc, char *argv[]) {
     DirEntryBegin += 2;
     int cnt = 0;
     for (sEntry_t* i = DirEntryBegin; (void*)i <= ImgPtr + fs.st_size && cnt<=3; i++,cnt++) {
-        printf("attr:%x\n", i->DIR_Attr);
+        printf("attr:%x ||", i->DIR_Attr);
+        if(i->DIR_Attr == 0xf){
+            lEntry_t* ptr = (lEntry_t*)i;
+            printf("%c%c%c  \n", ptr->a[1], ptr->a[2], ptr->a[3]);
+        }
     }
 
         close(fd);
