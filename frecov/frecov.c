@@ -95,7 +95,6 @@ int main(int argc, char* argv[])
     //FirstDataCluster += 4096 * 15316;
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
         if (isDirEntryCluster(clusPtr)) {
-            printf("|||||||||||%d||||||||\n", (int)(clusPtr - FirstDataCluster) / 4096);
             for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4064;) {
                 if (left->DIR_Name[0] == 0xE5 || left->DIR_Name[0] == 0x00) {
                     ++left;
@@ -108,7 +107,6 @@ int main(int argc, char* argv[])
 
                 if (left != right) {
                     for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
-                        printf("%x ", i->LDIR_Ord);
                         for (int j = 0; j < 5; j++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
                         for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
                         for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
