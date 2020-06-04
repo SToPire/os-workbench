@@ -69,20 +69,15 @@ int main(int argc, char *argv[]) {
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     void* FirstDataSector = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
 
-    sEntry_t* test = (sEntry_t*)FirstDataSector;
-    //test = (sEntry_t*)((void*)test + 8 * 512);
-    //test++;
-    printf("attr: %x ", test->DIR_Attr);
-    for (int i = 0; i < 8; i++)
-        printf("%c", test->DIR_Name[i]);
-    u32 FirstCluster = (u32)(test->DIR_FstClusHI) << 16 | (u32)(test->DIR_FstClusLO);
+    sEntry_t* DCIM = (sEntry_t*)FirstDataSector;
+    u32 FirstCluster = (u32)(DCIM->DIR_FstClusHI) << 16 | (u32)(DCIM->DIR_FstClusLO);
 
-    sEntry_t* t2 = (sEntry_t*)NthClusterAddr(FirstCluster);
-    t2 += 5;
-    printf("attr: %x ", t2->DIR_Attr);
-    for (int i = 0; i < 8; i++)
-        printf("%c", t2->DIR_Name[i]);
+    sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
+    DirEntryBegin += 2;
+    ;
+    for (sEntry_t* i = DirEntryBegin; i <= ImgPtr + fs.st_size;i++)
+        ;
 
-    close(fd);
+        close(fd);
     return 0;
 }
