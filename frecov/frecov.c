@@ -74,9 +74,10 @@ int main(int argc, char *argv[]) {
 
     sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
     DirEntryBegin += 2;
-    ;
-    for (sEntry_t* i = DirEntryBegin; (void*)i <= ImgPtr + fs.st_size;i++)
-        ;
+    int cnt = 0;
+    for (sEntry_t* i = DirEntryBegin; (void*)i <= ImgPtr + fs.st_size && cnt<=3; i++,cnt++) {
+        printf("attr:%x\n", i->DIR_Attr);
+    }
 
         close(fd);
     return 0;
