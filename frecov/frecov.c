@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
             assert(0);
         }
         left = right + 1;
-        printf("%s\n", name);
+        printf("%s %d\n", name,cnt);
     }
 
     close(fd);
