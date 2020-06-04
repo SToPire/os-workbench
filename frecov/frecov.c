@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     //test = (sEntry_t*)((void*)test + 8 * 512);
     test++;
     for (int i = 0; i < 8; i++)
-        printf("%c\n", test->DIR_Name[i]);
+        printf("%c", test->DIR_Name[i]);
     
 
     printf("%u\n", fhp->BPB_FATSz32);
