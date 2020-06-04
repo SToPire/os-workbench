@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
     sEntry_t* DCIM = (sEntry_t*)FirstDataSector;
     u32 FirstCluster = (u32)(DCIM->DIR_FstClusHI) << 16 | (u32)(DCIM->DIR_FstClusLO);
 
-    sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(FirstCluster);
+    sEntry_t* DirEntryBegin = (sEntry_t*)NthClusterAddr(4);
     //DirEntryBegin += 2;
     int cnt = 0;
     for (sEntry_t* left = DirEntryBegin; (void*)left <= ImgPtr + fs.st_size; cnt++) {
