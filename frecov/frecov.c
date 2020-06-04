@@ -81,7 +81,7 @@ int isDirEntryCluster(void* addr)
     else
         return 0;
 }
-
+int globalcnt = 0;
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataSector)
 int main(int argc, char* argv[])
 {
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
                     }
                 }
                 left = right + 1;
-                printf("%s\n", name);
+                printf("%s %d\n", name,++globalcnt);
             }
         }
     }
