@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
         printf("%c", test->DIR_Name[i]);
     u32 FirstCluster = (u32)(test->DIR_FstClusHI) << 16 | (u32)(test->DIR_FstClusLO);
 
-    void* t2 = FirstSectorofCluster(FirstCluster);
+    sEntry_t* t2 = FirstSectorofCluster(FirstCluster);
     printf("attr: %x ", t2->DIR_Attr);
     for (int i = 0; i < 8; i++)
         printf("%c", t2->DIR_Name[i]);
