@@ -104,6 +104,7 @@ int main(int argc, char* argv[])
             for (int i = 0; i < 8; i++) name[nameptr++] = right->DIR_Name[i];
             name[nameptr++] = '.';
             for (int i = 0; i < 3; i++) name[nameptr++] = right->DIR_ExtName[i];
+            name[nameptr++] = '\0';
         }
         left = right + 1;
         printf("%s %d\n", name,cnt);
