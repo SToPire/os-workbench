@@ -84,7 +84,7 @@ main(int argc, char* argv[]) {
         printf("attr:%x ||", i->DIR_Attr);
         if(i->DIR_Attr == 0xf){
             lEntry_t* ptr = (lEntry_t*)i;
-            printf("%u%u%u%u%u  \n", ptr->a[1], ptr->a[2], ptr->a[3], ptr->a[4], ptr->a[5]);
+            printf("%u %u %u %u %u  \n", ptr->a[1], ptr->a[2], ptr->a[3], ptr->a[4], ptr->a[5]);
         }
     }
 
