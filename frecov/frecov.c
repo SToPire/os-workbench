@@ -88,10 +88,9 @@ int main(int argc, char* argv[])
     DirEntryBegin += 2;
     int cnt = 0;
     for (sEntry_t* left = DirEntryBegin; (void*)left <= ImgPtr + fs.st_size && cnt <= 2; cnt++) {
-
-    printf("fuuck\n");
         sEntry_t* right = left;
         while (right->DIR_Attr != 0x20) ++right;
+        printf("fuuck\n");
         char name[128];
         int nameptr = 0;
 
@@ -101,8 +100,7 @@ int main(int argc, char* argv[])
                 for (int j = 0; j < 6; i++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
                 for (int j = 0; j < 2; i++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
             }
-        }
-        else{
+        } else {
             assert(0);
         }
         left = right + 1;
