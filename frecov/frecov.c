@@ -71,6 +71,7 @@ int main(int argc, char *argv[]) {
     sEntry_t* test = (sEntry_t*)FirstDataSector;
     //test = (sEntry_t*)((void*)test + 8 * 512);
     //test++;
+    printf("attr: %x ", test->DIR_Attr);
     for (int i = 0; i < 8; i++)
         printf("%c", test->DIR_Name[i]);
     
