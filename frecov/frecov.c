@@ -94,13 +94,13 @@ int main(int argc, char* argv[])
     if(fs.st_size>100*1024*1024) FirstDataCluster += 4096 * 2;
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
         if (isDirEntryCluster(clusPtr)) {
-            for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4064;) {
+            for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4096-320;) {
                 if (left->DIR_Name[0] == 0xE5 || left->DIR_Name[0] == 0x00) {
                     ++left;
                     continue;
                 }
                 sEntry_t* right = left;
-                while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + 4064) ++right;
+                while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + 4096-320) ++right;
                 char name[128];
                 int nameptr = 0;
 
