@@ -76,7 +76,7 @@ int isDirEntryCluster(void* addr)
     for (char* i = (char*)addr; i <= (char*)addr + 4096 - 3; i++) {
         if ((*i == 'b' || *i == 'B') && (*(i + 1) == 'm' || *(i + 1) == 'M') && (*(i + 2) == 'p' || *(i + 2) == 'P')) cnt++;
     }
-    if (cnt >= 10)
+    if (cnt >= 5)
         return 1;
     else
         return 0;
@@ -96,7 +96,6 @@ int main(int argc, char* argv[])
     //printf("%d\n", ((int)(0.25 * fs.st_size) / 4096) * 4096);
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
         if (isDirEntryCluster(clusPtr)) {
-            printf("________%d________\n", (int)(clusPtr-FirstDataCluster)/4096);
             for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4064;) {
                 if (left->DIR_Name[0] == 0xE5 || left->DIR_Name[0] == 0x00) {
                     ++left;
