@@ -62,13 +62,13 @@ typedef struct short_entry {
 
 typedef struct long_entry {
     u8 LDIR_Ord;
-    u16 LDIR_Name1[5];
+    u8 LDIR_Name1[5][2];
     u8 LDIR_Attr;
     u8 LDIR_Type;
     u8 LDIR_ChkSum;
-    u16 LDIR_Name2[6];
+    u8 LDIR_Name2[6][2];
     u16 LDIR_FstClusLO;
-    u16 LDIR_Name3[2];
+    u8 LDIR_Name3[2][2];
 } __attribute__((packed)) lEntry_t;
 
 int isDirEntryCluster(void* addr)
@@ -113,18 +113,18 @@ int main(int argc, char* argv[])
                 }
                 sEntry_t* right = left;
                 while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + 4096 - 32) ++right;
-                char name[128];
+                char name[256];
                 int nameptr = 0;
 
                 int legalname = 0;
                 if (left != right) {
                     for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
                         for (int j = 0; j < 5; j++)
-                            if (isLegalChar((char)(i->LDIR_Name1[j]))) name[nameptr++] = (char)(i->LDIR_Name1[j]);
+                            if (isLegalChar((i->LDIR_Name1[j]))) name[nameptr++] = (i->LDIR_Name1[j][0]);
                         for (int j = 0; j < 6; j++)
-                            if (isLegalChar((char)(i->LDIR_Name2[j]))) name[nameptr++] = (char)(i->LDIR_Name2[j]);
+                            if (isLegalChar((i->LDIR_Name2[j]))) name[nameptr++] = (i->LDIR_Name2[j][0]);
                         for (int j = 0; j < 2; j++)
-                            if (isLegalChar((char)(i->LDIR_Name3[j]))) name[nameptr++] = (char)(i->LDIR_Name3[j]);
+                            if (isLegalChar((i->LDIR_Name3[j]))) name[nameptr++] = (i->LDIR_Name3[j][0]);
                     }
                     if (toupper(name[nameptr - 1]) == right->DIR_ExtName[2] && toupper(name[0]) == right->DIR_Name[0]) legalname = 1;
                     name[nameptr++] = '\0';
