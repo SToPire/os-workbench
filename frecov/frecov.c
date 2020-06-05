@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
                 if (legalname) {
                     for (int i = 1; i <= 40; i++) putc('c', stdout);
                     putc(' ', stdout);
-                    printf("%s %d\n", name,++gcnt);
+                    printf("%s\n", name);
                 }
             }
         }
