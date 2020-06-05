@@ -112,6 +112,7 @@ int main(int argc, char* argv[])
                         for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
                         for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
                     }
+                    printf("%c %c %c %c\n", toupper(name[nameptr - 1]), right->DIR_ExtName[2], toupper(name[0]), right->DIR_Name[0]);
                     if (toupper(name[nameptr - 1]) == right->DIR_ExtName[2] && toupper(name[0]) == right->DIR_Name[0]) legalname = 1;
                     name[nameptr++] = '\0';
                 } else {
