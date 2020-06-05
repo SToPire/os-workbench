@@ -76,7 +76,7 @@ int isDirEntryCluster(void* addr)
     for (char* i = (char*)addr; i <= (char*)addr + 4096 - 3; i++) {
         if ((*i == 'b' || *i == 'B') && (*(i + 1) == 'm' || *(i + 1) == 'M') && (*(i + 2) == 'p' || *(i + 2) == 'P')) cnt++;
     }
-    if (cnt >= 3)
+    if (cnt >= 5)
         return 1;
     else
         return 0;
