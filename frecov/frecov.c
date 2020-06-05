@@ -120,11 +120,11 @@ int main(int argc, char* argv[])
                 if (left != right) {
                     for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
                         for (int j = 0; j < 5; j++)
-                            if (isLegalChar((i->LDIR_Name1[j]))) name[nameptr++] = (i->LDIR_Name1[j][0]);
+                            if (isLegalChar((i->LDIR_Name1[j][0]))) name[nameptr++] = (i->LDIR_Name1[j][0]);
                         for (int j = 0; j < 6; j++)
-                            if (isLegalChar((i->LDIR_Name2[j]))) name[nameptr++] = (i->LDIR_Name2[j][0]);
+                            if (isLegalChar((i->LDIR_Name2[j][0]))) name[nameptr++] = (i->LDIR_Name2[j][0]);
                         for (int j = 0; j < 2; j++)
-                            if (isLegalChar((i->LDIR_Name3[j]))) name[nameptr++] = (i->LDIR_Name3[j][0]);
+                            if (isLegalChar((i->LDIR_Name3[j][0]))) name[nameptr++] = (i->LDIR_Name3[j][0]);
                     }
                     if (toupper(name[nameptr - 1]) == right->DIR_ExtName[2] && toupper(name[0]) == right->DIR_Name[0]) legalname = 1;
                     name[nameptr++] = '\0';
