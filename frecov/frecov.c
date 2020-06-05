@@ -91,8 +91,7 @@ int main(int argc, char* argv[])
     void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
-    //FirstDataCluster += ((int)(0.25*fs.st_size)/4096) * 4096;
-    //printf("%d\n", ((int)(0.25 * fs.st_size) / 4096) * 4096);
+    if(fs.st_size>100*1024*1024) FirstDataCluster += 4096 * 2;
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
         if (isDirEntryCluster(clusPtr)) {
             for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4064;) {
@@ -107,9 +106,12 @@ int main(int argc, char* argv[])
 
                 if (left != right) {
                     for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
-                        for (int j = 0; j < 5; j++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
-                        for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
-                        for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
+                        for (int j = 0; j < 5; j++)
+                            if ((char)(i->LDIR_Name1[j]) <= 'z' && (char)(i->LDIR_Name1[j])>='0') name[nameptr++] = (char)(i->LDIR_Name1[j]);
+                        for (int j = 0; j < 6; j++)
+                            if ((char)(i->LDIR_Name1[j]) <= 'z' && (char)(i->LDIR_Name1[j]) >= '0') name[nameptr++] = (char)(i->LDIR_Name2[j]);
+                        for (int j = 0; j < 2; j++)
+                            if ((char)(i->LDIR_Name1[j]) <= 'z' && (char)(i->LDIR_Name1[j]) >= '0') name[nameptr++] = (char)(i->LDIR_Name3[j]);
                     }
                     name[nameptr++] = '\0';
                 } else {
