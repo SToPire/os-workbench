@@ -108,9 +108,12 @@ int main(int argc, char* argv[])
                 int legalname = 0;
                 if (left != right) {
                     for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
-                        for (int j = 0; j < 5; j++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
-                        for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
-                        for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
+                        for (int j = 0; j < 5; j++)
+                            if ((char)(i->LDIR_Name1[j]) != 0x0 && (char)(i->LDIR_Name1[j]) != 0xff) name[nameptr++] = (char)(i->LDIR_Name1[j]);
+                        for (int j = 0; j < 6; j++)
+                            if ((char)(i->LDIR_Name1[j]) != 0x0 && (char)(i->LDIR_Name1[j]) != 0xff) name[nameptr++] = (char)(i->LDIR_Name2[j]);
+                        for (int j = 0; j < 2; j++)
+                            if ((char)(i->LDIR_Name1[j]) != 0x0 && (char)(i->LDIR_Name1[j]) != 0xff) name[nameptr++] = (char)(i->LDIR_Name3[j]);
                     }
                     printf("%x %x %x %x\n", toupper(name[nameptr - 1]), right->DIR_ExtName[2], toupper(name[0]), right->DIR_Name[0]);
                     if (toupper(name[nameptr - 1]) == right->DIR_ExtName[2] && toupper(name[0]) == right->DIR_Name[0]) legalname = 1;
