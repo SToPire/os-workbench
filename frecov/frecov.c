@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <sys/fcntl.h>
 #include <sys/mman.h>
+#include <ctype.h>
 
 typedef __uint8_t u8;
 typedef __uint16_t u16;
@@ -91,25 +92,27 @@ int main(int argc, char* argv[])
     void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
-    if(fs.st_size>100*1024*1024) FirstDataCluster += 4096 * 2;
+    if (fs.st_size > 100 * 1024 * 1024) FirstDataCluster += 4096 * 2;
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
         if (isDirEntryCluster(clusPtr)) {
-            for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4096-320;) {
+            for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4096 - 32;) {
                 if (left->DIR_Name[0] == 0xE5 || left->DIR_Name[0] == 0x00) {
                     ++left;
                     continue;
                 }
                 sEntry_t* right = left;
-                while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + 4096-320) ++right;
+                while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + 4096 - 32) ++right;
                 char name[128];
                 int nameptr = 0;
 
+                int legalname = 0;
                 if (left != right) {
                     for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
                         for (int j = 0; j < 5; j++) name[nameptr++] = (char)(i->LDIR_Name1[j]);
                         for (int j = 0; j < 6; j++) name[nameptr++] = (char)(i->LDIR_Name2[j]);
                         for (int j = 0; j < 2; j++) name[nameptr++] = (char)(i->LDIR_Name3[j]);
                     }
+                    if (toupper(name[nameptr - 1] == right->DIR_ExtName[2] && tolower(name[0] == right->DIR_Name[0]))) legalname = 1;
                     name[nameptr++] = '\0';
                 } else {
                     if (right->DIR_Name[0] == 0xE5 || right->DIR_Name[0] == 0x00) {
@@ -120,9 +123,11 @@ int main(int argc, char* argv[])
                     }
                 }
                 left = right + 1;
-                for (int i = 1; i <= 40; i++) putc('c', stdout);
-                putc(' ', stdout);
-                printf("%s\n", name);
+                if (legalname) {
+                    for (int i = 1; i <= 40; i++) putc('c', stdout);
+                    putc(' ', stdout);
+                    printf("%s\n", name);
+                }
             }
         }
     }
