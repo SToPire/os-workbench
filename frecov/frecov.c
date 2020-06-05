@@ -82,6 +82,15 @@ int isDirEntryCluster(void* addr)
     else
         return 0;
 }
+
+int isLegalChar(char c){
+    if (c == 0x2E || c == 0x5F) return 1;
+    if (c >= 0x30 && c <= 0x39) return 1;
+    if (c >= 0x41 && c <= 0x5A) return 1;
+    if (c >= 0x61 && c <= 0x7A) return 1;
+    return 0;
+}
+
 int gcnt = 0;
 
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataSector)
@@ -111,11 +120,11 @@ int main(int argc, char* argv[])
                 if (left != right) {
                     for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
                         for (int j = 0; j < 5; j++)
-                            if ((i->LDIR_Name1[j]) != 0x0 && (i->LDIR_Name1[j]) != 0xffff) name[nameptr++] = (char)(i->LDIR_Name1[j]);
+                            if (isLegalChar((char)(i->LDIR_Name1[j]))) name[nameptr++] = (char)(i->LDIR_Name1[j]);
                         for (int j = 0; j < 6; j++)
-                            if ((i->LDIR_Name2[j]) != 0x0 && (i->LDIR_Name2[j]) != 0xffff) name[nameptr++] = (char)(i->LDIR_Name2[j]);
+                            if (isLegalChar((char)(i->LDIR_Name2[j]))) name[nameptr++] = (char)(i->LDIR_Name2[j]);
                         for (int j = 0; j < 2; j++)
-                            if ((i->LDIR_Name3[j]) != 0x0 && (i->LDIR_Name3[j]) != 0xffff) name[nameptr++] = (char)(i->LDIR_Name3[j]);
+                            if (isLegalChar((char)(i->LDIR_Name3[j]))) name[nameptr++] = (char)(i->LDIR_Name3[j]);
                     }
                     if (toupper(name[nameptr - 1]) == right->DIR_ExtName[2] && toupper(name[0]) == right->DIR_Name[0]) legalname = 1;
                     name[nameptr++] = '\0';
