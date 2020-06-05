@@ -96,6 +96,7 @@ int main(int argc, char* argv[])
     //printf("%d\n", ((int)(0.25 * fs.st_size) / 4096) * 4096);
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
         if (isDirEntryCluster(clusPtr)) {
+            printf("________%p________\n", clusPtr);
             for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4064;) {
                 if (left->DIR_Name[0] == 0xE5 || left->DIR_Name[0] == 0x00) {
                     ++left;
