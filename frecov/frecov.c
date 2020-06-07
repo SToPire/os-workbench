@@ -149,7 +149,9 @@ int main(int argc, char* argv[])
                     // printf("%s\n", name);
                     if (right->DIR_Attr == 0x20) {
                         u32 offset = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                        printf("%s %u\n", name, offset);
+                        if (offset == 99) {
+                            printf("%s %u\n", name, offset);
+                        }
                     }
                 }
                 left = right + 1;
