@@ -166,9 +166,11 @@ int main(int argc, char* argv[])
                             char tmpbuf[2 * BytesPerCluster];
                             memcpy(tmpbuf, ptr1, BytesPerCluster);
                             memcpy(tmpbuf + BytesPerCluster, ptr2, BytesPerCluster);
-                            for (int i = 0; i + width * 3 < 2 * BytesPerCluster; i++) {
-                                printf("%d ", abs(tmpbuf[i] - tmpbuf[i + width * 3]));
+                            int i = 0;
+                            for (; i + width * 3 < 2 * BytesPerCluster; i++) {
+                                if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 50) tcnt++;
                             }
+                            printf("%d %d\n", tcnt, i);
                             // }
 
                             fclose(fp);
