@@ -149,13 +149,10 @@ int main(int argc, char* argv[])
                     // putc(' ', stdout);
                     // printf("%s\n", name);
                     if (right->DIR_Attr == 0x20) {
-                        u32 offset = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                        if (offset == 99) {
-                            printf("%s %u\n", name, offset);
-                            bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(offset);
-                            printf("%x%x\n", bmph->type[0], bmph->type[1]);
+                        u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
+                        if (NumCluster == 99) {
+                            bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
-                            printf("%u\n", bmph->size);
 
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmph->size, 1, fp);
@@ -166,7 +163,7 @@ int main(int argc, char* argv[])
                             fscanf(fp, "%s", buf);  // Get it!
                             pclose(fp);
 
-                            printf("%s\n", buf);
+                            printf("%s %s\n", buf,name);
                         }
                     }
                 }
