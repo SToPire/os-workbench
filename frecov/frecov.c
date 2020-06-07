@@ -107,7 +107,7 @@ int isLegalChar(char c)
 
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataCluster)
 #define BytesPerCluster (fhp->BPB_BytsPerSec * fhp->BPB_SecPerClus)
-#define TotalClusterCnt ((fs.st_size  )/ BytesPerCluster)
+#define TotalClusterCnt ((fs.st_size - (FirstDataCluster - ImgPtr) )/ BytesPerCluster)
 #define Min(a, b) ((a < b) ? a : b)
 int main(int argc, char* argv[])
 {
@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
     void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
-    printf("%d\n", (int)(TotalClusterCnt));
+    //printf("%d\n", (int)(TotalClusterCnt));
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += BytesPerCluster) {
         if (isDirEntryCluster(clusPtr)) {
             for (sEntry_t* left = clusPtr; (void*)left < clusPtr + BytesPerCluster;) {
@@ -156,10 +156,10 @@ int main(int argc, char* argv[])
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
 
                             int bmpoffset = bmph->offset, bmpsize = bmph->size, width = bmph->width, height = bmph->height;
-                            char t[32];
-                            sprintf(t, "/tmp/%d.bmp", ++tcnt);
-                            FILE* fp = fopen(t, "w");
-                            //FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
+                            // char t[32];
+                            // sprintf(t, "/tmp/%d.bmp", ++tcnt);
+                            // FILE* fp = fopen(t, "w");
+                            FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmpoffset, 1, fp);
                             bmpsize -= bmpoffset;
 
