@@ -108,6 +108,7 @@ int isLegalChar(char c)
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataCluster)
 #define BytesPerCluster (fhp->BPB_BytsPerSec * fhp->BPB_SecPerClus)
 #define TotalClusterCnt (fs.st_size / BytesPerCluster)
+#define Min(a, b) ((a < b) ? a : b)
 int main(int argc, char* argv[])
 {
     struct stat fs;
@@ -166,9 +167,9 @@ int main(int argc, char* argv[])
                                 tcnt = 0;
                                 char tmpbuf[2 * BytesPerCluster];
                                 memcpy(tmpbuf, ptr1, BytesPerCluster);
-                                memcpy(tmpbuf + BytesPerCluster, ptr2, BytesPerCluster);
+                                memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize,BytesPerCluster);
                                 int i = 0;
-                                for (; i + width * 3 < 2 * BytesPerCluster; i++) {
+                                for (; i + width * 3 < BytesPerCluster + Min(bmpsize,BytesPerCluster); i++) {
                                     if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 25) tcnt++;
                                 }
                                 printf("%d %d\n", tcnt, i);
