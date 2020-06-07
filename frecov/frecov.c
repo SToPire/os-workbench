@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
                     if (right->DIR_Attr == 0x20) {
                         u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
                         if (NumCluster >= 0 && NumCluster <= TotalClusterCnt) {
-                        //if (NumCluster == 99) {
+                            //if (NumCluster == 99) {
                             bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
 
@@ -168,15 +168,17 @@ int main(int argc, char* argv[])
                             bmpsize -= BytesPerCluster;
 
                             while (bmpsize) {
-                                int rational_cnt = 0;
+                                int rational_cnt = 0, all_cnt = 0;
                                 char tmpbuf[2 * BytesPerCluster];
                                 memcpy(tmpbuf, ptr1, BytesPerCluster);
                                 memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
-                                int i = 0;
-                                for (; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
-                                    if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 30) rational_cnt++;
+                                for (int i = 0; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
+                                    if (i < BytesPerCluster && i + width * 3 >= BytesPerCluster) {
+                                        ++all_cnt;
+                                        if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 30) ++rational_cnt;
+                                    }
                                 }
-                                if (2 * rational_cnt >= 1 * i) {
+                                if (2 * rational_cnt >= 1 * all_cnt) {
                                     fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
                                     bmpsize -= Min(bmpsize, BytesPerCluster);
                                     ptr1 = ptr2;
@@ -189,16 +191,17 @@ int main(int argc, char* argv[])
                                         ptr2 = NthClusterAddr(j);
                                         memcpy(tmpbuf, ptr1, BytesPerCluster);
                                         memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
-                                        for (int k = 0; k + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); k++) {
-                                            if (abs(tmpbuf[k] - tmpbuf[k + width * 3]) <= 30) rational_cnt++;
+                                        for (int i = 0; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
+                                            if (i < BytesPerCluster && i + width * 3 >= BytesPerCluster)
+                                                if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 30) ++rational_cnt;
                                         }
-                                        if(rational_cnt > current_rational_cnt){
+                                        if (rational_cnt > current_rational_cnt) {
                                             current_rational_cnt = rational_cnt;
                                             current_j = j;
                                         }
                                     }
                                     ptr2 = NthClusterAddr(current_j);
-                                    fwrite(ptr2, Min(bmpsize, BytesPerCluster),1,fp);
+                                    fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
                                     bmpsize -= Min(bmpsize, BytesPerCluster);
                                     ptr1 = ptr2;
                                     ptr2 += BytesPerCluster;
