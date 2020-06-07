@@ -173,7 +173,7 @@ int main(int argc, char* argv[])
                                     if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 25) tcnt++;
                                 }
                                 printf("%d %d\n", tcnt, i);
-                                bmpsize -= BytesPerCluster;
+                                bmpsize -= Min(bmpsize,BytesPerCluster);
                                 printf("bmpsize:%d\n", bmpsize);
                                 ptr1++;
                                 ptr2++;
