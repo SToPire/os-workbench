@@ -154,11 +154,11 @@ int main(int argc, char* argv[])
                             bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
 
-                            //char t[32];
-                            //sprintf(t, "/tmp/%d.bmp", ++tcnt);
-                            //FILE* fp = fopen(t, "w");
                             int bmpoffset = bmph->offset, bmpsize = bmph->size, width = bmph->width, height = bmph->height;
-                            FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
+                            char t[32];
+                            sprintf(t, "/tmp/%d.bmp", ++tcnt);
+                            FILE* fp = fopen(t, "w");
+                            //FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmpoffset, 1, fp);
                             bmpsize -= bmpoffset;
 
