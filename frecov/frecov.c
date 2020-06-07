@@ -139,21 +139,20 @@ int main(int argc, char* argv[])
                     }
                     if (toupper(name[nameptr - 1]) == right->DIR_ExtName[2] && toupper(name[0]) == right->DIR_Name[0]) legalname = 1;
                     name[nameptr++] = '\0';
-
-                    if (right->DIR_Attr == 0x20) {
-                        u32 offset = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                        printf("%s %u\n",name, offset);
-                    }
                 } else {
                     ++left;
                     continue;
                 }
-                left = right + 1;
                 if (legalname) {
                     // for (int i = 1; i <= 40; i++) putc('c', stdout);
                     // putc(' ', stdout);
                     // printf("%s\n", name);
+                    if (right->DIR_Attr == 0x20) {
+                        u32 offset = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
+                        printf("%s %u\n", name, offset);
+                    }
                 }
+                left = right + 1;
             }
         }
     }
