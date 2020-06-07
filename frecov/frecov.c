@@ -117,6 +117,7 @@ int main(int argc, char* argv[])
 
     void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
+    printf("%d\n", TotalClusterCnt);
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += BytesPerCluster) {
         if (isDirEntryCluster(clusPtr)) {
@@ -178,7 +179,7 @@ int main(int argc, char* argv[])
                                         if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 30) ++rational_cnt;
                                     }
                                 }
-                                if (3 * rational_cnt >= 1 * all_cnt) {
+                                if (10 * rational_cnt >= 1 * all_cnt) {
                                     fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
                                     bmpsize -= Min(bmpsize, BytesPerCluster);
                                     ptr1 = ptr2;
