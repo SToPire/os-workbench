@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
                             bmpsize -= bmpoffset;
 
                             void* ptr1 = (void*)bmph + bmpoffset;
-                            void* ptr2 = ptr1 + 1 * BytesPerCluster;
+                            void* ptr2 = ptr1 + BytesPerCluster;
                             fwrite(ptr1, BytesPerCluster, 1, fp);
                             bmpsize -= BytesPerCluster;
 
@@ -180,7 +180,7 @@ int main(int argc, char* argv[])
                                 if (3 * rational_cnt >= 2 * i) {
                                     bmpsize -= Min(bmpsize, BytesPerCluster);
                                     printf("bmpsize:%d\n", bmpsize);
-                                    fwrite(ptr2, BytesPerCluster, 1, fp);
+                                    fwrite(ptr2, Min(bmpsize,BytesPerCluster), 1, fp);
                                     ptr1 = ptr2;
                                     ptr2++;
                                 }else{
