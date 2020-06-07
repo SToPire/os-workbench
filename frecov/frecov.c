@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
 
                             char t[32];
-                            sprintf(t, "/tmp/frecov/%d.bmp", ++tcnt);
+                            sprintf(t, "/tmp/%d.bmp", ++tcnt);
                             FILE* fp = fopen(t, "w");
 
                             //FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
