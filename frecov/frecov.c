@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
             if (*(char*)(NthClusterAddr(i) + j) == 0x00) t++;
         if(t >= 128){
             ClusterType[i] = 1;
-            printf("s|");
+            printf("%d ",++tcnt);
         }
     }
         for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += BytesPerCluster) {
