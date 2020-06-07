@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
                             fwrite((void*)bmph, bmph->size, 1, fp);
                             fclose(fp);
 
-                            char buf[41];
+                            char buf[50];
                             fp = popen("sha1sum /tmp/frecov-tmpfile", "r");
                             fscanf(fp, "%s", buf);  // Get it!
                             pclose(fp);
