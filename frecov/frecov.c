@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<string.h>
+#include <string.h>
 #include <unistd.h>
 #include <assert.h>
 #include <sys/stat.h>
@@ -107,6 +107,7 @@ int isLegalChar(char c)
 int gcnt = 0;
 
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataCluster)
+#define BytesPerCluster (fhp->BPB_BytsPerSec * fhp->BPB_SecPerClus)
 int main(int argc, char* argv[])
 {
     struct stat fs;
@@ -116,15 +117,15 @@ int main(int argc, char* argv[])
     void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
-    for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
+    for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += BytesPerCluster) {
         if (isDirEntryCluster(clusPtr)) {
-            for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4096;) {
+            for (sEntry_t* left = clusPtr; (void*)left < clusPtr + BytesPerCluster;) {
                 if (left->DIR_Name[0] == 0xE5 || left->DIR_Name[0] == 0x00) {
                     ++left;
                     continue;
                 }
                 sEntry_t* right = left;
-                while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + 4096) ++right;
+                while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + BytesPerCluster) ++right;
                 char name[128];
                 int nameptr = 0;
 
@@ -150,7 +151,7 @@ int main(int argc, char* argv[])
                     // printf("%s\n", name);
                     if (right->DIR_Attr == 0x20) {
                         u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                        if (NumCluster >= 0 && NumCluster <= fs.st_size/(fhp->BPB_BytsPerSec*fhp->BPB_SecPerClus)) {
+                        if (NumCluster >= 0 && NumCluster <= fs.st_size / BytesPerCluster) {
                             bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
 
@@ -163,7 +164,7 @@ int main(int argc, char* argv[])
                             fscanf(fp, "%s", buf);  // Get it!
                             pclose(fp);
 
-                            printf("%s %s\n", buf,name);
+                            printf("%s %s\n", buf, name);
                         }
                     }
                 }
