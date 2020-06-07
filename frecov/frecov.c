@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
                                         if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 30) ++rational_cnt;
                                     }
                                 }
-                                if (2 * rational_cnt >= 1 * all_cnt) {
+                                if (3 * rational_cnt >= 1 * all_cnt) {
                                     fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
                                     bmpsize -= Min(bmpsize, BytesPerCluster);
                                     ptr1 = ptr2;
