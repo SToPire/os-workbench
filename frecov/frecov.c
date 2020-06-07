@@ -162,10 +162,10 @@ int main(int argc, char* argv[])
                             fclose(fp);
 
                             char buf[40];
-                            int pp = popen("sha1sum /tmp/frecov-tmpfile", "r");
-                            panic_on(!pp, "popen");
-                            fscanf(pp, "%s", buf);  // Get it!
-                            pclose(pp);
+                            fp = popen("sha1sum /tmp/frecov-tmpfile", "r");
+                            panic_on(!fp, "popen");
+                            fscanf(fp, "%s", buf);  // Get it!
+                            pclose(fp);
 
                             printf("%s\n", buf);
                         }
