@@ -107,7 +107,7 @@ int isLegalChar(char c)
 
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataCluster)
 #define BytesPerCluster (fhp->BPB_BytsPerSec * fhp->BPB_SecPerClus)
-#define TotalClusterCnt ((fs.st_size - (FirstDataCluster - ImgPtr) )/ BytesPerCluster)
+#define TotalClusterCnt ((fs.st_size - (FirstDataCluster - ImgPtr)) / BytesPerCluster)
 #define Min(a, b) ((a < b) ? a : b)
 int main(int argc, char* argv[])
 {
@@ -124,122 +124,130 @@ int main(int argc, char* argv[])
         int t = 0;
         for (int j = 0; j < BytesPerCluster; j++)
             if (*(char*)(NthClusterAddr(i) + j) == 0x00) t++;
-        if(t >= 32){
+        if (t >= 32)
             ClusterType[i] = 1;
-            printf("%d ",++tcnt);
-        }
     }
-        for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += BytesPerCluster) {
-            if (isDirEntryCluster(clusPtr)) {
-                for (sEntry_t* left = clusPtr; (void*)left < clusPtr + BytesPerCluster;) {
-                    if (left->DIR_Name[0] == 0xE5 || left->DIR_Name[0] == 0x00) {
-                        ++left;
-                        continue;
+    for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += BytesPerCluster) {
+        if (isDirEntryCluster(clusPtr)) {
+            for (sEntry_t* left = clusPtr; (void*)left < clusPtr + BytesPerCluster;) {
+                if (left->DIR_Name[0] == 0xE5 || left->DIR_Name[0] == 0x00) {
+                    ++left;
+                    continue;
+                }
+                sEntry_t* right = left;
+                while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + BytesPerCluster) ++right;
+                char name[128];
+                int nameptr = 0;
+
+                int legalname = 0;
+                if (left != right) {
+                    for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
+                        for (int j = 0; j < 5; j++)
+                            if (isLegalChar((i->LDIR_Name1[j][0]))) name[nameptr++] = (i->LDIR_Name1[j][0]);
+                        for (int j = 0; j < 6; j++)
+                            if (isLegalChar((i->LDIR_Name2[j][0]))) name[nameptr++] = (i->LDIR_Name2[j][0]);
+                        for (int j = 0; j < 2; j++)
+                            if (isLegalChar((i->LDIR_Name3[j][0]))) name[nameptr++] = (i->LDIR_Name3[j][0]);
                     }
-                    sEntry_t* right = left;
-                    while (right->DIR_Attr != 0x20 && (void*)right < clusPtr + BytesPerCluster) ++right;
-                    char name[128];
-                    int nameptr = 0;
+                    if (toupper(name[nameptr - 1]) == right->DIR_ExtName[2] && toupper(name[0]) == right->DIR_Name[0]) legalname = 1;
+                    name[nameptr++] = '\0';
+                } else {
+                    ++left;
+                    continue;
+                }
+                if (legalname) {
+                    if (right->DIR_Attr == 0x20) {
+                        u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
+                        if (NumCluster >= 0 && NumCluster <= TotalClusterCnt) {
+                            //if (NumCluster == 99) {
+                            bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
+                            if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
 
-                    int legalname = 0;
-                    if (left != right) {
-                        for (lEntry_t* i = (lEntry_t*)(right - 1); i >= (lEntry_t*)left; i--) {
-                            for (int j = 0; j < 5; j++)
-                                if (isLegalChar((i->LDIR_Name1[j][0]))) name[nameptr++] = (i->LDIR_Name1[j][0]);
-                            for (int j = 0; j < 6; j++)
-                                if (isLegalChar((i->LDIR_Name2[j][0]))) name[nameptr++] = (i->LDIR_Name2[j][0]);
-                            for (int j = 0; j < 2; j++)
-                                if (isLegalChar((i->LDIR_Name3[j][0]))) name[nameptr++] = (i->LDIR_Name3[j][0]);
-                        }
-                        if (toupper(name[nameptr - 1]) == right->DIR_ExtName[2] && toupper(name[0]) == right->DIR_Name[0]) legalname = 1;
-                        name[nameptr++] = '\0';
-                    } else {
-                        ++left;
-                        continue;
-                    }
-                    if (legalname) {
-                        if (right->DIR_Attr == 0x20) {
-                            u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                            if (NumCluster >= 0 && NumCluster <= TotalClusterCnt) {
-                                //if (NumCluster == 99) {
-                                bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
-                                if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
+                            int bmpoffset = bmph->offset, bmpsize = bmph->size, width = bmph->width, height = bmph->height;
+                            FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
+                            fwrite((void*)bmph, bmph->size, 1, fp);
+                            fclose(fp);
+                            char buf1[41];
+                            fp = popen("sha1sum /tmp/frecov-tmpfile", "r");
+                            fscanf(fp, "%s", buf1);  // Get it!
+                            pclose(fp);
 
-                                int bmpoffset = bmph->offset, bmpsize = bmph->size, width = bmph->width, height = bmph->height;
-                                // char t[32];
-                                // sprintf(t, "/tmp/%d.bmp", ++tcnt);
-                                // FILE* fp = fopen(t, "w");
-                                FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
-                                fwrite((void*)bmph, bmpoffset, 1, fp);
-                                bmpsize -= bmpoffset;
+                            printf("%s %s\n", buf1, name);
+                            // char t[32];
+                            // sprintf(t, "/tmp/%d.bmp", ++tcnt);
+                            // FILE* fp = fopen(t, "w");
+                            fp = fopen("/tmp/frecov-tmpfile", "w");
+                            fwrite((void*)bmph, bmpoffset, 1, fp);
+                            bmpsize -= bmpoffset;
 
-                                void* ptr1 = (void*)bmph + bmpoffset;
-                                void* ptr2 = ptr1 + BytesPerCluster;
-                                fwrite(ptr1, BytesPerCluster, 1, fp);
-                                bmpsize -= BytesPerCluster;
+                            void* ptr1 = (void*)bmph + bmpoffset;
+                            void* ptr2 = ptr1 + BytesPerCluster;
+                            fwrite(ptr1, BytesPerCluster, 1, fp);
+                            bmpsize -= BytesPerCluster;
 
-                                while (bmpsize) {
-                                    int rational_cnt = 0, all_cnt = 0;
-                                    char tmpbuf[2 * BytesPerCluster];
-                                    memcpy(tmpbuf, ptr1, BytesPerCluster);
-                                    memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
-                                    for (int i = 0; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
-                                        if (i < BytesPerCluster && i + width * 3 >= BytesPerCluster) {
-                                            ++all_cnt;
-                                            if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 50) ++rational_cnt;
-                                        }
-                                    }
-                                    if (10 * rational_cnt >= 1 * all_cnt) {
-                                        fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
-                                        bmpsize -= Min(bmpsize, BytesPerCluster);
-                                        ptr1 = ptr2;
-                                        ptr2 += BytesPerCluster;
-                                    } else {
-                                        void* ptr3 = ptr2;
-                                        rational_cnt = 0;
-                                        int current_rational_cnt = 0, current_j = 0;
-                                        for (int j = 0; j < TotalClusterCnt; ++j) {
-                                            ptr2 = NthClusterAddr(j);
-                                            memcpy(tmpbuf, ptr1, BytesPerCluster);
-                                            memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
-                                            for (int i = 0; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
-                                                if (i < BytesPerCluster && i + width * 3 >= BytesPerCluster)
-                                                    if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 50) ++rational_cnt;
-                                            }
-                                            if (rational_cnt > current_rational_cnt) {
-                                                current_rational_cnt = rational_cnt;
-                                                current_j = j;
-                                            }
-                                        }
-                                        ptr2 = NthClusterAddr(current_j);
-                                        fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
-                                        bmpsize -= Min(bmpsize, BytesPerCluster);
-                                        ptr1 = ptr2;
-                                        ptr2 += BytesPerCluster;
+                            while (bmpsize) {
+                                int rational_cnt = 0, all_cnt = 0;
+                                char tmpbuf[2 * BytesPerCluster];
+                                memcpy(tmpbuf, ptr1, BytesPerCluster);
+                                memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
+                                for (int i = 0; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
+                                    if (i < BytesPerCluster && i + width * 3 >= BytesPerCluster) {
+                                        ++all_cnt;
+                                        if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 50) ++rational_cnt;
                                     }
                                 }
-
-                                fclose(fp);
-
-                                char buf[41];
-                                fp = popen("sha1sum /tmp/frecov-tmpfile", "r");
-                                fscanf(fp, "%s", buf);  // Get it!
-                                pclose(fp);
-
-                                printf("%s %s\n", buf, name);
-                            } else {
-                                ++left;
-                                continue;
+                                if (5 * rational_cnt >= 1 * all_cnt) {
+                                    fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
+                                    bmpsize -= Min(bmpsize, BytesPerCluster);
+                                    ptr1 = ptr2;
+                                    ptr2 += BytesPerCluster;
+                                } else {
+                                    void* ptr3 = ptr2;
+                                    rational_cnt = 0;
+                                    int current_rational_cnt = 0, current_j = 0;
+                                    for (int j = 0; j < TotalClusterCnt; ++j) {
+                                        if (ClusterType[j] == 1) continue;
+                                        ptr2 = NthClusterAddr(j);
+                                        memcpy(tmpbuf, ptr1, BytesPerCluster);
+                                        memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
+                                        for (int i = 0; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
+                                            if (i < BytesPerCluster && i + width * 3 >= BytesPerCluster)
+                                                if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 10) ++rational_cnt;
+                                        }
+                                        if (rational_cnt > current_rational_cnt) {
+                                            current_rational_cnt = rational_cnt;
+                                            current_j = j;
+                                        }
+                                    }
+                                    ptr2 = NthClusterAddr(current_j);
+                                    fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
+                                    bmpsize -= Min(bmpsize, BytesPerCluster);
+                                    ptr1 = ptr2;
+                                    ptr2 += BytesPerCluster;
+                                }
                             }
+
+                            fclose(fp);
+
+                            char buf2[41];
+                            fp = popen("sha1sum /tmp/frecov-tmpfile", "r");
+                            fscanf(fp, "%s", buf2);  // Get it!
+                            pclose(fp);
+
+                            printf("%s %s\n", buf2, name);
                         } else {
                             ++left;
                             continue;
                         }
+                    } else {
+                        ++left;
+                        continue;
                     }
-                    left = right + 1;
                 }
+                left = right + 1;
             }
         }
+    }
 
     close(fd);
     return 0;
