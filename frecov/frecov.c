@@ -159,7 +159,8 @@ int main(int argc, char* argv[])
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmpoffset, 1, fp);
                             bmph = (void*)bmph + bmpoffset;
-                            fwrite((void*)bmph, bmpsize-bmpoffset, 1, fp);
+                            memset(bmph, 0, 4096);
+                            fwrite((void*)bmph, bmpsize - bmpoffset, 1, fp);
                             fclose(fp);
 
                             char buf[41];
