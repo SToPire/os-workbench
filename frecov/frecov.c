@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
                                     fwrite(ptr2, Min(bmpsize,BytesPerCluster), 1, fp);
                                     bmpsize -= Min(bmpsize, BytesPerCluster);
                                     ptr1 = ptr2;
-                                    ptr2++;
+                                    ptr2 += BytesPerCluster;
                                 }else{
                                     printf("fuc\n");
                                 }
