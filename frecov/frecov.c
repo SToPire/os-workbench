@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
                                     void* ptr3 = ptr2;
                                     rational_cnt = 0;
                                     int current_rational_cnt = 0, current_j = 0;
-                                    for (int j = 0; j < TotalClusterCnt && NthClusterAddr(j) != ptr3; ++j) {
+                                    for (int j = 0; j < TotalClusterCnt; ++j) {
                                         ptr2 = NthClusterAddr(j);
                                         memcpy(tmpbuf, ptr1, BytesPerCluster);
                                         memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
