@@ -174,7 +174,7 @@ int main(int argc, char* argv[])
                                 memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
                                 int i = 0;
                                 for (; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
-                                    if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 30) rational_cnt++;
+                                    if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 20) rational_cnt++;
                                 }
                                 if (3 * rational_cnt >= 2 * i) {
                                     fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
