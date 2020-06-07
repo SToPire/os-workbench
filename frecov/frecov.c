@@ -150,10 +150,10 @@ int main(int argc, char* argv[])
                     // printf("%s\n", name);
                     if (right->DIR_Attr == 0x20) {
                         u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                        if (NumCluster == 99) {
+                        if (NumCluster >= 0 && NumCluster <= fs.st_size/(fhp->BPB_BytsPerSec*fhp->BPB_SecPerClus)) {
                             bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
-
+                            printf("%u\n", fhp->BPB_BytsPerSec * fhp->BPB_SecPerClus);
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmph->size, 1, fp);
                             fclose(fp);
