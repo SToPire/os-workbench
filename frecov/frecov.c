@@ -160,7 +160,7 @@ int main(int argc, char* argv[])
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmpoffset, 1, fp);
                             void* ptr1 = (void*)bmph + bmpoffset;
-                            void* ptr2 = ptr1 +9* BytesPerCluster;
+                            void* ptr2 = ptr1 +10* BytesPerCluster;
                             bmpsize -= bmpoffset;
                             //while (bmpsize) {
                             char tmpbuf[2 * BytesPerCluster];
