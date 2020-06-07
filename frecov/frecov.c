@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include<string.h>
 #include <unistd.h>
 #include <assert.h>
 #include <sys/stat.h>
@@ -156,9 +157,9 @@ int main(int argc, char* argv[])
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
                             printf("%u\n", bmph->size);
 
-                            for (int i = 0; i < 10;i++){
-                                printf("%x ", *((char*)bmph + i));
-                            }
+                            FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
+                            fwrite((void*)bmph, bmph->size, 1, fp);
+                            fclose(fp);
                         }
                     }
                 }
