@@ -177,9 +177,10 @@ int main(int argc, char* argv[])
                                     if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 25) rational_cnt++;
                                 }
                                 printf("%d %d\n", rational_cnt, i);
-                                if (1) {
+                                if (3 * rational_cnt >= 2 * i) {
                                     bmpsize -= Min(bmpsize, BytesPerCluster);
                                     printf("bmpsize:%d\n", bmpsize);
+                                    fwrite(ptr2, BytesPerCluster, 1, fp);
                                     ptr1 = ptr2;
                                     ptr2++;
                                 }else{
