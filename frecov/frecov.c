@@ -146,7 +146,8 @@ int main(int argc, char* argv[])
                 if (legalname) {
                     if (right->DIR_Attr == 0x20) {
                         u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                        if (NumCluster >= 0 && NumCluster <= fs.st_size / BytesPerCluster) {
+                        //if (NumCluster >= 0 && NumCluster <= fs.st_size / BytesPerCluster) {
+                            if(NumCluster==99){
                             bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
 
