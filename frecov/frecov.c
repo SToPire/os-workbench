@@ -150,12 +150,13 @@ int main(int argc, char* argv[])
                             bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
 
-                            char t[64];
+                            char t[32];
                             int tcnt = 0;
                             sprintf(t, "/tmp/frecov-tmpfile/%d.bmp", ++tcnt);
+                            printf("%s", t);
                             FILE* fp = fopen(t, "w");
 
-//                            FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
+                            //                            FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmph->size, 1, fp);
                             fclose(fp);
 
