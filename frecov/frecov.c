@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
                                         memcpy(tmpbuf, ptr1, BytesPerCluster);
                                         memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
                                         for (int k = 0; k + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); k++) {
-                                            if (abs(tmpbuf[k] - tmpbuf[k + width * 3]) <= 30) rational_cnt++;
+                                            if (abs(tmpbuf[k] - tmpbuf[k + width * 3]) <= 100) rational_cnt++;
                                         }
                                         if(rational_cnt > current_rational_cnt){
                                             current_rational_cnt = rational_cnt;
