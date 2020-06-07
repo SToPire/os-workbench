@@ -71,6 +71,17 @@ typedef struct long_entry {
     u8 LDIR_Name3[2][2];
 } __attribute__((packed)) lEntry_t;
 
+typedef struct bmp_header{
+    u8 type[2];
+    u32 size;
+    u8 meaningless1[4];
+    u32 offset;
+    u8 meaningless2[4];
+    u32 width;
+    u32 height;
+    u8 meaningless3[28];
+} __attribute((packed)) bmp_header_t;
+
 int isDirEntryCluster(void* addr)
 {
     int cnt = 0;
@@ -127,17 +138,18 @@ int main(int argc, char* argv[])
                     }
                     if (toupper(name[nameptr - 1]) == right->DIR_ExtName[2] && toupper(name[0]) == right->DIR_Name[0]) legalname = 1;
                     name[nameptr++] = '\0';
+
+                    u32 offset = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
+                    printf("%u\n", offset);
                 } else {
-                    if (right->DIR_Name[0] == 0xE5 || right->DIR_Name[0] == 0x00) {
-                        ++left;
-                        continue;
-                    }
+                    ++left;
+                    continue;
                 }
                 left = right + 1;
                 if (legalname) {
                     for (int i = 1; i <= 40; i++) putc('c', stdout);
                     putc(' ', stdout);
-                    printf("%s\n", name);
+                    //printf("%s\n", name);
                 }
             }
         }
