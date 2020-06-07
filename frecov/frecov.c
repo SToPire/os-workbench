@@ -105,7 +105,7 @@ int isLegalChar(char c)
 
 int gcnt = 0;
 
-#define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataSector)
+#define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataCluster)
 int main(int argc, char* argv[])
 {
     struct stat fs;
@@ -151,6 +151,8 @@ int main(int argc, char* argv[])
                         u32 offset = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
                         if (offset == 99) {
                             printf("%s %u\n", name, offset);
+                            bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(offset);
+                            printf("%x%x\n", bmph->type[0], bmph->type[1]);
                         }
                     }
                 }
