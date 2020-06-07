@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <assert.h>
@@ -106,6 +107,7 @@ int isLegalChar(char c)
 
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataCluster)
 #define BytesPerCluster (fhp->BPB_BytsPerSec * fhp->BPB_SecPerClus)
+#define TotalClusterCnt (fs.st_size / BytesPerCluster)
 int main(int argc, char* argv[])
 {
     struct stat fs;
@@ -146,7 +148,7 @@ int main(int argc, char* argv[])
                 if (legalname) {
                     if (right->DIR_Attr == 0x20) {
                         u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                        //if (NumCluster >= 0 && NumCluster <= fs.st_size / BytesPerCluster) {
+                        //if (NumCluster >= 0 && NumCluster <= TotalClusterCnt) {
                         if (NumCluster == 99) {
                             bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
@@ -154,21 +156,22 @@ int main(int argc, char* argv[])
                             //char t[32];
                             //sprintf(t, "/tmp/%d.bmp", ++tcnt);
                             //FILE* fp = fopen(t, "w");
-                            int bmpoffset = bmph->offset;
-                            int bmpsize = bmph->size;
+                            int bmpoffset = bmph->offset, bmpsize = bmph->size, width = bmph->width, height = bmph->height;
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmpoffset, 1, fp);
-                            bmph = (void*)bmph + bmpoffset;
+                            void* ptr1 = (void*)bmph + bmpoffset;
+                            void* ptr2 = ptr1 + BytesPerCluster;
+                            bmpsize -= bmpoffset;
 
-                            char tmp[4096];
-                            memset(tmp, -1, sizeof(tmp));
-                            tmp[0] = 0xff;
-                            tmp[1] = 0x00;
-                            tmp[2] = 0x00;
-                            fwrite(tmp, 4096, 1, fp);
+                            while (bmpsize) {
+                                char tmpbuf[2 * BytesPerCluster];
+                                memcpy(ptr1, tmpbuf, BytesPerCluster);
+                                memcpy(ptr2, tmpbuf + BytesPerCluster, BytesPerCluster);
+                                for (int i = 0; i + width * 3 < 2 * BytesPerCluster; i++) {
+                                    printf("%d ", abs(tmpbuf[i] - tmpbuf[i + width * 3]));
+                                }
+                            }
 
-                            bmph = (void*)bmph + 4096;
-                            fwrite((void*)bmph, bmpsize - bmpoffset - 4096, 1, fp);
                             fclose(fp);
 
                             char buf[41];
