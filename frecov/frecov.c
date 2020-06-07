@@ -146,9 +146,6 @@ int main(int argc, char* argv[])
                     continue;
                 }
                 if (legalname) {
-                    // for (int i = 1; i <= 40; i++) putc('c', stdout);
-                    // putc(' ', stdout);
-                    // printf("%s\n", name);
                     if (right->DIR_Attr == 0x20) {
                         u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
                         if (NumCluster >= 0 && NumCluster <= fs.st_size / BytesPerCluster) {
@@ -165,7 +162,14 @@ int main(int argc, char* argv[])
                             pclose(fp);
 
                             printf("%s %s\n", buf, name);
+                        } else {
+                            ++left;
+                            continue;
                         }
+
+                    } else {
+                        ++left;
+                        continue;
                     }
                 }
                 left = right + 1;
