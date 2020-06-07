@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
                             printf("%u\n", bmph->size);
 
                             for (int i = 0; i < bmph->size;i++){
-                                putc(*((char*)bmph + i), stdout);
+                                printf("%x", *((char*)bmph + i));
                             }
                         }
                     }
