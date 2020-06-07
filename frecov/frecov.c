@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
                             printf("%u\n", bmph->size);
 
-                            for (int i = 0; i < bmph->size;i++){
+                            for (int i = 0; i < 10;i++){
                                 printf("%x", *((char*)bmph + i));
                             }
                         }
