@@ -107,7 +107,7 @@ int isLegalChar(char c)
 
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataCluster)
 #define BytesPerCluster (fhp->BPB_BytsPerSec * fhp->BPB_SecPerClus)
-#define TotalClusterCnt ((fs.st_size - (FirstDataCluster - ImgPtr) )/ BytesPerCluster)
+#define TotalClusterCnt ((fs.st_size  )/ BytesPerCluster)
 #define Min(a, b) ((a < b) ? a : b)
 int main(int argc, char* argv[])
 {
