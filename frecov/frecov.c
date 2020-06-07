@@ -185,6 +185,7 @@ int main(int argc, char* argv[])
                             fwrite(ptr1, BytesPerCluster, 1, fp);
                             bmpsize -= BytesPerCluster;
 
+                            int flag = 0;
                             while (bmpsize) {
                                 int rational_cnt = 0, all_cnt = 0;
                                 char tmpbuf[2 * BytesPerCluster];
@@ -202,6 +203,7 @@ int main(int argc, char* argv[])
                                     ptr1 = ptr2;
                                     ptr2 += BytesPerCluster;
                                 } else {
+                                    flag = 1;
                                     void* ptr3 = ptr2;
                                     rational_cnt = 0;
                                     int current_rational_cnt = 0, current_j = 0;
@@ -234,7 +236,7 @@ int main(int argc, char* argv[])
                             fscanf(fp, "%s", buf2);  // Get it!
                             pclose(fp);
 
-                            printf("%s %s\n", buf2, name);
+                            if(flag) printf("%s %s\n", buf2, name);
                         } else {
                             ++left;
                             continue;
