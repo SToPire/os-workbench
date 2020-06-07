@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
 
                             void* ptr1 = (void*)bmph + bmpoffset;
                             void* ptr2 = ptr1 + BytesPerCluster;
-                            fwrite(ptr1, bmpsize-bmpoffset, 1, fp);
+                            fwrite(ptr1, bmpsize, 1, fp);
                             bmpsize -= BytesPerCluster;
 
                             // while (bmpsize) {
