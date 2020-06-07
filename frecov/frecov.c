@@ -104,8 +104,6 @@ int isLegalChar(char c)
     return 0;
 }
 
-int gcnt = 0;
-
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataCluster)
 #define BytesPerCluster (fhp->BPB_BytsPerSec * fhp->BPB_SecPerClus)
 int main(int argc, char* argv[])
@@ -166,7 +164,6 @@ int main(int argc, char* argv[])
                             ++left;
                             continue;
                         }
-
                     } else {
                         ++left;
                         continue;
