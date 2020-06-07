@@ -160,23 +160,31 @@ int main(int argc, char* argv[])
                             int bmpoffset = bmph->offset, bmpsize = bmph->size, width = bmph->width, height = bmph->height;
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmpoffset, 1, fp);
+                            bmpsize -= bmpoffset;
+
                             void* ptr1 = (void*)bmph + bmpoffset;
                             void* ptr2 = ptr1 + 1 * BytesPerCluster;
-                            bmpsize -= bmpoffset;
+                            fwrite(ptr1, BytesPerCluster, 1, fp);
+                            bmpsize -= BytesPerCluster;
+
                             while (bmpsize) {
-                                tcnt = 0;
+                                int rational_cnt = 0;
                                 char tmpbuf[2 * BytesPerCluster];
                                 memcpy(tmpbuf, ptr1, BytesPerCluster);
-                                memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize,BytesPerCluster));
+                                memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
                                 int i = 0;
-                                for (; i + width * 3 < BytesPerCluster + Min(bmpsize,BytesPerCluster); i++) {
-                                    if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 25) tcnt++;
+                                for (; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
+                                    if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 25) rational_cnt++;
                                 }
-                                printf("%d %d\n", tcnt, i);
-                                bmpsize -= Min(bmpsize,BytesPerCluster);
-                                printf("bmpsize:%d\n", bmpsize);
-                                ptr1++;
-                                ptr2++;
+                                printf("%d %d\n", rational_cnt, i);
+                                if (3 * rational_cnt >= 2 * i) {
+                                    bmpsize -= Min(bmpsize, BytesPerCluster);
+                                    printf("bmpsize:%d\n", bmpsize);
+                                    ptr1 = ptr2;
+                                    ptr2++;
+                                }else{
+                                    printf("fuc\n");
+                                }
                             }
 
                             fclose(fp);
