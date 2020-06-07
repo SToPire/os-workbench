@@ -174,6 +174,7 @@ int main(int argc, char* argv[])
                                 }
                                 printf("%d %d\n", tcnt, i);
                                 bmpsize -= BytesPerCluster;
+                                printf("bmpsize:%d\n", bmpsize);
                                 ptr1++;
                                 ptr2++;
                             }
