@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
         int t = 0;
         for (int j = 0; j < BytesPerCluster; j++)
             if (*(char*)(NthClusterAddr(i) + j) == 0x00) t++;
-        if(t >= 64){
+        if(t >= 32){
             ClusterType[i] = 1;
             printf("%d ",++tcnt);
         }
