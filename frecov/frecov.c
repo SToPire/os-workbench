@@ -160,6 +160,14 @@ int main(int argc, char* argv[])
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmph->size, 1, fp);
                             fclose(fp);
+
+                            char buf[40];
+                            int pp = popen("sha1sum /tmp/frecov-tmpfile", "r");
+                            panic_on(!pp, "popen");
+                            fscanf(pp, "%s", buf);  // Get it!
+                            pclose(pp);
+
+                            printf("%s\n", buf);
                         }
                     }
                 }
