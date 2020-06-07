@@ -147,8 +147,8 @@ int main(int argc, char* argv[])
                 }
                 left = right + 1;
                 if (legalname) {
-                    for (int i = 1; i <= 40; i++) putc('c', stdout);
-                    putc(' ', stdout);
+                    //for (int i = 1; i <= 40; i++) putc('c', stdout);
+                    //putc(' ', stdout);
                     //printf("%s\n", name);
                 }
             }
