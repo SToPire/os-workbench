@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
 
                             char t[32];
                             int tcnt = 0;
-                            sprintf(t, "/tmp/frecov/%d.bmp", ++tcnt);
+                            sprintf(t, "/tmp/%d.bmp", ++tcnt);
                             FILE* fp = fopen(t, "w");
 
                             //FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
