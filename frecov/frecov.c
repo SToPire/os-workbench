@@ -140,16 +140,16 @@ int main(int argc, char* argv[])
                     name[nameptr++] = '\0';
 
                     u32 offset = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                    printf("%s %u\n",name, offset);
+                    //printf("%s %u\n",name, offset);
                 } else {
                     ++left;
                     continue;
                 }
                 left = right + 1;
                 if (legalname) {
-                    //for (int i = 1; i <= 40; i++) putc('c', stdout);
-                    //putc(' ', stdout);
-                    //printf("%s\n", name);
+                    for (int i = 1; i <= 40; i++) putc('c', stdout);
+                    putc(' ', stdout);
+                    printf("%s\n", name);
                 }
             }
         }
