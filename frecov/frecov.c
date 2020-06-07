@@ -107,7 +107,7 @@ int isLegalChar(char c)
 
 #define NthClusterAddr(N) (((N - 2) * fhp->BPB_SecPerClus) * fhp->BPB_BytsPerSec + FirstDataCluster)
 #define BytesPerCluster (fhp->BPB_BytsPerSec * fhp->BPB_SecPerClus)
-#define TotalClusterCnt (fs.st_size / BytesPerCluster)
+#define TotalClusterCnt (fs.st_size - (FirstDataCluster - ImgPtr) / BytesPerCluster)
 #define Min(a, b) ((a < b) ? a : b)
 int main(int argc, char* argv[])
 {
@@ -117,7 +117,6 @@ int main(int argc, char* argv[])
 
     void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
-    printf("%d\n", (int)TotalClusterCnt);
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += BytesPerCluster) {
         if (isDirEntryCluster(clusPtr)) {
