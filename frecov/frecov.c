@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
                             bmph = (void*)bmph + bmpoffset;
 
                             char tmp[4096];
-                            memset(tmp, 0, sizeof(tmp));
+                            memset(tmp, -1, sizeof(tmp));
                             fwrite(tmp, 4096, 1, fp);
 
                             bmph = (void*)bmph + 4096;
