@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
                             memcpy(tmpbuf + BytesPerCluster, ptr2, BytesPerCluster);
                             int i = 0;
                             for (; i + width * 3 < 2 * BytesPerCluster; i++) {
-                                if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 100) tcnt++;
+                                if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 20) tcnt++;
                             }
                             printf("%d %d\n", tcnt, i);
                             // }
