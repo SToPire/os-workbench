@@ -174,10 +174,10 @@ int main(int argc, char* argv[])
                                 memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
                                 int i = 0;
                                 for (; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
-                                    if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 25) rational_cnt++;
+                                    if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 50) rational_cnt++;
                                 }
                                 printf("%d %d\n", rational_cnt, i);
-                                if (1) {
+                                if (3 * rational_cnt >= 2 * i) {
                                     printf("bmpsize:%d\n", bmpsize);
                                     fwrite(ptr2, Min(bmpsize,BytesPerCluster), 1, fp);
                                     bmpsize -= Min(bmpsize, BytesPerCluster);
