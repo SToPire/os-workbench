@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
                             if(NumCluster==99){
                             bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
-
+                            printf("%d %d\n", bmph->height, bmph->width);
                             //char t[32];
                             //sprintf(t, "/tmp/%d.bmp", ++tcnt);
                             //FILE* fp = fopen(t, "w");
