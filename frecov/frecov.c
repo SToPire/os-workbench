@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
                             //while (bmpsize) {
                                 char tmpbuf[2 * BytesPerCluster];
                                 memcpy(ptr1, tmpbuf, BytesPerCluster);
-                                memcpy(ptr2, tmpbuf + BytesPerCluster, BytesPerCluster);
+                                //memcpy(ptr2, tmpbuf + BytesPerCluster, BytesPerCluster);
                                 // for (int i = 0; i + width * 3 < 2 * BytesPerCluster; i++) {
                                 //     printf("%d ", abs(tmpbuf[i] - tmpbuf[i + width * 3]));
                                 // }
