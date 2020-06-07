@@ -155,6 +155,10 @@ int main(int argc, char* argv[])
                             printf("%x%x\n", bmph->type[0], bmph->type[1]);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
                             printf("%u\n", bmph->size);
+
+                            for (int i = 0; i < bmph->size;i++){
+                                putc(*((char*)bmph + i), stdout);
+                            }
                         }
                     }
                 }
