@@ -163,8 +163,8 @@ int main(int argc, char* argv[])
                             char tmp[4096];
                             memset(tmp, -1, sizeof(tmp));
                             tmp[0] = 0x00;
-                            tmp[1] = 0xff;
-                            tmp[2] = 0x00;
+                            tmp[1] = 0x00;
+                            tmp[2] = 0xff;
                             fwrite(tmp, 4096, 1, fp);
 
                             bmph = (void*)bmph + 4096;
