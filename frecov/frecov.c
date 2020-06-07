@@ -167,7 +167,7 @@ int main(int argc, char* argv[])
                                 tcnt = 0;
                                 char tmpbuf[2 * BytesPerCluster];
                                 memcpy(tmpbuf, ptr1, BytesPerCluster);
-                                memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize,BytesPerCluster);
+                                memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize,BytesPerCluster));
                                 int i = 0;
                                 for (; i + width * 3 < BytesPerCluster + Min(bmpsize,BytesPerCluster); i++) {
                                     if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 25) tcnt++;
