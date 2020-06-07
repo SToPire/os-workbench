@@ -103,7 +103,6 @@ int main(int argc, char* argv[])
     void* ImgPtr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     fat_header_t* fhp = (fat_header_t*)ImgPtr;
     void* FirstDataCluster = ImgPtr + fhp->BPB_BytsPerSec * (fhp->BPB_RsvdSecCnt + fhp->BPB_NumFATs * fhp->BPB_FATSz32);
-    if (fs.st_size > 100 * 1024 * 1024) FirstDataCluster += 4096 * 2;
     for (void* clusPtr = FirstDataCluster; clusPtr < ImgPtr + fs.st_size; clusPtr += 4096) {
         if (isDirEntryCluster(clusPtr)) {
             for (sEntry_t* left = clusPtr; (void*)left < clusPtr + 4096;) {
