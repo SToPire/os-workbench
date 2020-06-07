@@ -154,10 +154,12 @@ int main(int argc, char* argv[])
                             //char t[32];
                             //sprintf(t, "/tmp/%d.bmp", ++tcnt);
                             //FILE* fp = fopen(t, "w");
-
+                            int bmpoffset = bmph->offset;
+                            int bmpsize = bmph->size;
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
-                            printf("%d %d\n", bmph->offset, bmph->size);
-                            fwrite((void*)bmph, bmph->size, 1, fp);
+                            fwite((void*)bmph, bmpoffset, 1, fp);
+                            bmph = (void*)bmph + bmpoffset;
+                            fwrite((void*)bmph, bmpsize-bmpoffset, 1, fp);
                             fclose(fp);
 
                             char buf[41];
