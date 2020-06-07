@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
                                 for (; i + width * 3 < BytesPerCluster + Min(bmpsize, BytesPerCluster); i++) {
                                     if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) <= 30) rational_cnt++;
                                 }
-                                if (3 * rational_cnt >= 2 * i) {
+                                if (1) {
                                     fwrite(ptr2, Min(bmpsize, BytesPerCluster), 1, fp);
                                     bmpsize -= Min(bmpsize, BytesPerCluster);
                                     ptr1 = ptr2;
