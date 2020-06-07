@@ -160,18 +160,21 @@ int main(int argc, char* argv[])
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
                             fwrite((void*)bmph, bmpoffset, 1, fp);
                             void* ptr1 = (void*)bmph + bmpoffset;
-                            void* ptr2 = ptr1 +1* BytesPerCluster;
+                            void* ptr2 = ptr1 + 1 * BytesPerCluster;
                             bmpsize -= bmpoffset;
-                            //while (bmpsize) {
-                            char tmpbuf[2 * BytesPerCluster];
-                            memcpy(tmpbuf, ptr1, BytesPerCluster);
-                            memcpy(tmpbuf + BytesPerCluster, ptr2, BytesPerCluster);
-                            int i = 0;
-                            for (; i + width * 3 < 2 * BytesPerCluster; i++) {
-                                if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 25) tcnt++;
+                            while (bmpsize) {
+                                char tmpbuf[2 * BytesPerCluster];
+                                memcpy(tmpbuf, ptr1, BytesPerCluster);
+                                memcpy(tmpbuf + BytesPerCluster, ptr2, BytesPerCluster);
+                                int i = 0;
+                                for (; i + width * 3 < 2 * BytesPerCluster; i++) {
+                                    if (abs(tmpbuf[i] - tmpbuf[i + width * 3]) < 25) tcnt++;
+                                }
+                                printf("%d %d\n", tcnt, i);
+                                bmpsize -= BytesPerCluster;
+                                ptr1++;
+                                ptr2++;
                             }
-                            printf("%d %d\n", tcnt, i);
-                            // }
 
                             fclose(fp);
 
