@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
                     name[nameptr++] = '\0';
 
                     u32 offset = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                    printf("%u\n", offset);
+                    printf("%s %u\n",name, offset);
                 } else {
                     ++left;
                     continue;
