@@ -146,11 +146,11 @@ int main(int argc, char* argv[])
                 if (legalname) {
                     if (right->DIR_Attr == 0x20) {
                         u32 NumCluster = (right->DIR_FstClusHI << 16) | right->DIR_FstClusLO;
-                        if (NumCluster >= 0 && NumCluster <= fs.st_size / BytesPerCluster) {
-                        //    if(NumCluster==99){
+                        //if (NumCluster >= 0 && NumCluster <= fs.st_size / BytesPerCluster) {
+                        if (NumCluster == 99) {
                             bmp_header_t* bmph = (bmp_header_t*)NthClusterAddr(NumCluster);
                             if (bmph->type[0] != 0x42 || bmph->type[1] != 0x4d) continue;
-                            printf("%d %d\n", bmph->height, bmph->width);
+
                             //char t[32];
                             //sprintf(t, "/tmp/%d.bmp", ++tcnt);
                             //FILE* fp = fopen(t, "w");
@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
                             fwrite(tmp, 4096, 1, fp);
 
                             bmph = (void*)bmph + 4096;
-                            fwrite((void*)bmph, bmpsize - bmpoffset-4096, 1, fp);
+                            fwrite((void*)bmph, bmpsize - bmpoffset - 4096, 1, fp);
                             fclose(fp);
 
                             char buf[41];
