@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
                             //FILE* fp = fopen(t, "w");
 
                             FILE* fp = fopen("/tmp/frecov-tmpfile", "w");
-                            printf("%d %d", bmph->offset, bmph->size);
+                            printf("%d %d\n", bmph->offset, bmph->size);
                             fwrite((void*)bmph, bmph->size, 1, fp);
                             fclose(fp);
 
