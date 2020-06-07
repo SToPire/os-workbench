@@ -163,6 +163,7 @@ int main(int argc, char* argv[])
                             void* ptr2 = ptr1 + 1 * BytesPerCluster;
                             bmpsize -= bmpoffset;
                             while (bmpsize) {
+                                tcnt = 0;
                                 char tmpbuf[2 * BytesPerCluster];
                                 memcpy(tmpbuf, ptr1, BytesPerCluster);
                                 memcpy(tmpbuf + BytesPerCluster, ptr2, BytesPerCluster);
