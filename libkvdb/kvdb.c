@@ -14,7 +14,7 @@ typedef struct kvdb kvdb_t;
 struct kvdb* kvdb_open(const char* filename)
 {
     kvdb_t* ptr = malloc(sizeof(kvdb_t));
-    ptr->fd = open(filename, O_CREAT | O_RDWR);
+    ptr->fd = open(filename, O_CREAT | O_RDWR, S_IRWXU);
     return ptr;
 }
 
