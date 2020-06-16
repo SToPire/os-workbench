@@ -120,34 +120,55 @@ char* kvdb_get(struct kvdb* db, const char* key)
 {
     kvdb_lock(db);
 
-    char* ret = NULL;
-    off_t old_off = lseek(db->fd, 0, SEEK_CUR);
-    off_t END = lseek(db->fd, 0, SEEK_END);
-    lseek(db->fd, 0, SEEK_SET);
+    // char* ret = NULL;
+    // off_t old_off = lseek(db->fd, 0, SEEK_CUR);
+    // off_t END = lseek(db->fd, 0, SEEK_END);
+    // lseek(db->fd, 0, SEEK_SET);
 
-    char buf[4096 + 128];
+    // char buf[4096 + 128];
 
-    while (ltell(db->fd) != END) {
-        memset(buf, 0, 4096 + 128);
-        for (int i = 0;; ++i) {
-            read(db->fd, buf + i, 1);
-            if (buf[i] == '\n') break;
+    // while (ltell(db->fd) != END) {
+    //     memset(buf, 0, 4096 + 128);
+    //     for (int i = 0;; ++i) {
+    //         read(db->fd, buf + i, 1);
+    //         if (buf[i] == '\n') break;
+    //     }
+    //     int space = 0, enter = 0;
+    //     while (buf[++space] != ' ')
+    //         ;
+    //     while (buf[++enter] != '\n')
+    //         ;
+
+    //     if (strlen(key) == space && strncmp(buf, key, space) == 0) {
+    //         ret = malloc(enter - space);
+    //         strncpy(ret, buf + space + 1, enter - space - 1);
+    //         ret[enter - space - 1] = '\0';
+    //     }
+    // }
+
+    // lseek(db->fd, old_off, SEEK_SET);
+
+    char* buf = malloc(reserved_sz);
+    char* rkey = malloc(1024);
+    char* rval = malloc(1024);
+    char* ret = calloc(1, 1024);
+
+    kvdb_fsck(db);
+    find_start(db->fd);
+    off_t offset = lseek(db->fd, 0, SEEK_CUR);
+    while (read(db->fd, buf, reserved_sz)) {
+        sscanf(buf, " %s %s", rkey, rval);
+        if (!strcmp(key, rkey)) {
+            strcpy(ret, rval);
         }
-        int space = 0, enter = 0;
-        while (buf[++space] != ' ')
-            ;
-        while (buf[++enter] != '\n')
-            ;
-
-        if (strlen(key) == space && strncmp(buf, key, space) == 0) {
-            ret = malloc(enter - space);
-            strncpy(ret, buf + space + 1, enter - space - 1);
-            ret[enter - space - 1] = '\0';
-        }
+        offset += strlen(rkey) + strlen(rval) + 2;
+        lseek(db->fd, offset, SEEK_SET);
     }
 
-    lseek(db->fd, old_off, SEEK_SET);
-
+    free(buf);
+    free(rkey);
+    free(rval);
+    boom("get-6");
     kvdb_unlock(db);
     return ret;
 }
