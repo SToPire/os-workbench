@@ -153,7 +153,7 @@ char* kvdb_get(struct kvdb* db, const char* key)
     char* rval = malloc(1024);
     char* ret = calloc(1, 1024);
 
-    kvdb_fsck(db);
+    kvdb_journal(db);
     find_start(db->fd);
     off_t offset = lseek(db->fd, 0, SEEK_CUR);
     while (read(db->fd, buf, reserved_sz)) {
