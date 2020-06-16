@@ -35,10 +35,6 @@ void kvdb_unlock(kvdb_t* db)
     pthread_mutex_unlock(db->mutex);
 }
 
-void kvdb_journal(kvdb_t* db){
-
-}
-
 struct kvdb* kvdb_open(const char* filename)
 {
     kvdb_t* db = malloc(sizeof(kvdb_t));
