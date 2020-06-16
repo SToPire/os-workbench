@@ -154,7 +154,7 @@ char* kvdb_get(struct kvdb* db, const char* key)
     char* ret = calloc(1, 1024);
 
     kvdb_journal(db);
-    find_start(db->fd);
+    lseek(db->fd, reserved_sz, SEEK_SET);
     off_t offset = lseek(db->fd, 0, SEEK_CUR);
     while (read(db->fd, buf, reserved_sz)) {
         sscanf(buf, " %s %s", rkey, rval);
