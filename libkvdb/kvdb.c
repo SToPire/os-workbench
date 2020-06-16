@@ -67,7 +67,7 @@ int kvdb_close(struct kvdb* db)
 
 void kvdb_journal(kvdb_t* db){
     lseek(db->fd, 0, SEEK_SET);
-    char* buf = malloc(SZ_RSVD);
+    char* buf = malloc(reserved_sz);
     read(db->fd, buf, 2);
     if (buf[0] == 'Y') {
         read(db->fd, buf, reserved_sz);
