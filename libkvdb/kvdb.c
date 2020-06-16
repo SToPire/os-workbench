@@ -168,7 +168,6 @@ char* kvdb_get(struct kvdb* db, const char* key)
     free(buf);
     free(rkey);
     free(rval);
-    boom("get-6");
     kvdb_unlock(db);
     return ret;
 }
