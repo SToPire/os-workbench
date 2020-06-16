@@ -1,3 +1,4 @@
+#include<pthread.h>
 struct kvdb;
 struct kvdb *kvdb_open(const char *filename);
 int kvdb_close(struct kvdb *db);
