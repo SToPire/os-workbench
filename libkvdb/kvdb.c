@@ -101,7 +101,7 @@ int kvdb_put(struct kvdb* db, const char* key, const char* value)
     // write(db->fd, buf, charCnt);
     // fsync(db->fd);
 
-    kvdb_fsck(db);
+    kvdb_journal(db);
     lseek(db->fd, 2, SEEK_SET);
     write(db->fd, key, strlen(key));
     write(db->fd, " ", 1);
@@ -110,7 +110,7 @@ int kvdb_put(struct kvdb* db, const char* key, const char* value)
     lseek(db->fd, 0, SEEK_SET);
     write(db->fd, "Y\n", 2);
     //sync();
-    kvdb_fsck(db);
+    kvdb_journal(db);
 
     kvdb_unlock(db);
     return 0;
