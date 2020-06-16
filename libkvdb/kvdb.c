@@ -75,13 +75,13 @@ void kvdb_journal(kvdb_t* db){
         char* val = malloc(4096);
         sscanf(buf, " %s %s", key, val);
 
-        lseek(fd, 0, SEEK_END);
-        lseek(fd, -1, SEEK_CUR);
+        lseek(db->fd, 0, SEEK_END);
+        lseek(db->fd, -1, SEEK_CUR);
         char buf;
-        read(fd, &buf, 1);
+        read(db->fd, &buf, 1);
         while (buf != '\n') {
-            lseek(fd, -2, SEEK_CUR);
-            read(fd, &buf, 1);
+            lseek(db->fd, -2, SEEK_CUR);
+            read(db->fd, &buf, 1);
         }
         write(db->fd, key, strlen(key));
         write(db->fd, " ", 1);
