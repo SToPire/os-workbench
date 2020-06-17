@@ -11,21 +11,21 @@ int main()
     __pid_t pid = fork();
     if (pid == 0) {
         struct kvdb* db = kvdb_open("miao.db");
-        for (int i = 1; i <= 2;i++)
-            kvdb_put(db, "aaa", "bbb");
-        for (int i = 1; i <= 2; i++)
-            kvdb_put(db, "aaa", "bcb");
-        free(db);
+        kvdb_put(db, "aaa", "bbb");
         kvdb_close(db);
     } else {
         while (waitpid(pid, NULL, WNOHANG) != pid)
             ;
         struct kvdb* db = kvdb_open("miao.db");
+        kvdb_put(db, "eeee", "ffff");
+        char* s2 = kvdb_get(db, "eeee");
         char* s1 = kvdb_get(db, "aaa");
-        free(db);
+        kvdb_put(db, "gg", "h");
+        // char* s3 = kvdb_get(db, "gg");
         kvdb_close(db);
 
-        printf("%s\n", s1);
+        printf("%s %s\n", s1, s2);
+        //printf("%s %s %s\n", s1, s2,s3);
     }
 
     return 0;

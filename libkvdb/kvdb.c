@@ -10,46 +10,46 @@
 #include <pthread.h>
 #include <errno.h>
 
+#define key_size 128
+#define value_size 16 * 1024 * 1024
+#define entry_size key_size + value_size + 32
+
 struct kvdb {
     int fd;
     pthread_mutex_t* mutex;
 };
 typedef struct kvdb kvdb_t;
 
-#define reserved_sz 1024*1024
-
-off_t ltell(int fd)
+void To_End_of_DB(int fd)
 {
-    return lseek(fd, 0, SEEK_CUR);
-}
-
-void kvdb_lock(kvdb_t* db)
-{
-    pthread_mutex_consistent(db->mutex);
-    flock(db->fd, LOCK_EX);
-}
-
-void kvdb_unlock(kvdb_t* db)
-{
-    flock(db->fd, LOCK_UN);
-    pthread_mutex_unlock(db->mutex);
+    char tmp;
+    lseek(fd, -1, SEEK_END);
+    read(fd, &tmp, 1);
+    while (tmp != '\n') {
+        lseek(fd, -2, SEEK_CUR);
+        read(fd, &tmp, 1);
+    }
 }
 
 struct kvdb* kvdb_open(const char* filename)
 {
+    int exist = 0;
+    if (access(filename, F_OK) == 0) exist = 1;
     kvdb_t* db = malloc(sizeof(kvdb_t));
-    db->fd = open(filename, O_CREAT | O_RDWR, S_IRWXU | S_IRWXG | S_IRWXU);
+    if ((db->fd = open(filename, O_CREAT | O_RDWR, S_IRWXU | S_IRWXG | S_IRWXO)) < 0) assert(0);
     db->mutex = malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(db->mutex, NULL);
 
-    if(lseek(db->fd,0,SEEK_END) < reserved_sz){
-        char* tmp = malloc(reserved_sz);
-        tmp[0] = 'N';
+    if (!exist) {
+        char* tmp = malloc(entry_size);
+        tmp[0] = '1';
         tmp[1] = '\n';
-        tmp[reserved_sz - 1] = '\n';
+        tmp[entry_size - 1] = '\n';
         lseek(db->fd, 0, SEEK_SET);
-        write(db->fd, tmp, reserved_sz);
+        write(db->fd, tmp, entry_size);
+        fsync(db->fd);
         lseek(db->fd, 0, SEEK_SET);
+        free(tmp);
     }
     return db;
 }
@@ -58,116 +58,110 @@ int kvdb_close(struct kvdb* db)
 {
     close(db->fd);
     free(db->mutex);
+    free(db);
     return 0;
 }
-
-void kvdb_journal(kvdb_t* db){
+void CheckAndRepair(kvdb_t* db)
+{
     lseek(db->fd, 0, SEEK_SET);
-    char* buf = malloc(reserved_sz);
-    read(db->fd, buf, 2);
-    if (buf[0] == 'Y') {
-        read(db->fd, buf, reserved_sz);
-        char* key = malloc(1024);
-        char* val = malloc(4096);
-        sscanf(buf, " %s %s", key, val);
+    char* tmp = malloc(entry_size);
+    read(db->fd, tmp, 2);
+    if (tmp[0] == 'M') {
+        char* tmp = malloc(entry_size);
+        char* tmp_key = malloc(key_size);
+        char* tmp_value = malloc(value_size);
+        read(db->fd, tmp, entry_size);
 
-        lseek(db->fd, 0, SEEK_END);
-        lseek(db->fd, -1, SEEK_CUR);
-        char buf;
-        read(db->fd, &buf, 1);
-        while (buf != '\n') {
-            lseek(db->fd, -2, SEEK_CUR);
-            read(db->fd, &buf, 1);
-        }
-        write(db->fd, key, strlen(key));
+        int tmp_ptr = 0, cur = 0;
+        while (tmp[cur] != ' ') tmp_key[tmp_ptr++] = tmp[cur++];
+        tmp_key[tmp_ptr] = 0;
+        tmp_ptr = 0;
+        cur++;
+        while (tmp[cur] != '\n') tmp_value[tmp_ptr++] = tmp[cur++];
+        tmp_value[tmp_ptr] = 0;
+
+        To_End_of_DB(db->fd);
+        write(db->fd, tmp_key, strlen(tmp_key));
         write(db->fd, " ", 1);
-        write(db->fd, val, strlen(val));
+        write(db->fd, tmp_value, strlen(tmp_value));
         write(db->fd, "\n", 1);
-        //sync();
-        free(key);
-        free(val);
+        fsync(db->fd);
         lseek(db->fd, 0, SEEK_SET);
-        write(db->fd, "N\n", 2);
-    }
-    free(buf);
-}
+        write(db->fd, "1\n", 2);
 
+        free(tmp_key);
+        free(tmp_value);
+    }
+    free(tmp);
+}
 int kvdb_put(struct kvdb* db, const char* key, const char* value)
 {
-    kvdb_lock(db);
+    pthread_mutex_lock(db->mutex);
+    flock(db->fd, LOCK_EX);
 
-    // char buf[4096 + 128];
-    // int charCnt = sprintf(buf, "%s %s\n", key, value);
-    // write(db->fd, buf, charCnt);
-    // fsync(db->fd);
+    CheckAndRepair(db);
 
-    kvdb_journal(db);
     lseek(db->fd, 2, SEEK_SET);
     write(db->fd, key, strlen(key));
     write(db->fd, " ", 1);
     write(db->fd, value, strlen(value));
     write(db->fd, "\n", 1);
     lseek(db->fd, 0, SEEK_SET);
-    write(db->fd, "Y\n", 2);
-    //sync();
-    kvdb_journal(db);
+    write(db->fd, "M\n", 2);
+    fsync(db->fd);
 
-    kvdb_unlock(db);
+    CheckAndRepair(db);
+
+    flock(db->fd, LOCK_UN);
+    pthread_mutex_unlock(db->mutex);
     return 0;
 }
 
 char* kvdb_get(struct kvdb* db, const char* key)
 {
-    kvdb_lock(db);
+    pthread_mutex_lock(db->mutex);
+    flock(db->fd, LOCK_EX);
 
-    // char* ret = NULL;
-    // off_t old_off = lseek(db->fd, 0, SEEK_CUR);
-    // off_t END = lseek(db->fd, 0, SEEK_END);
-    // lseek(db->fd, 0, SEEK_SET);
+    CheckAndRepair(db);
 
-    // char buf[4096 + 128];
+    char* buf = malloc(entry_size);
+    char* tmp_key = malloc(key_size);
+    char* tmp_value = malloc(value_size);
+    char* ret = NULL;
 
-    // while (ltell(db->fd) != END) {
-    //     memset(buf, 0, 4096 + 128);
-    //     for (int i = 0;; ++i) {
-    //         read(db->fd, buf + i, 1);
-    //         if (buf[i] == '\n') break;
-    //     }
-    //     int space = 0, enter = 0;
-    //     while (buf[++space] != ' ')
-    //         ;
-    //     while (buf[++enter] != '\n')
-    //         ;
+    off_t offset = lseek(db->fd, entry_size, SEEK_SET);
+    int len = read(db->fd, buf, entry_size), cur = 0;
+    while (len > 0 && buf[len - 1] != '\n') --len;
 
-    //     if (strlen(key) == space && strncmp(buf, key, space) == 0) {
-    //         ret = malloc(enter - space);
-    //         strncpy(ret, buf + space + 1, enter - space - 1);
-    //         ret[enter - space - 1] = '\0';
-    //     }
-    // }
-
-    // lseek(db->fd, old_off, SEEK_SET);
-
-    char* buf = malloc(reserved_sz);
-    char* rkey = malloc(1024);
-    char* rval = malloc(1024);
-    char* ret = calloc(1, 1024);
-
-    kvdb_journal(db);
-    lseek(db->fd, reserved_sz, SEEK_SET);
-    off_t offset = lseek(db->fd, 0, SEEK_CUR);
-    while (read(db->fd, buf, reserved_sz)) {
-        sscanf(buf, " %s %s", rkey, rval);
-        if (!strcmp(key, rkey)) {
-            strcpy(ret, rval);
-        }
-        offset += strlen(rkey) + strlen(rval) + 2;
+    while (1) {
+        int cur = 0;
+        memset(buf, 0, entry_size);
         lseek(db->fd, offset, SEEK_SET);
-    }
+        int len = read(db->fd, buf, entry_size);
+        while (len > 0 && buf[len - 1] != '\n') --len;
 
+        if (len == 0) break;
+
+        while (cur < len) {
+            int tmp_ptr = 0;
+            while (buf[cur] != ' ') tmp_key[tmp_ptr++] = buf[cur++];
+            tmp_key[tmp_ptr] = '\0';
+            cur++, tmp_ptr = 0;
+            while (buf[cur] != '\n') tmp_value[tmp_ptr++] = buf[cur++];
+            tmp_value[tmp_ptr] = '\0';
+            cur++;
+            if (strcmp(tmp_key, key) == 0) {
+                ret = malloc(strlen(tmp_value) + 1);
+                strcpy(ret, tmp_value);
+            }
+        }
+        offset += len;
+    }
     free(buf);
-    free(rkey);
-    free(rval);
-    kvdb_unlock(db);
+    free(tmp_key);
+    free(tmp_value);
+
+    flock(db->fd, LOCK_UN);
+    pthread_mutex_unlock(db->mutex);
     return ret;
 }
