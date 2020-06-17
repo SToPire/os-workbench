@@ -65,7 +65,7 @@ void CheckAndRepair(kvdb_t* db)
 {
     lseek(db->fd, 0, SEEK_SET);
     char* tmp = malloc(entry_size);
-    read(db->fd, tmp, 2);
+    read(db->fd, tmp, 1);
     if (tmp[0] == 'M') {
         char* tmp_key = malloc(key_size);
         char* tmp_value = malloc(value_size);
