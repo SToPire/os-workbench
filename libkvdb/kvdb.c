@@ -67,7 +67,6 @@ void CheckAndRepair(kvdb_t* db)
     char* tmp = malloc(entry_size);
     read(db->fd, tmp, 2);
     if (tmp[0] == 'M') {
-        char* tmp = malloc(entry_size);
         char* tmp_key = malloc(key_size);
         char* tmp_value = malloc(value_size);
         read(db->fd, tmp, entry_size);
@@ -101,13 +100,12 @@ int kvdb_put(struct kvdb* db, const char* key, const char* value)
 
     CheckAndRepair(db);
 
-    lseek(db->fd, 2, SEEK_SET);
+    lseek(db->fd, 0, SEEK_SET);
+    write(db->fd, "M\n", 2);
     write(db->fd, key, strlen(key));
     write(db->fd, " ", 1);
     write(db->fd, value, strlen(value));
     write(db->fd, "\n", 1);
-    lseek(db->fd, 0, SEEK_SET);
-    write(db->fd, "M\n", 2);
     fsync(db->fd);
 
     CheckAndRepair(db);
