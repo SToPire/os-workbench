@@ -42,8 +42,7 @@ struct kvdb* kvdb_open(const char* filename)
 
     if (!exist) {
         char* tmp = malloc(entry_size);
-        tmp[0] = '1';
-        //tmp[1] = '\n';
+        tmp[0] = '!';
         tmp[entry_size - 1] = '\n';
         lseek(db->fd, 0, SEEK_SET);
         write(db->fd, tmp, entry_size);
@@ -64,9 +63,10 @@ int kvdb_close(struct kvdb* db)
 void CheckAndRepair(kvdb_t* db)
 {
     lseek(db->fd, 0, SEEK_SET);
-    char* tmp = malloc(entry_size);
-    read(db->fd, tmp, 1);
-    if (tmp[0] == 'M') {
+    char t;
+    read(db->fd, &t, 1);
+    if (t == 'M') {
+        char* tmp = malloc(entry_size);
         char* tmp_key = malloc(key_size);
         char* tmp_value = malloc(value_size);
         read(db->fd, tmp, entry_size);
@@ -86,13 +86,12 @@ void CheckAndRepair(kvdb_t* db)
         write(db->fd, "\n", 1);
         fsync(db->fd);
         lseek(db->fd, 0, SEEK_SET);
-        write(db->fd, "1", 1);
-        fsync(db->fd);
+        write(db->fd, "!", 1);
 
+        free(tmp);
         free(tmp_key);
         free(tmp_value);
     }
-    free(tmp);
 }
 int kvdb_put(struct kvdb* db, const char* key, const char* value)
 {
@@ -103,11 +102,11 @@ int kvdb_put(struct kvdb* db, const char* key, const char* value)
 
     lseek(db->fd, 0, SEEK_SET);
     write(db->fd, "M", 1);
-    fsync(db->fd);
     write(db->fd, key, strlen(key));
     write(db->fd, " ", 1);
     write(db->fd, value, strlen(value));
     write(db->fd, "\n", 1);
+
     fsync(db->fd);
 
     CheckAndRepair(db);
