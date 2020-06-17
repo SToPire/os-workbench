@@ -187,6 +187,7 @@ int main(int argc, char* argv[])
 
                             while (bmpsize) {
                                 int rational_cnt = 0, all_cnt = 0;
+                                name[1] = 'a';
                                 char tmpbuf[2 * BytesPerCluster];
                                 memcpy(tmpbuf, ptr1, BytesPerCluster);
                                 memcpy(tmpbuf + BytesPerCluster, ptr2, Min(bmpsize, BytesPerCluster));
@@ -234,8 +235,7 @@ int main(int argc, char* argv[])
                             fscanf(fp, "%s", buf2);  // Get it!
                             pclose(fp);
 
-                            name[2] = 'j';
-                            printf("%s %s\n", buf2, name);
+                            if(++ccnt<=15)printf("%s %s\n", buf2,name);
                         } else {
                             ++left;
                             continue;
