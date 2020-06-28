@@ -68,7 +68,7 @@ static void os_init()
     kmt->spin_init(&trapLock, "trapLock");
 
     dev->init();
-
+    printf("ss:%d\n", TASKS_CNT);
     task_t* t1 = pmm->alloc(sizeof(task_t));
     task_t* t2 = pmm->alloc(sizeof(task_t));
     kmt->create(t1, "tty_reader", tty_reader, "tty1");
