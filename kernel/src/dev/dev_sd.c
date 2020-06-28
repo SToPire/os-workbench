@@ -45,7 +45,6 @@ static ssize_t sd_read(device_t *dev, off_t offset, void *buf, size_t count) {
 }
 
 static ssize_t sd_write(device_t *dev, off_t offset, const void *buf, size_t count) {
-    printf("ss");
     sd_t* sd = dev->ptr;
     panic_on(!sd, "no disk");
     uint32_t pos = 0;
