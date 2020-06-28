@@ -276,7 +276,6 @@ void dev_tty_task(void *arg) {
 
   while (1) {
       struct input_event ev;
-      printf("dddddd\n");
       int nread = in->ops->read(in, 0, &ev, sizeof(ev));
       panic_on(nread == 0, "unknown error");
 
