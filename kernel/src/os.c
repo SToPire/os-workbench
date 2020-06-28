@@ -1,4 +1,5 @@
-#include <common.h>
+//#include <common.h>
+#include<devices.h>
 // sem_t empty, fill;
 // #define P kmt->sem_wait
 // #define V kmt->sem_signal
@@ -44,6 +45,21 @@ void th4(void* s){
             ;
     }
 }
+
+static void tty_reader(void* arg)
+{
+    device_t* tty = dev->lookup(arg);
+    char cmd[128], resp[128], ps[16];
+    snprintf(ps, 16, "(%s) $ ", arg);
+    while (1) {
+        tty->ops->write(tty, 0, ps, strlen(ps));
+        int nread = tty->ops->read(tty, 0, cmd, sizeof(cmd) - 1);
+        cmd[nread] = '\0';
+        sprintf(resp, "tty reader task: got %d character(s).\n", strlen(cmd));
+        tty->ops->write(tty, 0, resp, strlen(resp));
+    }
+}
+
 static void os_init()
 {
     pmm->init();
@@ -52,16 +68,22 @@ static void os_init()
     kmt->spin_init(&trapLock, "trapLock");
 
     dev->init();
-    spin_init(&lk, NULL);
 
     task_t* t1 = pmm->alloc(sizeof(task_t));
     task_t* t2 = pmm->alloc(sizeof(task_t));
-    task_t* t3 = pmm->alloc(sizeof(task_t));
+    kmt->create(t1, "tty_reader", tty_reader, "tty1");
+    kmt->create(t1, "tty_reader", tty_reader, "tty2");
 
-    kmt->create(t1, "th1", th, "th1");
-    kmt->create(t2, "th2", th, "th2");
-    kmt->create(t3, "th3", th, "th3");
-    kmt->create(pmm->alloc(sizeof(task_t)), "th4", th4, "th4");
+    // spin_init(&lk, NULL);
+
+    // task_t* t1 = pmm->alloc(sizeof(task_t));
+    // task_t* t2 = pmm->alloc(sizeof(task_t));
+    // task_t* t3 = pmm->alloc(sizeof(task_t));
+
+    // kmt->create(t1, "th1", th, "th1");
+    // kmt->create(t2, "th2", th, "th2");
+    // kmt->create(t3, "th3", th, "th3");
+    // kmt->create(pmm->alloc(sizeof(task_t)), "th4", th4, "th4");
 
     // kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
     // kmt->sem_init(&fill, "fill", 0);
