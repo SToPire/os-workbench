@@ -224,7 +224,7 @@ static int tty_init(device_t *ttydev) {
 
 static ssize_t tty_read(device_t *dev, off_t offset, void *buf, size_t count) {
   tty_t *tty = dev->ptr;
-  printf("v:%s\n", tty->cooked.name);
+  printf("v:%d\n", tty->cooked.value);
   kmt->sem_wait(&tty->cooked);
   kmt->sem_wait(&tty->lock);
   size_t nread = 0;
