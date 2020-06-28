@@ -71,8 +71,8 @@ static void os_init()
 
     task_t* t1 = pmm->alloc(sizeof(task_t));
     task_t* t2 = pmm->alloc(sizeof(task_t));
-    kmt->create(t1, "tty_reader", tty_reader, "tty11");
-    kmt->create(t2, "tty_reader", tty_reader, "tty22");
+    kmt->create(t1, "tty_reader", tty_reader, "tty1");
+    kmt->create(t2, "tty_reader", tty_reader, "tty2");
 
     // spin_init(&lk, NULL);
 
