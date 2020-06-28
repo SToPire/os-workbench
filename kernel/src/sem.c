@@ -49,6 +49,8 @@ void sem_signal(sem_t* sem)
     sem->value++;
     if (sem->front != sem->end) {
         TASKS[sem->queue[sem->end]]->status = READY;
+        printf("Process %d is ready now\n", TASKS[sem->queue[sem->end]]->num);
+
         sem->end = (sem->end + 1) % QSIZE;
         //printf("%d %d\n", sem->front, sem->end);
     }
