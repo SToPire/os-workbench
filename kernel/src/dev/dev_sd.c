@@ -30,16 +30,17 @@ static void blk_write(void *buf, int blkno, int blkcnt) {
 }
 
 static ssize_t sd_read(device_t *dev, off_t offset, void *buf, size_t count) {
-  sd_t *sd = dev->ptr;
-  panic_on(!sd, "no disk");
-  uint32_t pos = 0;
-  for (uint32_t st = ROUNDDOWN(offset, sd->blksz); pos < count; st = offset) {
-    uint32_t n = sd->blksz - (offset - st);
-    if (n > count - pos) n = count - pos;
-    blk_read(sd->buf, st / sd->blksz, 1);
-    memcpy((char *)buf + pos, sd->buf + offset - st, n);
-    pos   += n;
-    offset = st + sd->blksz;
+    putstr("SSSS");
+    sd_t* sd = dev->ptr;
+    panic_on(!sd, "no disk");
+    uint32_t pos = 0;
+    for (uint32_t st = ROUNDDOWN(offset, sd->blksz); pos < count; st = offset) {
+        uint32_t n = sd->blksz - (offset - st);
+        if (n > count - pos) n = count - pos;
+        blk_read(sd->buf, st / sd->blksz, 1);
+        memcpy((char*)buf + pos, sd->buf + offset - st, n);
+        pos += n;
+        offset = st + sd->blksz;
   }
   return pos;
 }
