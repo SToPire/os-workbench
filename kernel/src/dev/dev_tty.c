@@ -275,28 +275,29 @@ void dev_tty_task(void *arg) {
   uint32_t known_time = uptime();
 
   while (1) {
-    struct input_event ev;
-    int nread = in->ops->read(in, 0, &ev, sizeof(ev));
-    panic_on(nread == 0, "unknown error");
+      printf("dddddd\n");
+      struct input_event ev;
+      int nread = in->ops->read(in, 0, &ev, sizeof(ev));
+      panic_on(nread == 0, "unknown error");
 
-    tty_t *tty = ttydev->ptr;
+      tty_t* tty = ttydev->ptr;
 
-    if (ev.alt) {
-      device_t *next = ttydev;
-      if (ev.data == '1') next = dev->lookup("tty1");
-      if (ev.data == '2') next = dev->lookup("tty2");
-      if (next != ttydev) {
-        printf("(tty) Switch to %s.\n", next->name);
-        ttydev = next;
-        tty = ttydev->ptr;
+      if (ev.alt) {
+          device_t* next = ttydev;
+          if (ev.data == '1') next = dev->lookup("tty1");
+          if (ev.data == '2') next = dev->lookup("tty2");
+          if (next != ttydev) {
+              printf("(tty) Switch to %s.\n", next->name);
+              ttydev = next;
+              tty = ttydev->ptr;
 
-        struct display_info info = {
-          .current = tty->display,
-        };
-        tty_mark_all(tty);
-        fb->ops->write(fb, 0, &info, sizeof(struct display_info));
-        ttydev->ops->write(ttydev, 0, "", 0);
-      }
+              struct display_info info = {
+                  .current = tty->display,
+              };
+              tty_mark_all(tty);
+              fb->ops->write(fb, 0, &info, sizeof(struct display_info));
+              ttydev->ops->write(ttydev, 0, "", 0);
+          }
     }
     if (ev.ctrl) {
       if (ev.data == 'c') printf("(tty) Ctrl-c pressed.\n");
