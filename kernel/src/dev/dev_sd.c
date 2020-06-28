@@ -30,7 +30,7 @@ static void blk_write(void *buf, int blkno, int blkcnt) {
 }
 
 static ssize_t sd_read(device_t *dev, off_t offset, void *buf, size_t count) {
-    putstr("SSSS");
+    assert(0);
     sd_t* sd = dev->ptr;
     panic_on(!sd, "no disk");
     uint32_t pos = 0;
