@@ -51,7 +51,7 @@ static void os_init()
 
     kmt->spin_init(&trapLock, "trapLock");
 
-    //dev->init();
+    dev->init();
     // spin_init(&lk, NULL);
 
     // task_t* t1 = pmm->alloc(sizeof(task_t));
