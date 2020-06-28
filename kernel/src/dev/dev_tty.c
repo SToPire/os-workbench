@@ -275,9 +275,9 @@ void dev_tty_task(void *arg) {
   uint32_t known_time = uptime();
 
   while (1) {
-      printf("dddddd\n");
       struct input_event ev;
       int nread = in->ops->read(in, 0, &ev, sizeof(ev));
+      printf("dddddd\n");
       panic_on(nread == 0, "unknown error");
 
       tty_t* tty = ttydev->ptr;
