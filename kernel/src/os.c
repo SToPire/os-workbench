@@ -1,5 +1,5 @@
 //#include <common.h>
-#include<devices.h>
+#include <devices.h>
 // sem_t empty, fill;
 // #define P kmt->sem_wait
 // #define V kmt->sem_signal
@@ -32,7 +32,8 @@ void th(void* s)
             ;
     }
 }
-void th4(void* s){
+void th4(void* s)
+{
     kmt->create(pmm->alloc(sizeof(task_t)), "th5", th, "th5");
     kmt->create(pmm->alloc(sizeof(task_t)), "th6", th, "th6");
     kmt->create(pmm->alloc(sizeof(task_t)), "th7", th, "th7");
@@ -73,13 +74,13 @@ static void os_init()
     // kmt->create(t1, "tty_reader", tty_reader, "tty1");
     // kmt->create(t2, "tty_reader", tty_reader, "tty2");
 
-    // spin_init(&lk, NULL);
+    spin_init(&lk, NULL);
 
-    // task_t* t1 = pmm->alloc(sizeof(task_t));
+    task_t* t1 = pmm->alloc(sizeof(task_t));
     // task_t* t2 = pmm->alloc(sizeof(task_t));
     // task_t* t3 = pmm->alloc(sizeof(task_t));
 
-    // kmt->create(t1, "th1", th, "th1");
+    kmt->create(t1, "th1", th, "th1");
     // kmt->create(t2, "th2", th, "th2");
     // kmt->create(t3, "th3", th, "th3");
     // kmt->create(pmm->alloc(sizeof(task_t)), "th4", th4, "th4");
@@ -103,7 +104,7 @@ _Context* os_trap(_Event ev, _Context* context)
 {
     //kmt->spin_lock(&trapLock);
     _Context* next = NULL;
-    for (int i = 0; i <= MAX_INTR;i++) {
+    for (int i = 0; i <= MAX_INTR; i++) {
         if (INTR[i].valid == 1 && (INTR[i].event == _EVENT_NULL || INTR[i].event == ev.event)) {
             _Context* r = INTR[i].handler(ev, context);
             panic_on(r && next, "returning multiple contexts");
