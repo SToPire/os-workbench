@@ -68,23 +68,21 @@ static void os_init()
     kmt->spin_init(&trapLock, "trapLock");
 
     dev->init();
-    printf("ss:%d\n", TASKS_CNT);
-    task_t* t1 = pmm->alloc(sizeof(task_t));
-    task_t* t2 = pmm->alloc(sizeof(task_t));
-    kmt->create(t1, "tty_reader", tty_reader, "tty1");
-    kmt->create(t2, "tty_reader", tty_reader, "tty2");
-    printf("ss:%d\n", TASKS_CNT);
-
-    // spin_init(&lk, NULL);
-
     // task_t* t1 = pmm->alloc(sizeof(task_t));
     // task_t* t2 = pmm->alloc(sizeof(task_t));
-    // task_t* t3 = pmm->alloc(sizeof(task_t));
+    // kmt->create(t1, "tty_reader", tty_reader, "tty1");
+    // kmt->create(t2, "tty_reader", tty_reader, "tty2");
 
-    // kmt->create(t1, "th1", th, "th1");
-    // kmt->create(t2, "th2", th, "th2");
-    // kmt->create(t3, "th3", th, "th3");
-    // kmt->create(pmm->alloc(sizeof(task_t)), "th4", th4, "th4");
+    spin_init(&lk, NULL);
+
+    task_t* t1 = pmm->alloc(sizeof(task_t));
+    task_t* t2 = pmm->alloc(sizeof(task_t));
+    task_t* t3 = pmm->alloc(sizeof(task_t));
+
+    kmt->create(t1, "th1", th, "th1");
+    kmt->create(t2, "th2", th, "th2");
+    kmt->create(t3, "th3", th, "th3");
+    kmt->create(pmm->alloc(sizeof(task_t)), "th4", th4, "th4");
 
     // kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
     // kmt->sem_init(&fill, "fill", 0);
