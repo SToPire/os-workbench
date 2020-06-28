@@ -30,7 +30,6 @@ static void blk_write(void *buf, int blkno, int blkcnt) {
 }
 
 static ssize_t sd_read(device_t *dev, off_t offset, void *buf, size_t count) {
-    assert(0);
     sd_t* sd = dev->ptr;
     panic_on(!sd, "no disk");
     uint32_t pos = 0;
@@ -46,19 +45,20 @@ static ssize_t sd_read(device_t *dev, off_t offset, void *buf, size_t count) {
 }
 
 static ssize_t sd_write(device_t *dev, off_t offset, const void *buf, size_t count) {
-  sd_t *sd = dev->ptr;
-  panic_on(!sd, "no disk");
-  uint32_t pos = 0;
-  for (uint32_t st = ROUNDDOWN(offset, sd->blksz); pos < count; st = offset) {
-    uint32_t n = sd->blksz - (offset - st);
-    if (n > count - pos) n = count - pos;
-    if (n < sd->blksz) {
-      blk_read(sd->buf, st / sd->blksz, 1);
-    }
-    memcpy(sd->buf + offset - st, (char *)buf + pos, n);
-    blk_write(sd->buf, st / sd->blksz, 1);
-    pos   += n;
-    offset = st + sd->blksz;
+    printf("ss");
+    sd_t* sd = dev->ptr;
+    panic_on(!sd, "no disk");
+    uint32_t pos = 0;
+    for (uint32_t st = ROUNDDOWN(offset, sd->blksz); pos < count; st = offset) {
+        uint32_t n = sd->blksz - (offset - st);
+        if (n > count - pos) n = count - pos;
+        if (n < sd->blksz) {
+            blk_read(sd->buf, st / sd->blksz, 1);
+        }
+        memcpy(sd->buf + offset - st, (char*)buf + pos, n);
+        blk_write(sd->buf, st / sd->blksz, 1);
+        pos += n;
+        offset = st + sd->blksz;
   }
   return pos;
 }
