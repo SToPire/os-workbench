@@ -22,7 +22,6 @@ void sem_wait(sem_t* sem)
     bool flag = true;
     sem->value--;
     if (sem->value < 0) {
-        printf("Process %d is sleeping now\n", current->num);
         current->status = SLEEPING;
         sem->queue[sem->front] = current->num;
         sem->front = (sem->front + 1) % QSIZE;
@@ -49,7 +48,6 @@ void sem_signal(sem_t* sem)
     sem->value++;
     if (sem->front != sem->end) {
         TASKS[sem->queue[sem->end]]->status = READY;
-        printf("Process %d is ready now, waken by %d\n", TASKS[sem->queue[sem->end]]->num,current->num);
 
         sem->end = (sem->end + 1) % QSIZE;
         //printf("%d %d\n", sem->front, sem->end);
