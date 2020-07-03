@@ -1,3 +1,6 @@
+#ifndef __KERNEL_H__
+#define __KERNEL_H__
+
 #include <am.h>
 
 #define MODULE(mod) \
@@ -59,3 +62,5 @@ MODULE(vfs) {
   int (*chdir)(const char *path);
   int (*dup)(int fd);
 };
+
+#endif
