@@ -1,3 +1,6 @@
+#ifndef __KMT_H__
+#define __KMT_H__
+
 #include <am.h>
 typedef struct task task_t;
 
@@ -45,3 +48,5 @@ struct cpu_local {
     task_t* current;
     //task_t* sticky;
 } cpu_local[8];
+
+#endif
