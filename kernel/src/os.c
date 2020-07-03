@@ -1,4 +1,4 @@
-//#include <common.h>
+#include <common.h>
 #include <devices.h>
 // sem_t empty, fill;
 // #define P kmt->sem_wait
