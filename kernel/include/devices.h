@@ -1,3 +1,6 @@
+#ifndef __DEVICES_H__
+#define __DEVICES_H__
+
 #include <common.h>
 #include<unistd.h>
 #include<amdev.h>
@@ -103,3 +106,5 @@ typedef struct {
   uint32_t blkcnt, blksz;
   uint8_t *buf;
 } sd_t;
+
+#endif
