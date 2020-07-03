@@ -91,6 +91,8 @@ static void os_init()
     //     kmt->create(pmm->alloc(sizeof(task_t)), "producer", producer, NULL);
     // for (int i = 0; i <2; i++)  // 5 个消费者
     //     kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
+
+    device_t* d = dev->lookup("sda");
 }
 
 static void os_run()
