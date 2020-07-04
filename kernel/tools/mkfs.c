@@ -7,6 +7,8 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include "../include/devices.h"
+
 #define FS_OFFSET 1 * 1024 * 1024
 
 int main(int argc, char* argv[])
