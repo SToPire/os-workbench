@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
   uint8_t *disk;
 
   // TODO: argument parsing
-  int IMG_SIZE = atoi(argv[1]);
+  int IMG_SIZE = atoi(argv[1]) * 1024 * 1024;
 
   char* cwd = getcwd(NULL, 0);
   char* newwd = malloc(strlen(cwd) - strlen("/tools") + 1);
