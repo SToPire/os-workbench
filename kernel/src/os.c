@@ -92,9 +92,7 @@ static void os_init()
     // for (int i = 0; i <2; i++)  // 5 个消费者
     //     kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
 
-    device_t* sd = dev->lookup("sda");
-    char buf[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    sd->ops->write(sd, 0, (void*)buf, sizeof(buf));
+    vfs_init();
 }
 
 static void os_run()
