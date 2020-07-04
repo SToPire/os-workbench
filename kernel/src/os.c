@@ -92,7 +92,7 @@ static void os_init()
     // for (int i = 0; i <2; i++)  // 5 个消费者
     //     kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
 
-    vfs_init();
+    vfs->init();
 }
 
 static void os_run()
