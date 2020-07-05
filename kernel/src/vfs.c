@@ -5,11 +5,11 @@
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
-        if(strncmp(path,ptr->path,strlen(ptr->path) == 0)){
+        if (strncmp(path, ptr->path, strlen(ptr->path) == 0)) {
             if (strlen(path) == strlen(ptr->path))
                 return ptr;
             else
-                return inodeSearch(ptr, path);  
+                return inodeSearch(ptr, path);
         }
     }
     return cur;
@@ -21,7 +21,7 @@ void inodeInsert(inode_t* parent, inode_t* cur)
         parent->firstChild = cur;
     else {
         inode_t* i;
-        for (; i->nxtBrother; i = i->nxtBrother)
+        for (i = parent->firstChild; i->nxtBrother; i = i->nxtBrother)
             ;
         i->nxtBrother = cur;
     }
@@ -33,7 +33,7 @@ void inodeDelete(inode_t* parent, inode_t* child)
         parent->firstChild = child->nxtBrother;
     else {
         inode_t* i;
-        for (; i && i->nxtBrother != child; i = i->nxtBrother)
+        for (i = parent->firstChild; i && i->nxtBrother != child; i = i->nxtBrother)
             ;
         if (i)
             i->nxtBrother = child->nxtBrother;
@@ -43,9 +43,7 @@ superblock_t sb;
 device_t* sda;
 void addFAT(uint32_t from, uint32_t to)
 {
-    
 }
-
 
 #define FS_OFFSET 1 * 1024 * 1024
 inode_t* root;
