@@ -1,11 +1,12 @@
 #include <common.h>
-#include<devices.h>
+#include <devices.h>
+#include <vfs.h>
+
+#define FS_OFFSET 1 * 1024 * 1024
 
 void vfs_init()
 {
-    device_t* sd = dev->lookup("sda");
-    char buf[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    sd->ops->write(sd, 0, (void*)buf, sizeof(buf));
+    superblock_t sb;
 }
 
 MODULE_DEF(vfs) = {
