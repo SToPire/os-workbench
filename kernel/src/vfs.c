@@ -8,7 +8,7 @@ void vfs_init()
 {
     superblock_t sb;
     device_t* sda = dev->lookup("sda");
-    sda->ops->write(sda, 0, &sb, sizeof(sb));
+    sda->ops->read(sda, FS_OFFSET, &sb, sizeof(sb));
 
     printf("%u %u %u %u\n", sb.blk_size, sb.data_head, sb.fat_head, sb.fst_free_data_blk);
 }
