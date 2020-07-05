@@ -7,6 +7,7 @@
 void vfs_init()
 {
     superblock_t sb;
+    device_t* sda = dev->lookup("sda");
 }
 
 MODULE_DEF(vfs) = {
