@@ -72,7 +72,9 @@ void vfs_init()
     root->type = T_DIR;
 
     addFAT(0, 1);
+    addFAT(1, 2);
     printf("ll::%u\n", getNextFAT(0));
+    printf("ll::%u\n", getNextFAT(1));
 }
 
 MODULE_DEF(vfs) = {
