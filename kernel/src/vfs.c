@@ -72,8 +72,8 @@ void vfs_init()
     root->firstBlock = sb.fst_free_data_blk;
 
     entry_t e;
-    e.Bytes[0] = 0xff;
     memset(&e, 0, sizeof(e));
+    e.Bytes[0] = 0xff;
     sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
     printf("\n%x", FS_OFFSET + sb.data_head);
 }
