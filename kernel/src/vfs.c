@@ -39,13 +39,21 @@ void inodeDelete(inode_t* parent, inode_t* child)
             i->nxtBrother = child->nxtBrother;
     }
 }
-superblock_t sb;
-device_t* sda;
-void addFAT(uint32_t from, uint32_t to)
-{
-}
 
 #define FS_OFFSET 1 * 1024 * 1024
+superblock_t sb;
+device_t* sda;
+
+void addFAT(uint32_t from, uint32_t to)
+{
+    sda->ops->write(sda, FS_OFFSET + sb.fat_head + sizeof(int32_t) * from, (void*)(&to), sizeof(uint32_t));
+}
+uint32_t getNextFAT(uint32_t curBlk)
+{
+    uint32_t ret = 0;
+    off_t offset = 0;
+}
+
 inode_t* root;
 
 void vfs_init()

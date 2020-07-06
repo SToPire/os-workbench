@@ -8,6 +8,14 @@ typedef struct _superblock {
     uint32_t fst_free_data_blk;
 } superblock_t;
 
+typedef union _entry{
+    uint8_t Bytes[32]; // T_FILE
+    struct {    //T_DIR
+        uint32_t begin_blk;
+        uint32_t type;
+    } dir_entry[4];
+} entry_t;
+
 enum INODE_TYPE {
     T_INVALID,
     T_DIR,
@@ -16,7 +24,7 @@ enum INODE_TYPE {
 
 typedef struct _inode inode_t;
 struct _inode {
-    int type;
+    uint32_t type;
     char path[128];
 
     inode_t* parent;
