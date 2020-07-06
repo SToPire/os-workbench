@@ -51,8 +51,12 @@ void addFAT(uint32_t from, uint32_t to)
 uint32_t getNextFAT(uint32_t curBlk)
 {
     uint32_t ret = 0;
-    off_t offset = 0;
+    off_t offset = sb.fat_head + curBlk * sizeof(uint32_t);
+    sda->ops->read(sda, FS_OFFSET + offset, (void*)(&ret), sizeof(uint32_t));
+    return ret;
 }
+
+
 
 inode_t* root;
 
@@ -66,6 +70,9 @@ void vfs_init()
     root->parent = root;
     sprintf(root->path, "/");
     root->type = T_DIR;
+
+    addFAT(0, 1);
+    printf("ll::%u\n", getNextFAT(0));
 }
 
 MODULE_DEF(vfs) = {
