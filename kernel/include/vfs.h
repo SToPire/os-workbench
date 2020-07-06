@@ -13,7 +13,8 @@ typedef union _entry{
     struct {    //T_DIR
         uint32_t begin_blk;
         uint32_t type;
-    } dir_entry[4];
+        uint8_t padding[24];
+    } dir_entry;
 } entry_t;
 
 enum INODE_TYPE {
@@ -26,6 +27,7 @@ typedef struct _inode inode_t;
 struct _inode {
     uint32_t type;
     char path[128];
+    uint32_t firstBlock;
 
     inode_t* parent;
     inode_t* firstChild;
