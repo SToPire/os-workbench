@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
     sb.blk_size = 32;
     sb.fat_head = 16;
     sb.data_head = 1024;
-    sb.fst_free_data_blk = 1;
+    sb.fst_free_data_blk = 0;
 
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
     munmap(disk, IMG_SIZE);
