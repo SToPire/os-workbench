@@ -1,6 +1,8 @@
 #include <common.h>
 #include <devices.h>
 #include <vfs.h>
+#include <user.h>
+
 
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
@@ -56,7 +58,6 @@ uint32_t getNextFAT(uint32_t curBlk)
     return ret;
 }
 
-
 inode_t* root;
 
 void vfs_init()
@@ -71,11 +72,39 @@ void vfs_init()
     root->type = T_DIR;
     root->firstBlock = sb.fst_free_data_blk;
 
-    entry_t e;
-    memset(&e, 0, sizeof(e));
-    e.Bytes[0] = 0xff;
-    sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
-    printf("\n%x", FS_OFFSET + sb.data_head);
+    // entry_t e;
+    // memset(&e, 0, sizeof(e));
+    // e.Bytes[0] = 0xff;
+    // sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
+    // printf("\n%x", FS_OFFSET + sb.data_head);
+
+    vfs_open("/abc", O_CREAT);
+}
+
+int vfs_write(int fd, void* buf, int count)
+{
+}
+
+int vfs_read(int fd, void* buf, int count)
+{
+}
+
+int vfs_close(int fd)
+{
+
+}
+
+int vfs_open(const char *pathname, int flags)
+{
+    if(flags & O_CREAT){
+        if(pathname[0] == '/'){
+            int i = strlen(pathname);
+            while (pathname[i] != '/') --i;
+            char* filename = malloc(strlen(pathname));
+            strcpy(filename, pathname + i);
+            printf("%s\n", filename);
+        }
+    }
 }
 
 MODULE_DEF(vfs) = {
