@@ -120,8 +120,19 @@ int vfs_open(const char* pathname, int flags)
             if (strcmp(ip->path,dirname) != 0) return -1;
             printf("%s\n", ip->path);
 
-            uint32_t entryBlk = getLastEntryBlk(ip->firstBlock);
-            printf("entryBlk:%u\n", entryBlk);
+            uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
+            printf("entryBlk:%u\n", entryBlkNO);
+            addFAT(entryBlkNO, sb.fst_free_data_blk);
+            ++sb.fst_free_data_blk;
+            sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+
+            entry_t newEntry;
+            newEntry.dir_entry.type = T_FILE;
+            newEntry.dir_entry.begin_blk = sb.fst_free_data_blk;
+            ++sb.fst_free_data_blk;
+            sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+
+            sda->ops->write(sda, FS_OFFSET + sb.data_head + entryBlkNO * sb.blk_size, (void*)(&newEntry), sizeof(newEntry));
         }
     }
     return 0;
