@@ -129,7 +129,7 @@ int vfs_open(const char* pathname, int flags)
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
             entry_t newEntry;
-            newEntry.dir_entry.type = T_FILE;
+            newEntry.dir_entry.type = T_DIR;
             newEntry.dir_entry.begin_blk = sb.fst_free_data_blk;
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
