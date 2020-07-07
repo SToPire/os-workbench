@@ -99,9 +99,10 @@ int vfs_open(const char *pathname, int flags)
         if(pathname[0] == '/'){
             int i = strlen(pathname);
             while (pathname[i] != '/') --i;
-            char filename[128];
+            char filename[128], dirname[128];
             strcpy(filename, pathname + i + 1);
-            printf("%s\n", filename);
+            strncpy(dirname, pathname, i + 1);
+            printf("%s %s\n", dirname, filename);
         }
     }
     return 0;
