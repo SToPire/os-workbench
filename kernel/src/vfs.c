@@ -81,6 +81,8 @@ void vfs_init()
     sprintf(root->path, "/");
     root->type = T_DIR;
     root->firstBlock = sb.fst_free_data_blk;
+    ++sb.fst_free_data_blk;
+    sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
     // entry_t e;
     // memset(&e, 0, sizeof(e));
