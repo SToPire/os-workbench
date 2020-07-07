@@ -2,7 +2,7 @@
 #include <devices.h>
 #include <vfs.h>
 #include <user.h>
-
+#include <klib.h>
 
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {

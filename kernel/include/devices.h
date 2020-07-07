@@ -2,10 +2,9 @@
 #define __DEVICES_H__
 
 #include <common.h>
-//#include<unistd.h>
+#include <amdev.h>
 typedef long ssize_t;
 typedef long off_t;
-#include <amdev.h>
 typedef struct devops {
     int (*init)(device_t* dev);
     ssize_t (*read)(device_t* dev, off_t offset, void* buf, size_t count);
