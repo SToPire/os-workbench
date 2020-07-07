@@ -1,3 +1,6 @@
+#ifndef __USER_H__
+#define _USER_H__
+
 #include <stdint.h>
 
 #define T_DIR     1
@@ -20,3 +23,5 @@ struct ufs_dirent {
   uint32_t inode;
   char name[28];
 } __attribute__((packed));
+
+#endif
