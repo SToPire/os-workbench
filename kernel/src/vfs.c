@@ -106,6 +106,7 @@ int vfs_open(const char *pathname, int flags)
             printf("%s %s\n", dirname, filename);
 
             inode_t* ip = inodeSearch(root, dirname);
+            if (ip->path != dirname) return -1;
             printf("%s\n", ip->path);
         }
     }
