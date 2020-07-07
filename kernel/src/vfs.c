@@ -2,7 +2,7 @@
 #include <devices.h>
 #include <vfs.h>
 #include <user.h>
-#include <klib.h>
+#include<string.h>
 
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
@@ -81,18 +81,18 @@ void vfs_init()
     vfs_open("/abc", O_CREAT);
 }
 
-int vfs_write(int fd, void* buf, int count)
-{
-}
+// int vfs_write(int fd, void* buf, int count)
+// {
+// }
 
-int vfs_read(int fd, void* buf, int count)
-{
-}
+// int vfs_read(int fd, void* buf, int count)
+// {
+// }
 
-int vfs_close(int fd)
-{
+// int vfs_close(int fd)
+// {
 
-}
+// }
 
 int vfs_open(const char *pathname, int flags)
 {
