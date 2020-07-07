@@ -56,6 +56,17 @@ uint32_t getNextFAT(uint32_t curBlk)
     sda->ops->read(sda, FS_OFFSET + offset, (void*)(&ret), sizeof(uint32_t));
     return ret;
 }
+uint32_t getLastEntryBlk(uint32_t headBlk)
+{
+    uint32_t curBlk = headBlk;
+    while (1) {
+        uint32_t nxt = getNextFAT(curBlk);
+        if (nxt == 0)
+            return curBlk;
+        else
+            curBlk = nxt;
+    }
+}
 
 inode_t* root;
 
@@ -77,7 +88,7 @@ void vfs_init()
     // sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
     // printf("\n%x", FS_OFFSET + sb.data_head);
 
-    vfs_open("/a/b/c", O_CREAT);
+    vfs_open("/ac", O_CREAT);
 }
 
 // int vfs_write(int fd, void* buf, int count)
@@ -93,10 +104,10 @@ void vfs_init()
 
 // }
 
-int vfs_open(const char *pathname, int flags)
+int vfs_open(const char* pathname, int flags)
 {
-    if(flags & O_CREAT){
-        if(pathname[0] == '/'){
+    if (flags & O_CREAT) {
+        if (pathname[0] == '/') {
             int i = strlen(pathname);
             while (pathname[i] != '/') --i;
             char filename[128], dirname[128];
@@ -108,6 +119,9 @@ int vfs_open(const char *pathname, int flags)
             inode_t* ip = inodeSearch(root, dirname);
             if (ip->path != dirname) return -1;
             printf("%s\n", ip->path);
+
+            uint32_t entryBlk = getLastEntryBlk(ip->firstBlock);
+            printf("entryBlk:%u\n", entryBlk);
         }
     }
     return 0;
