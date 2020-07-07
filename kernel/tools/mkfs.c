@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     superblock_t sb;
     sb.blk_size = 32;
     sb.fat_head = 16;
-    sb.data_head = 1024;
+    sb.data_head = 10242;
     sb.fst_free_data_blk = 0;
 
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
