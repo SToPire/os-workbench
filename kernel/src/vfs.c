@@ -77,7 +77,7 @@ void vfs_init()
     // sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
     // printf("\n%x", FS_OFFSET + sb.data_head);
 
-    vfs_open("/abc", O_CREAT);
+    vfs_open("/a/b/c", O_CREAT);
 }
 
 // int vfs_write(int fd, void* buf, int count)
