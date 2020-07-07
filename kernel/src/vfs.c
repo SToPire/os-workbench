@@ -104,6 +104,7 @@ int vfs_open(const char *pathname, int flags)
             printf("%s\n", filename);
         }
     }
+    return 0;
 }
 
 MODULE_DEF(vfs) = {
