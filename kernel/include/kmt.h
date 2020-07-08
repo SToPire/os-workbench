@@ -2,6 +2,7 @@
 #define __KMT_H__
 
 #include <am.h>
+#include<vfs.h>
 typedef struct task task_t;
 
 enum {
@@ -20,9 +21,9 @@ struct task {
     _Context* context;
     _Area stack;
 
-    //int sticky; 
+    file_t* fds[128];
+    //int sticky;
 };
-
 #define MAX_TASKS 32
 task_t* TASKS[MAX_TASKS];
 int TASKS_FREE;
