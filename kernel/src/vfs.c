@@ -128,8 +128,8 @@ int vfs_open(const char* pathname, int flags)
             printf("dirname:%s filename:%s\n", dirname, filename);
 
             inode_t* ip = inodeSearch(root, dirname);
-            if (strcmp(ip->path, dirname) != 0) return -1;
             printf("ip->path:%s\n", ip->path);
+            if (strcmp(ip->path, dirname) != 0) return -1;
 
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
             printf("entryBlk:%u\n", entryBlkNO);
