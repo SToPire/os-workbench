@@ -155,9 +155,9 @@ int vfs_open(const char* pathname, int flags)
             memset(&newInode, 0, sizeof(newInode));
             newInode->firstBlock = newEntry.dir_entry.firstBlock;
             newInode->type = T_FILE;
-            printf("root->path:%s\n", root->path);
             strcpy(newInode->path, pathname);
             inodeInsert(ip, newInode);
+            printf("root->path:%s\n", root->path);
         }
     }
     return 0;
