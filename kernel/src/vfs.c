@@ -95,6 +95,7 @@ void vfs_init()
     // sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
     // printf("\n%x", FS_OFFSET + sb.data_head);
 
+    printf("root->path:%s\n", root->path);
     vfs_open("/a", O_CREAT);
     printf("root->path:%s\n", root->path);
     vfs_open("/bc", O_CREAT);
