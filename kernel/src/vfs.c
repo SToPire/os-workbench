@@ -97,12 +97,12 @@ void vfs_init()
     // printf("\n%x", FS_OFFSET + sb.data_head);
 
     vfs_open("/a", O_CREAT);
+    printf("1:%s\n", root->firstChild->path);
     vfs_open("/bc", O_CREAT);
 
     // inode_t* pp = inodeSearch(root, "/a");
     // printf("%p", pp);
-    printf("1:%s\n", root->firstChild->path);
-    printf("2:%s\n", root->firstChild->nxtBrother->path);
+    printf("2:%s\n", root->firstChild->path);
     printf("3:%u\n", sb.fst_free_data_blk);
 }
 
