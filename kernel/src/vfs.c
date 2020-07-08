@@ -5,7 +5,6 @@
 
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
-    printf("%s %s\n", path, cur->path);
     if (strcmp(cur->path, path) == 0) return cur;
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
         if (strncmp(path, ptr->path, strlen(ptr->path)) == 0) {
@@ -25,7 +24,6 @@ void inodeInsert(inode_t* parent, inode_t* cur)
         parent->firstChild = cur;
     else {
         inode_t* i;
-        printf("insert:%p %p\n", parent, cur);
         for (i = parent->firstChild; i->nxtBrother; i = i->nxtBrother)
             ;
         i->nxtBrother = cur;
