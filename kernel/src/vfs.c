@@ -3,6 +3,7 @@
 #include <vfs.h>
 #include <user.h>
 
+
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
@@ -145,7 +146,7 @@ int vfs_open(const char* pathname, int flags)
 
             sda->ops->write(sda, FS_OFFSET + sb.data_head + entryBlkNO * sb.blk_size, (void*)(&newEntry), sizeof(newEntry));
 
-            inode_t* newInode = malloc(sizeof(inode_t));
+            inode_t* newInode = pmm->alloc(sizeof(inode_t));
             memset(&newInode, 0, sizeof(newInode));
             newInode->firstBlock = newEntry.dir_entry.firstBlock;
             newInode->type = T_FILE;
