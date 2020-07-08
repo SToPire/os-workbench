@@ -38,6 +38,7 @@ typedef struct _file{
     int fd;
     //char path[128];
     inode_t* inode;
+    int valid;
 } file_t;
 
 int vfs_write(int fd, void* buf, int count);

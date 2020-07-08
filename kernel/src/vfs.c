@@ -3,6 +3,8 @@
 #include <vfs.h>
 #include <user.h>
 
+#define current cpu_local[_cpu()].current
+
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
     if (strcmp(cur->path, path) == 0) return cur;
@@ -93,8 +95,9 @@ void vfs_init()
     // sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
     // printf("\n%x", FS_OFFSET + sb.data_head);
 
-    vfs_open("/a", O_CREAT);
-    vfs_open("/bc", O_CREAT);
+    int a = vfs_open("/a", O_CREAT);
+    int b = vfs_open("/bc", O_CREAT);
+    printf("%d %d\n", a, b);
 }
 
 // int vfs_write(int fd, void* buf, int count)
@@ -125,7 +128,7 @@ int vfs_open(const char* pathname, int flags)
             //printf("dirname:%s filename:%s\n", dirname, filename);
 
             inode_t* ip = inodeSearch(root, dirname);
-           // printf("ip->path:%s\n", ip->path);
+            // printf("ip->path:%s\n", ip->path);
             if (strcmp(ip->path, dirname) != 0) return -1;
 
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
@@ -149,9 +152,20 @@ int vfs_open(const char* pathname, int flags)
             newInode->type = T_FILE;
             strcpy(newInode->path, pathname);
             inodeInsert(ip, newInode);
+
+            int free_fd = 0;
+            for (; free_fd < 128; i++) {
+                if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
+            }
+            file_t* newFile = pmm->alloc(sizeof(file_t));
+            newFile->fd = free_fd;
+            newFile->inode = newInode;
+            newFile->valid = 1;
+            current->fds[newFile->fd] = newFile;
+            return newFile->fd;
         }
     }
-    return 0;
+    return -1;
 }
 
 MODULE_DEF(vfs) = {
