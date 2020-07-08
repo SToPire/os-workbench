@@ -99,10 +99,8 @@ void vfs_init()
     printf("1:%s\n", root->firstChild->path);
     vfs_open("/bc", O_CREAT);
 
-    // inode_t* pp = inodeSearch(root, "/a");
-    // printf("%p", pp);
-    printf("2:%s\n", root->firstChild->nxtBrother->path);
-    printf("3:%u\n", sb.fst_free_data_blk);
+    inode_t* pp = inodeSearch(root, "/a");
+    printf("%s %s %s\n", pp->path,pp->parent->path,pp->nxtBrother->path);
 }
 
 // int vfs_write(int fd, void* buf, int count)
