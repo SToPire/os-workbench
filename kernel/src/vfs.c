@@ -122,14 +122,14 @@ int vfs_open(const char* pathname, int flags)
             strcpy(filename, pathname + i + 1);
             strncpy(dirname, pathname, i + 1);
             dirname[i + 1] = '\0';
-            printf("dirname:%s filename:%s\n", dirname, filename);
+            //printf("dirname:%s filename:%s\n", dirname, filename);
 
             inode_t* ip = inodeSearch(root, dirname);
-            printf("ip->path:%s\n", ip->path);
+           // printf("ip->path:%s\n", ip->path);
             if (strcmp(ip->path, dirname) != 0) return -1;
 
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
-            printf("entryBlk:%u\n", entryBlkNO);
+            //printf("entryBlk:%u\n", entryBlkNO);
             addFAT(entryBlkNO, sb.fst_free_data_blk);
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
