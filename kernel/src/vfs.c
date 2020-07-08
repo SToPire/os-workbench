@@ -151,9 +151,9 @@ int vfs_open(const char* pathname, int flags)
 
             sda->ops->write(sda, FS_OFFSET + sb.data_head + entryBlkNO * sb.blk_size, (void*)(&newEntry), sizeof(newEntry));
 
-            printf("root->path:%s\n", root->path);
             inode_t* newInode = pmm->alloc(sizeof(inode_t));
             memset(&newInode, 0, sizeof(newInode));
+            printf("root->path:%s\n", root->path);
             newInode->firstBlock = newEntry.dir_entry.firstBlock;
             newInode->type = T_FILE;
             strcpy(newInode->path, pathname);
