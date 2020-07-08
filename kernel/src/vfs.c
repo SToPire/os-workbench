@@ -158,6 +158,7 @@ int vfs_open(const char* pathname, int flags)
                 printf("%d ", free_fd);
                 if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
             }
+            printf("here\n");
             file_t* newFile = pmm->alloc(sizeof(file_t));
             newFile->fd = free_fd;
             newFile->inode = newInode;
