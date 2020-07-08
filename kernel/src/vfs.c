@@ -93,7 +93,7 @@ void vfs_init()
 
     vfs_open("/a", O_CREAT);
     vfs_open("/bc", O_CREAT);
-    inode_t* pp = inodeSearch(root, "/a");
+    //inode_t* pp = inodeSearch(root, "/a");
     printf("%u\n", sb.fst_free_data_blk);
 }
 
