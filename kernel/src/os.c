@@ -1,5 +1,6 @@
 #include <common.h>
 #include <devices.h>
+#include <user.h>
 // sem_t empty, fill;
 // #define P kmt->sem_wait
 // #define V kmt->sem_signal
@@ -20,18 +21,18 @@
 //     }
 // }
 
-spinlock_t lk;
-void th(void* s)
-{
-    while (1) {
-        spin_lock(&lk);
-        assert(_intr_read() == 0);
-        //printf("This is %s running in CPU %d!\n",(const char*)s,_cpu());
-        spin_unlock(&lk);
-        for (volatile int i = 1; i < 100000; i++)
-            ;
-    }
-}
+// spinlock_t lk;
+// void th(void* s)
+// {
+//     while (1) {
+//         spin_lock(&lk);
+//         assert(_intr_read() == 0);
+//         //printf("This is %s running in CPU %d!\n",(const char*)s,_cpu());
+//         spin_unlock(&lk);
+//         for (volatile int i = 1; i < 100000; i++)
+//             ;
+//     }
+// }
 // void th4(void* s)
 // {
 //     kmt->create(pmm->alloc(sizeof(task_t)), "th5", th, "th5");
@@ -47,18 +48,27 @@ void th(void* s)
 //     }
 // }
 
-static void tty_reader(void* arg)
-{
-    device_t* tty = dev->lookup(arg);
-    char cmd[128], resp[128], ps[16];
-    snprintf(ps, 16, "(%s) $ ", arg);
-    while (1) {
-        tty->ops->write(tty, 0, ps, strlen(ps));
-        int nread = tty->ops->read(tty, 0, cmd, sizeof(cmd) - 1);
-        cmd[nread] = '\0';
-        sprintf(resp, "tty reader task: got %d character(s).\n", strlen(cmd));
-        tty->ops->write(tty, 0, resp, strlen(resp));
-    }
+// static void tty_reader(void* arg)
+// {
+//     device_t* tty = dev->lookup(arg);
+//     char cmd[128], resp[128], ps[16];
+//     snprintf(ps, 16, "(%s) $ ", arg);
+//     while (1) {
+//         tty->ops->write(tty, 0, ps, strlen(ps));
+//         int nread = tty->ops->read(tty, 0, cmd, sizeof(cmd) - 1);
+//         cmd[nread] = '\0';
+//         sprintf(resp, "tty reader task: got %d character(s).\n", strlen(cmd));
+//         tty->ops->write(tty, 0, resp, strlen(resp));
+//     }
+// }
+
+void vfs_test(){
+    int a = vfs->open("/a", O_CREAT);
+    int b = vfs->open("/bcd", O_CREAT);
+
+    printf("%d %d\n", a, b);
+    while (1)
+        ;
 }
 
 static void os_init()
@@ -78,11 +88,11 @@ static void os_init()
 
     //task_t* t1 = pmm->alloc(sizeof(task_t));
     // task_t* t2 = pmm->alloc(sizeof(task_t));
-    task_t* t3 = pmm->alloc(sizeof(task_t));
+    //task_t* t3 = pmm->alloc(sizeof(task_t));
 
     //kmt->create(t1, "th1", th, "th1");
     // kmt->create(t2, "th2", th, "th2");
-    kmt->create(t3, "th3", th,NULL);
+    //kmt->create(t3, "th3", th,NULL);
     // kmt->create(pmm->alloc(sizeof(task_t)), "th4", th4, "th4");
 
     // kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
@@ -93,6 +103,8 @@ static void os_init()
     //     kmt->create(pmm->alloc(sizeof(task_t)), "consumer", consumer, NULL);
 
     vfs->init();
+
+    kmt->create(pmm->alloc(sizeof(task_t)), "t1",vfs_test , NULL);
 }
 
 static void os_run()
