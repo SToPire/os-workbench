@@ -141,7 +141,6 @@ int vfs_open(const char* pathname, int flags)
             addFAT(entryBlkNO, sb.fst_free_data_blk);
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
-            printf("root->path:%s\n", root->path);
 
             entry_t newEntry;
             memset(&newEntry, 0, sizeof(newEntry));
@@ -151,6 +150,7 @@ int vfs_open(const char* pathname, int flags)
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
             sda->ops->write(sda, FS_OFFSET + sb.data_head + entryBlkNO * sb.blk_size, (void*)(&newEntry), sizeof(newEntry));
+            printf("root->path:%s\n", root->path);
 
             inode_t* newInode = pmm->alloc(sizeof(inode_t));
             memset(&newInode, 0, sizeof(newInode));
