@@ -6,7 +6,6 @@
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
-        printf("ss");
         if (strncmp(path, ptr->path, strlen(ptr->path)) == 0) {
             if (strlen(path) == strlen(ptr->path))
                 return ptr;
@@ -96,9 +95,9 @@ void vfs_init()
     vfs_open("/bc", O_CREAT);
     // inode_t* pp = inodeSearch(root, "/a");
     // printf("%p", pp);
-    printf("%s\n", root->firstChild->path);
-    printf("%s\n", root->firstChild->nxtBrother->path);
-    printf("%u\n", sb.fst_free_data_blk);
+    printf("1:%s\n", root->firstChild->path);
+    printf("2:%s\n", root->firstChild->nxtBrother->path);
+    printf("3:%u\n", sb.fst_free_data_blk);
 }
 
 // int vfs_write(int fd, void* buf, int count)
