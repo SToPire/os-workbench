@@ -7,6 +7,7 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
 {
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
         if (strncmp(path, ptr->path, strlen(ptr->path) == 0)) {
+            printf("here: %s %s\n", path, ptr->path);
             if (strlen(path) == strlen(ptr->path))
                 return ptr;
             else
