@@ -119,11 +119,11 @@ int vfs_open(const char* pathname, int flags)
             strcpy(filename, pathname + i + 1);
             strncpy(dirname, pathname, i + 1);
             dirname[i + 1] = '\0';
-            printf("%s %s\n", dirname, filename);
+            printf("dirname:%s filename:%s\n", dirname, filename);
 
             inode_t* ip = inodeSearch(root, dirname);
             if (strcmp(ip->path,dirname) != 0) return -1;
-            printf("%s\n", ip->path);
+            printf("ip->path:%s\n", ip->path);
 
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
             printf("entryBlk:%u\n", entryBlkNO);
