@@ -5,8 +5,8 @@
 
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
+    printf("%p\n", cur->firstChild);
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
-            printf("here: %s %s\n", path, ptr->path);
         if (strncmp(path, ptr->path, strlen(ptr->path) == 0)) {
             if (strlen(path) == strlen(ptr->path))
                 return ptr;
@@ -123,7 +123,7 @@ int vfs_open(const char* pathname, int flags)
             printf("dirname:%s filename:%s\n", dirname, filename);
 
             inode_t* ip = inodeSearch(root, dirname);
-            if (strcmp(ip->path,dirname) != 0) return -1;
+            if (strcmp(ip->path, dirname) != 0) return -1;
             printf("ip->path:%s\n", ip->path);
 
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
