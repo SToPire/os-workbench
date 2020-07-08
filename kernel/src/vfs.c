@@ -124,6 +124,8 @@ int vfs_open(const char* pathname, int flags)
             int i = strlen(pathname);
             while (pathname[i] != '/') --i;
             char filename[128], dirname[128];
+            memset(filename, 0, 128);
+            memset(dirname, 0, 128);
             strcpy(filename, pathname + i + 1);
             strncpy(dirname, pathname, i + 1);
             dirname[i + 1] = '\0';
