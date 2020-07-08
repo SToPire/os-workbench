@@ -3,7 +3,6 @@
 #include <vfs.h>
 #include <user.h>
 
-
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
     printf("%s %s\n", path, cur->path);
@@ -21,12 +20,12 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
 
 void inodeInsert(inode_t* parent, inode_t* cur)
 {
-    printf("insert:%p %p\n", parent, cur);
     cur->parent = parent;
     if (parent->firstChild == NULL)
         parent->firstChild = cur;
     else {
         inode_t* i;
+        printf("insert:%p %p\n", parent, cur);
         for (i = parent->firstChild; i->nxtBrother; i = i->nxtBrother)
             ;
         i->nxtBrother = cur;
