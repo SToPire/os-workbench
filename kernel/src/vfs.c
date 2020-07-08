@@ -93,7 +93,7 @@ void vfs_init()
 
     vfs_open("/a", O_CREAT);
     inode_t* pp = inodeSearch(root, "/a");
-    printf("%s\n", pp->path);
+    printf("%u\n", pp->firstBlock);
 }
 
 // int vfs_write(int fd, void* buf, int count)
