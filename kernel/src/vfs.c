@@ -95,11 +95,8 @@ void vfs_init()
     // sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
     // printf("\n%x", FS_OFFSET + sb.data_head);
 
-    printf("root->path:%s\n", root->path);
     vfs_open("/a", O_CREAT);
-    printf("root->path:%s\n", root->path);
     vfs_open("/bc", O_CREAT);
-    printf("root->path:%s\n", root->path);
 
     // inode_t* pp = inodeSearch(root, "/a");
     // printf("%p", pp);
@@ -134,6 +131,8 @@ int vfs_open(const char* pathname, int flags)
             strncpy(dirname, pathname, i + 1);
             dirname[i + 1] = '\0';
             printf("dirname:%s filename:%s\n", dirname, filename);
+
+            printf("root->path:%s\n", root->path);
 
             inode_t* ip = inodeSearch(root, dirname);
             printf("ip->path:%s\n", ip->path);
