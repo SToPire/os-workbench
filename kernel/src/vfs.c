@@ -95,8 +95,6 @@ void vfs_init()
 
     vfs_open("/a", O_CREAT);
     vfs_open("/bc", O_CREAT);
-
-    inode_t* pp = inodeSearch(root, "/a");
 }
 
 // int vfs_write(int fd, void* buf, int count)
