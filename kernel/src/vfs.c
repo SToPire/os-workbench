@@ -96,8 +96,8 @@ void vfs_init()
     // printf("\n%x", FS_OFFSET + sb.data_head);
 
     int a = vfs_open("/a", O_CREAT);
-    //int b = vfs_open("/bc", O_CREAT);
-    printf("%d \n", a);
+    int b = vfs_open("/bc", O_CREAT);
+    printf("%d %d\n", a, b);
 }
 
 // int vfs_write(int fd, void* buf, int count)
