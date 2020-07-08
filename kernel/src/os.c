@@ -32,20 +32,20 @@ void th(void* s)
             ;
     }
 }
-void th4(void* s)
-{
-    kmt->create(pmm->alloc(sizeof(task_t)), "th5", th, "th5");
-    kmt->create(pmm->alloc(sizeof(task_t)), "th6", th, "th6");
-    kmt->create(pmm->alloc(sizeof(task_t)), "th7", th, "th7");
-    while (1) {
-        spin_lock(&lk);
-        assert(_intr_read() == 0);
-        //printf("This is %s running in CPU %d!\n", (const char*)s, _cpu());
-        spin_unlock(&lk);
-        for (volatile int i = 1; i < 100000; i++)
-            ;
-    }
-}
+// void th4(void* s)
+// {
+//     kmt->create(pmm->alloc(sizeof(task_t)), "th5", th, "th5");
+//     kmt->create(pmm->alloc(sizeof(task_t)), "th6", th, "th6");
+//     kmt->create(pmm->alloc(sizeof(task_t)), "th7", th, "th7");
+//     while (1) {
+//         spin_lock(&lk);
+//         assert(_intr_read() == 0);
+//         //printf("This is %s running in CPU %d!\n", (const char*)s, _cpu());
+//         spin_unlock(&lk);
+//         for (volatile int i = 1; i < 100000; i++)
+//             ;
+//     }
+// }
 
 static void tty_reader(void* arg)
 {
@@ -69,12 +69,12 @@ static void os_init()
     kmt->spin_init(&trapLock, "trapLock");
 
     dev->init();
-    task_t* t1 = pmm->alloc(sizeof(task_t));
-    task_t* t2 = pmm->alloc(sizeof(task_t));
-    kmt->create(t1, "tty_reader", tty_reader, "tty1");
-    kmt->create(t2, "tty_reader", tty_reader, "tty2");
+    // task_t* t1 = pmm->alloc(sizeof(task_t));
+    // task_t* t2 = pmm->alloc(sizeof(task_t));
+    // kmt->create(t1, "tty_reader", tty_reader, "tty1");
+    // kmt->create(t2, "tty_reader", tty_reader, "tty2");
 
-    spin_init(&lk, NULL);
+    // spin_init(&lk, NULL);
 
     //task_t* t1 = pmm->alloc(sizeof(task_t));
     // task_t* t2 = pmm->alloc(sizeof(task_t));
@@ -82,7 +82,7 @@ static void os_init()
 
     //kmt->create(t1, "th1", th, "th1");
     // kmt->create(t2, "th2", th, "th2");
-    kmt->create(t3, "th3", th, "th3");
+    kmt->create(t3, "th3", th,NULL);
     // kmt->create(pmm->alloc(sizeof(task_t)), "th4", th4, "th4");
 
     // kmt->sem_init(&empty, "empty", 5);  // 缓冲区大小为 5
