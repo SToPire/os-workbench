@@ -132,8 +132,6 @@ int vfs_open(const char* pathname, int flags)
             dirname[i + 1] = '\0';
             printf("dirname:%s filename:%s\n", dirname, filename);
 
-            printf("root->path:%s\n", root->path);
-
             inode_t* ip = inodeSearch(root, dirname);
             printf("ip->path:%s\n", ip->path);
             if (strcmp(ip->path, dirname) != 0) return -1;
@@ -143,6 +141,7 @@ int vfs_open(const char* pathname, int flags)
             addFAT(entryBlkNO, sb.fst_free_data_blk);
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+            printf("root->path:%s\n", root->path);
 
             entry_t newEntry;
             memset(&newEntry, 0, sizeof(newEntry));
