@@ -94,8 +94,9 @@ void vfs_init()
 
     vfs_open("/a", O_CREAT);
     vfs_open("/bc", O_CREAT);
-    inode_t* pp = inodeSearch(root, "/a");
-    printf("%p", pp);
+    // inode_t* pp = inodeSearch(root, "/a");
+    // printf("%p", pp);
+    printf("%s", root->firstChild->nxtBrother->path);
     printf("%u\n", sb.fst_free_data_blk);
 }
 
