@@ -21,7 +21,7 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
 
 void inodeInsert(inode_t* parent, inode_t* cur)
 {
-    printf("insert:%s %s\n", parent->path, cur->path);
+    printf("insert:%p %p\n", parent, cur);
     cur->parent = parent;
     if (parent->firstChild == NULL)
         parent->firstChild = cur;
