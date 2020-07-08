@@ -11,7 +11,7 @@ typedef struct _superblock {
 typedef union _entry{
     uint8_t Bytes[32]; // T_FILE
     struct {    //T_DIR
-        uint32_t begin_blk;
+        uint32_t firstBlock;
         uint32_t type;
         uint8_t padding[24];
     } dir_entry;

@@ -18,6 +18,7 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
 
 void inodeInsert(inode_t* parent, inode_t* cur)
 {
+    cur->parent = parent;
     if (parent->firstChild == NULL)
         parent->firstChild = cur;
     else {
@@ -131,11 +132,18 @@ int vfs_open(const char* pathname, int flags)
             entry_t newEntry;
             memset(&newEntry, 0, sizeof(newEntry));
             newEntry.dir_entry.type = T_DIR;
-            newEntry.dir_entry.begin_blk = sb.fst_free_data_blk;
+            newEntry.dir_entry.firstBlock = sb.fst_free_data_blk;
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
             sda->ops->write(sda, FS_OFFSET + sb.data_head + entryBlkNO * sb.blk_size, (void*)(&newEntry), sizeof(newEntry));
+
+            inode_t newInode;
+            memset(&newInode, 0, sizeof(newInode));
+            newInode.firstBlock = newEntry.dir_entry.firstBlock;
+            newInode.type = T_FILE;
+            strcpy(newInode.path, pathname);
+            inodeInsert(ip, &newInode);
         }
     }
     return 0;
