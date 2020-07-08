@@ -93,7 +93,7 @@ void vfs_init()
     // printf("\n%x", FS_OFFSET + sb.data_head);
 
     vfs_open("/a", O_CREAT);
-    //inode_t* pp = inodeSearch(root, "/a");
+    inode_t* pp = inodeSearch(root, "/a");
     printf("%s\n", root->firstChild->path);
 }
 
