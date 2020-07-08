@@ -157,6 +157,7 @@ int vfs_open(const char* pathname, int flags)
             newInode->type = T_FILE;
             strcpy(newInode->path, pathname);
             inodeInsert(ip, newInode);
+            printf("%p %p", ip, root);
             printf("root->path:%s\n", root->path);
         }
     }
