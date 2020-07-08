@@ -155,6 +155,7 @@ int vfs_open(const char* pathname, int flags)
 
             int free_fd = 0;
             for (; free_fd < 128; free_fd++) {
+                printf("%d ", free_fd);
                 if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
             }
             file_t* newFile = pmm->alloc(sizeof(file_t));
