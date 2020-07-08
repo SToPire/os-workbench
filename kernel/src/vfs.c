@@ -153,16 +153,16 @@ int vfs_open(const char* pathname, int flags)
             strcpy(newInode->path, pathname);
             inodeInsert(ip, newInode);
 
-            int free_fd = 0;
-            for (; free_fd < 128; i++) {
-                if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
-            }
-            file_t* newFile = pmm->alloc(sizeof(file_t));
-            newFile->fd = free_fd;
-            newFile->inode = newInode;
-            newFile->valid = 1;
-            current->fds[newFile->fd] = newFile;
-            return newFile->fd;
+            // int free_fd = 0;
+            // for (; free_fd < 128; i++) {
+            //     if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
+            // }
+            // file_t* newFile = pmm->alloc(sizeof(file_t));
+            // newFile->fd = free_fd;
+            // newFile->inode = newInode;
+            // newFile->valid = 1;
+            // current->fds[newFile->fd] = newFile;
+            // return newFile->fd;
         }
     }
     return -1;
