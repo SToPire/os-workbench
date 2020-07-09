@@ -121,7 +121,10 @@ int vfs_write(int fd, void* buf, int count)
     //while (count > 0 && curBlk != 0) {
         entry_t entry;
         readEntry(curBlk, &entry);
-        printf("\n%x", entry.Bytes[0]);
+        memcpy(entry.Bytes + offset, buf, count);
+        writeEntry(curBlk, &entry);
+
+        
         //}
 
         return 0;
