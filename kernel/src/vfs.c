@@ -101,7 +101,14 @@ void vfs_init()
 int vfs_write(int fd, void* buf, int count)
 {
     file_t* file = getFileFromFD(fd);
-    printf("%d\n", file->offset);
+    off_t offset = file->offset;
+    uint32_t curBlk = file->inode->firstBlock;
+    while (file->offset >= sb.blk_size) {
+        curBlk = getNextFAT(curBlk);
+        offset -= sb.blk_size;
+        if (curBlk == 0) return 0;
+    }
+    printf("%d %d", offset, curBlk);
     return 0;
 }
 
