@@ -101,7 +101,6 @@ void vfs_init()
 int vfs_write(int fd, void* buf, int count)
 {
     file_t* file = getFileFromFD(fd);
-    printf("here");
     printf("%s\n", file->inode->path);
     return 0;
 }
