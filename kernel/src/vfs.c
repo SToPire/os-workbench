@@ -120,6 +120,7 @@ int vfs_write(int fd, void* buf, int count)
 
     int writeCnt = 0;
     while (count > 0) {
+        printf("cnt=%d\n", count);
         entry_t entry;
         readEntry(curBlk, &entry);
         if (offset + count <= sb.blk_size) {
