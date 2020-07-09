@@ -73,6 +73,15 @@ uint32_t getLastEntryBlk(uint32_t headBlk)
     }
 }
 
+void writeEntry(uint32_t NO, entry_t* e)
+{
+    sda->ops->write(sda, FS_OFFSET + sb.data_head + NO * sb.blk_size, (void*)(e), sizeof(entry_t));
+}
+void readEntry(uint32_t NO, entry_t* e)
+{
+    sda->ops->read(sda, FS_OFFSET + sb.data_head + NO * sb.blk_size, (void*)(e), sizeof(entry_t));
+}
+
 inode_t* root;
 
 void vfs_init()
@@ -95,7 +104,6 @@ void vfs_init()
     // e.Bytes[0] = 0xff;
     // sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
     // printf("\n%x", FS_OFFSET + sb.data_head);
-
 }
 
 int vfs_write(int fd, void* buf, int count)
@@ -109,7 +117,14 @@ int vfs_write(int fd, void* buf, int count)
         if (curBlk == 0) return 0;
     }
     printf("%d %d", offset, curBlk);
-    return 0;
+
+    //while (count > 0 && curBlk != 0) {
+        entry_t entry;
+        readEntry(curBlk, &entry);
+        printf("\n%x", entry.Bytes[0]);
+        //}
+
+        return 0;
 }
 
 // int vfs_read(int fd, void* buf, int count)
@@ -153,7 +168,7 @@ int vfs_open(const char* pathname, int flags)
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
-            sda->ops->write(sda, FS_OFFSET + sb.data_head + entryBlkNO * sb.blk_size, (void*)(&newEntry), sizeof(newEntry));
+            writeEntry(entryBlkNO, &newEntry);
 
             inode_t* newInode = pmm->alloc(sizeof(inode_t));
             memset(newInode, 0, sizeof(inode_t));
