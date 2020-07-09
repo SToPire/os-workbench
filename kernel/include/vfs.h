@@ -1,6 +1,8 @@
 #ifndef __VFS_H__
 #define __VFS_H__
 
+typedef long off_t;
+
 typedef struct _superblock {
     uint32_t blk_size;
     uint32_t fat_head;
@@ -38,6 +40,7 @@ typedef struct _file{
     int fd;
     //char path[128];
     inode_t* inode;
+    off_t offset;
     int valid;
 } file_t;
 

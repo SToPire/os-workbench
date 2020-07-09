@@ -4,6 +4,7 @@
 #include <user.h>
 
 #define current cpu_local[_cpu()].current
+#define getFileFromFD(fd) current->fds[fd];
 
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
@@ -97,12 +98,15 @@ void vfs_init()
 
 }
 
-// int vfs_write(int fd, void* buf, int count)
-// {
-// }
+int vfs_write(int fd, void* buf, int count)
+{
+    file_t* file = getFileFromFD(fd);
+    printf("%s\n", file->inode->path);
+}
 
 // int vfs_read(int fd, void* buf, int count)
 // {
+
 // }
 
 // int vfs_close(int fd)
