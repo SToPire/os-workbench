@@ -112,7 +112,7 @@ int vfs_write(int fd, void* buf, int count)
     off_t offset = file->offset;
     printf("off:%d\n", offset);
     uint32_t curBlk = file->inode->firstBlock;
-    while (file->offset >= sb.blk_size) {
+    while (offset >= sb.blk_size) {
         curBlk = getNextFAT(curBlk);
         offset -= sb.blk_size;
         if (curBlk == 0) return 0;
