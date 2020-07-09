@@ -174,4 +174,5 @@ int vfs_open(const char* pathname, int flags)
 MODULE_DEF(vfs) = {
     .init = vfs_init,
     .open = vfs_open,
+    .write = vfs_write,
 };
