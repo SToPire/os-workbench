@@ -146,9 +146,8 @@ int vfs_write(int fd, void* buf, int count)
                 curBlk = nxtBlk;
             }
         }
-
-        file->offset += writeCnt;
     }
+    file->offset += writeCnt;
 
     return writeCnt;
 }
