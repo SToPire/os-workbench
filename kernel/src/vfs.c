@@ -138,6 +138,7 @@ int vfs_write(int fd, void* buf, int count)
                 addFAT(curBlk, sb.fst_free_data_blk);
                 ++sb.fst_free_data_blk;
                 sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+                curBlk = getNextFAT(curBlk);
             } else {
                 curBlk = nxtBlk;
             }
