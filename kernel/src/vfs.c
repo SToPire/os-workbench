@@ -110,18 +110,16 @@ int vfs_write(int fd, void* buf, int count)
 {
     file_t* file = getFileFromFD(fd);
     off_t offset = file->offset;
-    printf("off:%d\n", offset);
     uint32_t curBlk = file->inode->firstBlock;
     while (offset >= sb.blk_size) {
         curBlk = getNextFAT(curBlk);
         offset -= sb.blk_size;
         if (curBlk == 0) return 0;
     }
-    printf("%d %d", offset, curBlk);
 
     int writeCnt = 0;
     while (count > 0) {
-        printf("curBlk=%u\n", curBlk);
+        printf("wc:%d, offset:%d\n", writeCnt, offset);
         entry_t entry;
         readEntry(curBlk, &entry);
         if (offset + count <= sb.blk_size) {
