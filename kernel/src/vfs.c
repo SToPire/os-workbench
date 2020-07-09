@@ -118,17 +118,33 @@ int vfs_write(int fd, void* buf, int count)
     }
     printf("%d %d", offset, curBlk);
 
-    //while (count > 0 && curBlk != 0) {
-        entry_t entry;
-        readEntry(curBlk, &entry);
-        memcpy(entry.Bytes + offset, buf, count);
-        writeEntry(curBlk, &entry);
+    int writeCnt = 0;
+    //while (count > 0) {
+    entry_t entry;
+    readEntry(curBlk, &entry);
+    if (offset + count <= sb.blk_size) {
+        memcpy(entry.Bytes + offset, buf + writeCnt, count);
+        offset = (offset + count) % sb.blk_size;
+        writeCnt += count;
+    } else {
+        memcpy(entry.Bytes + offset, buf + writeCnt, sb.blk_size - offset);
+        offset = 0;
+        writeCnt += sb.blk_size - offset;
+        uint32_t nxtBlk = getNextFAT(curBlk);
+        if(nxtBlk==0){
+            addFAT(curBlk, sb.fst_free_data_blk);
+            ++sb.fst_free_data_blk;
+            sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+        }else{
+            curBlk = nxtBlk;
+        }
+    }
 
-        file->offset += count;
+    writeEntry(curBlk, &entry);
 
-        //}
+    //}
 
-        return 0;
+    return 0;
 }
 
 // int vfs_read(int fd, void* buf, int count)
