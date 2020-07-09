@@ -128,11 +128,14 @@ int vfs_write(int fd, void* buf, int count)
             offset = (offset + count) % sb.blk_size;
             writeCnt += count;
             count = 0;
+            writeEntry(curBlk, &entry);
         } else {
             memcpy(entry.Bytes + offset, buf + writeCnt, sb.blk_size - offset);
             offset = 0;
             writeCnt += (sb.blk_size - offset);
             count -= (sb.blk_size - offset);
+            writeEntry(curBlk, &entry);
+
             uint32_t nxtBlk = getNextFAT(curBlk);
             if (nxtBlk == 0) {
                 addFAT(curBlk, sb.fst_free_data_blk);
@@ -145,7 +148,6 @@ int vfs_write(int fd, void* buf, int count)
         }
 
         file->offset += writeCnt;
-        writeEntry(curBlk, &entry);
     }
 
     return writeCnt;
