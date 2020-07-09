@@ -101,7 +101,7 @@ void vfs_init()
 int vfs_write(int fd, void* buf, int count)
 {
     file_t* file = getFileFromFD(fd);
-    printf("%s\n", file->inode->path);
+    printf("%d\n", file->offset);
     return 0;
 }
 
@@ -162,6 +162,7 @@ int vfs_open(const char* pathname, int flags)
             file_t* newFile = pmm->alloc(sizeof(file_t));
             newFile->fd = free_fd;
             newFile->inode = newInode;
+            newFile->offset = 0;
             newFile->valid = 1;
             current->fds[newFile->fd] = newFile;
             return newFile->fd;
