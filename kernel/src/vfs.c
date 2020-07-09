@@ -140,11 +140,12 @@ int vfs_write(int fd, void* buf, int count)
         }
     }
 
+    file->offset += writeCnt;
     writeEntry(curBlk, &entry);
 
     //}
 
-    return 0;
+    return writeCnt;
 }
 
 // int vfs_read(int fd, void* buf, int count)
