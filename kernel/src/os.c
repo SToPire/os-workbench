@@ -65,7 +65,7 @@
 void vfs_test(){
     int a = vfs->open("/a", O_CREAT);
     int b = vfs->open("/bcd", O_CREAT);
-    vfs->write(0, "12345678912345678912345678912346", 33);
+    vfs->write(0, "123456789123456789123456789123456", 34);
     //vfs->write(0, "NULL", 4);
 
     while (1)
