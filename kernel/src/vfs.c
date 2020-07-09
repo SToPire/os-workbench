@@ -124,7 +124,8 @@ int vfs_write(int fd, void* buf, int count)
         memcpy(entry.Bytes + offset, buf, count);
         writeEntry(curBlk, &entry);
 
-        
+        file->offset += count;
+
         //}
 
         return 0;
