@@ -100,7 +100,7 @@ void vfs_init()
     // sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
     sda->ops->read(sda, FS_OFFSET + sb.inode_head, (void*)root, sizeof(inode_t));
     root->parent = root;
-    printf("current:%s\n", root->path);
+    printf("current:%d\n", root->type);
 
     // entry_t e;
     // memset(&e, 0, sizeof(e));
