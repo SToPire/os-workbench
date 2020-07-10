@@ -11,11 +11,13 @@
 
 typedef struct _superblock {
     uint32_t blk_size;
+    uint32_t inode_size;
     uint32_t inode_head;
     uint32_t fat_head;
     uint32_t data_head;
     uint32_t fst_free_data_blk;
-    uint8_t padding[12];
+    uint32_t fst_free_inode;
+    uint8_t padding[4];
 } superblock_t;
 
 int main(int argc, char* argv[])
@@ -38,10 +40,12 @@ int main(int argc, char* argv[])
 
     superblock_t sb;
     sb.blk_size = 32U;
+    sb.inode_size = 64U; 
     sb.inode_head = sizeof(superblock_t);
     sb.fat_head = sb.inode_head + 1024U;
     sb.data_head = sb.fat_head + 1024U;
     sb.fst_free_data_blk = 0;
+    sb.fst_free_inode = 0;
 
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
     munmap(disk, IMG_SIZE);

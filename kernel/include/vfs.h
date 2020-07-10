@@ -5,11 +5,13 @@ typedef long off_t;
 
 typedef struct _superblock {
     uint32_t blk_size;
+    uint32_t inode_size;
     uint32_t inode_head;
     uint32_t fat_head;
     uint32_t data_head;
     uint32_t fst_free_data_blk;
-    uint8_t padding[12];
+    uint32_t fst_free_inode;
+    uint8_t padding[4];
 } superblock_t;
 
 typedef union _entry{
@@ -30,7 +32,7 @@ enum INODE_TYPE {
 typedef struct _inode inode_t;
 struct _inode {
     uint32_t type;
-    char path[128];
+    char path[28];
     uint32_t firstBlock;
 
     inode_t* parent;
