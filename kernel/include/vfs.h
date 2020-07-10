@@ -27,7 +27,7 @@ typedef union _entry{
 
 typedef struct _inode inode_t;
 struct _inode {
-    int iNum;
+    uint32_t iNum;
     uint32_t type;
     char path[28];
     uint32_t firstBlock;
@@ -38,7 +38,7 @@ struct _inode {
 };
 
 typedef struct _dinode{
-    int iNum;
+    uint32_t iNum;
     uint32_t type;
     char path[28];
     uint32_t firstBlock;
