@@ -1,6 +1,7 @@
 #ifndef __VFS_H__
 #define __VFS_H__
 
+#include<user.h>
 typedef long off_t;
 
 typedef struct _superblock {
@@ -22,12 +23,6 @@ typedef union _entry{
         uint8_t padding[24];
     } dir_entry;
 } entry_t;
-
-enum INODE_TYPE {
-    T_INVALID,
-    T_DIR,
-    T_FILE,
-};
 
 typedef struct _inode inode_t;
 struct _inode {
