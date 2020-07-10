@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
     inode_t rootInode;
     strcpy(rootInode.path, "/");
     rootInode.firstChild = rootInode.nxtBrother = NULL;
-    rootInode.parent = rootInode;
+    rootInode.parent = NULL;
     rootInode.type = T_DIR;
     rootInode.firstBlock = 0;
     memcpy(fs_head + sb.inode_head, (void*)(rootInode), sizeof(rootInode));

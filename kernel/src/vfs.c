@@ -99,6 +99,7 @@ void vfs_init()
     // ++sb.fst_free_data_blk;
     // sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
     sda->ops->read(sda, FS_OFFSET + sb.inode_head, (void*)root, sizeof(inode_t));
+    root->parent = root;
     printf("root->first_blk:%u\n", root->firstBlock);
 
     // entry_t e;
