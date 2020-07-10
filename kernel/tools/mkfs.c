@@ -69,6 +69,7 @@ int main(int argc, char* argv[])
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
 
     dinode_t rootInode;
+    memset(&rootInode, 0, sizeof(rootInode));
     strcpy(rootInode.path, "/");
     //rootInode.firstChild = rootInode.nxtBrother = NULL;
     //rootInode.parent = NULL;
