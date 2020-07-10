@@ -22,6 +22,7 @@ typedef union _entry{
         uint32_t type;
         uint8_t padding[24];
     } dir_entry;
+    struct ufs_dirent dirent;
 } entry_t;
 
 typedef struct _inode inode_t;
