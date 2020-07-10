@@ -100,7 +100,7 @@ void vfs_init()
     // sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
     sda->ops->read(sda, FS_OFFSET + sb.inode_head, (void*)root, sizeof(inode_t));
     root->parent = root;
-    printf("root->first_blk:%u\n", root->firstBlock);
+    printf("current:%p %p\n", root->parent,root);
 
     // entry_t e;
     // memset(&e, 0, sizeof(e));
