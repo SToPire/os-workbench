@@ -98,13 +98,6 @@ void vfs_init()
     root->firstBlock = d_root->firstBlock;
     root->type = d_root->type;
     strcpy(root->path, d_root->path);
-    printf("ss:%s\n", root->path);
-
-    // entry_t e;
-    // memset(&e, 0, sizeof(e));
-    // e.Bytes[0] = 0xff;
-    // sda->ops->write(sda, FS_OFFSET + sb.data_head, &e, sizeof(e));
-    // printf("\n%x", FS_OFFSET + sb.data_head);
 }
 
 int vfs_write(int fd, void* buf, int count)
@@ -202,11 +195,20 @@ int vfs_open(const char* pathname, int flags)
             strcpy(newInode->path, pathname);
             inodeInsert(ip, newInode);
 
+            dinode_t* newDinode = pmm->alloc(sizeof(dinode_t));
+            memset(newDinode, 0, sizeof(dinode_t));
+            newDinode->firstBlock = newEntry.dir_entry.firstBlock;
+            newDinode->type = T_FILE;
+            strcpy(newDinode->path, pathname);
+            sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
+            ++sb.fst_free_inode;
+            sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+
+            file_t* newFile = pmm->alloc(sizeof(file_t));
             int free_fd = 0;
             for (; free_fd < 128; free_fd++) {
                 if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
             }
-            file_t* newFile = pmm->alloc(sizeof(file_t));
             newFile->fd = free_fd;
             newFile->inode = newInode;
             newFile->offset = 0;
