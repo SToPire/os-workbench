@@ -66,7 +66,7 @@ void vfs_test(){
     int a = vfs->open("/a", O_CREAT);
     int b = vfs->open("/bcd", O_CREAT);
     vfs->write(0, "ABCDEFGABCDEFGABCDEFGABCDEFGABCDEFG", 35);
-    vfs->write(0, "ABCDEFGABCDEFGABCDEFGABCDEFGABCDEFG", 35);
+    vfs->write(0, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 35);
 
     //vfs->write(0, "NULL", 4);
 
