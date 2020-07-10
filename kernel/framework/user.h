@@ -1,8 +1,9 @@
 #ifndef __USER_H__
-#define _USER_H__
+#define __USER_H__
 
 #include <stdint.h>
 
+//#define T_INVALID 0
 #define T_DIR     1
 #define T_FILE    2
 
