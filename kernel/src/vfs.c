@@ -88,7 +88,7 @@ void vfs_init()
 {
     sda = dev->lookup("sda");
     sda->ops->read(sda, FS_OFFSET, &sb, sizeof(sb));
-    printf("%u %u %u %u\n", sb.blk_size, sb.data_head, sb.fat_head, sb.fst_free_data_blk);
+    printf("%u %u %u %u %u\n", sb.blk_size,sb.inode_head, sb.data_head, sb.fat_head, sb.fst_free_data_blk);
 
     root = pmm->alloc(sizeof(inode_t));
     root->firstChild = root->nxtBrother = NULL;

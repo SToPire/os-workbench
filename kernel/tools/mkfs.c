@@ -9,11 +9,13 @@
 
 #define FS_OFFSET 1 * 1024 * 1024
 
-typedef struct superblock {
+typedef struct _superblock {
     uint32_t blk_size;
+    uint32_t inode_head;
     uint32_t fat_head;
     uint32_t data_head;
     uint32_t fst_free_data_blk;
+    uint8_t padding[12];
 } superblock_t;
 
 int main(int argc, char* argv[])
@@ -35,9 +37,10 @@ int main(int argc, char* argv[])
     uint8_t* fs_head = disk + FS_OFFSET;
 
     superblock_t sb;
-    sb.blk_size = 32;
-    sb.fat_head = 16;
-    sb.data_head = 1024;
+    sb.blk_size = 32U;
+    sb.inode_head = sizeof(superblock_t);
+    sb.fat_head = sb.inode_head + 1024U;
+    sb.data_head = sb.fat_head + 1024U;
     sb.fst_free_data_blk = 0;
 
     memcpy(fs_head, (void*)(&sb), sizeof(sb));

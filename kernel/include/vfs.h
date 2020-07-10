@@ -5,9 +5,11 @@ typedef long off_t;
 
 typedef struct _superblock {
     uint32_t blk_size;
+    uint32_t inode_head;
     uint32_t fat_head;
     uint32_t data_head;
     uint32_t fst_free_data_blk;
+    uint8_t padding[12];
 } superblock_t;
 
 typedef union _entry{
