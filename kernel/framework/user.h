@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-//#define T_INVALID 0
+#define T_INVALID 0
 #define T_DIR     1
 #define T_FILE    2
 
