@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
     rootInode.parent = NULL;
     rootInode.type = T_DIR;
     rootInode.firstBlock = 0;
-    memcpy(fs_head + sb.inode_head, (void*)(rootInode), sizeof(rootInode));
+    memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
     munmap(disk, IMG_SIZE);
     close(fd);
