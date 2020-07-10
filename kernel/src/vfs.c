@@ -98,7 +98,7 @@ void vfs_init()
     root->firstBlock = d_root->firstBlock;
     root->type = d_root->type;
     strcpy(root->path, d_root->path);
-    printf("ss:%u\n", root->type);
+    printf("ss:%s\n", root->path);
 
     // entry_t e;
     // memset(&e, 0, sizeof(e));
