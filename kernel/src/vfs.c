@@ -178,30 +178,31 @@ int vfs_open(const char* pathname, int flags)
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
-            entry_t newEntry;
-            memset(&newEntry, 0, sizeof(newEntry));
-            newEntry.dir_entry.type = T_DIR;
-            newEntry.dir_entry.firstBlock = sb.fst_free_data_blk;
-            ++sb.fst_free_data_blk;
-            sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
-
-            writeEntry(entryBlkNO, &newEntry);
 
             inode_t* newInode = pmm->alloc(sizeof(inode_t));
             memset(newInode, 0, sizeof(inode_t));
-            newInode->firstBlock = newEntry.dir_entry.firstBlock;
+            newInode->iNum = sb.fst_free_inode;
+            newInode->firstBlock = sb.fst_free_data_blk;
             newInode->type = T_FILE;
             strcpy(newInode->path, pathname);
             inodeInsert(ip, newInode);
 
             dinode_t* newDinode = pmm->alloc(sizeof(dinode_t));
             memset(newDinode, 0, sizeof(dinode_t));
-            newDinode->firstBlock = newEntry.dir_entry.firstBlock;
+            newDinode->iNum = sb.fst_free_inode;
+            newDinode->firstBlock = sb.fst_free_data_blk;
             newDinode->type = T_FILE;
             strcpy(newDinode->path, pathname);
             sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
             ++sb.fst_free_inode;
+            ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+
+            entry_t newEntry;
+            memset(&newEntry, 0, sizeof(newEntry));
+            newEntry.dir_entry.inode = newInode->iNum;
+            strcpy(newEntry.dir_entry.name, newInode->path);
+            writeEntry(entryBlkNO, &newEntry);
 
             file_t* newFile = pmm->alloc(sizeof(file_t));
             int free_fd = 0;

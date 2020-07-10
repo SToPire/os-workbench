@@ -17,16 +17,17 @@ typedef struct _superblock {
 
 typedef union _entry{
     uint8_t Bytes[32]; // T_FILE
-    struct {    //T_DIR
-        uint32_t firstBlock;
-        uint32_t type;
-        uint8_t padding[24];
-    } dir_entry;
-    struct ufs_dirent dirent;
+    // struct {    //T_DIR
+    //     uint32_t firstBlock;
+    //     uint32_t type;
+    //     uint8_t padding[24];
+    // } dir_entry;
+    struct ufs_dirent dir_entry;
 } entry_t;
 
 typedef struct _inode inode_t;
 struct _inode {
+    int iNum;
     uint32_t type;
     char path[28];
     uint32_t firstBlock;
@@ -37,6 +38,7 @@ struct _inode {
 };
 
 typedef struct _dinode{
+    int iNum;
     uint32_t type;
     char path[28];
     uint32_t firstBlock;

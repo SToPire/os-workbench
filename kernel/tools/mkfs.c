@@ -22,6 +22,7 @@ typedef struct _superblock {
 
 typedef struct _inode inode_t;
 struct _inode {
+    int iNum;
     uint32_t type;
     char path[28];
     uint32_t firstBlock;
@@ -32,6 +33,7 @@ struct _inode {
 };
 
 typedef struct _dinode {
+    int iNum;
     uint32_t type;
     char path[28];
     uint32_t firstBlock;
@@ -70,6 +72,7 @@ int main(int argc, char* argv[])
     strcpy(rootInode.path, "/");
     //rootInode.firstChild = rootInode.nxtBrother = NULL;
     //rootInode.parent = NULL;
+    rootInode.iNum = 0;
     rootInode.type = T_DIR;
     rootInode.firstBlock = 0;
     memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
