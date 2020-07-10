@@ -20,6 +20,17 @@ typedef struct _superblock {
     uint8_t padding[4];
 } superblock_t;
 
+typedef struct _inode inode_t;
+struct _inode {
+    uint32_t type;
+    char path[28];
+    uint32_t firstBlock;
+
+    inode_t* parent;
+    inode_t* firstChild;
+    inode_t* nxtBrother;
+};
+
 int main(int argc, char* argv[])
 {
     int fd;
@@ -44,10 +55,19 @@ int main(int argc, char* argv[])
     sb.inode_head = sizeof(superblock_t);
     sb.fat_head = sb.inode_head + 1024U;
     sb.data_head = sb.fat_head + 1024U;
-    sb.fst_free_data_blk = 0;
-    sb.fst_free_inode = 0;
+    sb.fst_free_data_blk = 1;
+    sb.fst_free_inode = 1;
 
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
+
+    inode_t rootInode;
+    strcpy(rootInode.path, "/");
+    rootInode.firstChild = rootInode.nxtBrother = NULL;
+    rootInode.parent = rootInode;
+    rootInode.type = T_DIR;
+    rootInode.firstBlock = 0;
+    memcpy(fs_head + sb.inode_head, (void*)(rootInode), sizeof(rootInode));
+
     munmap(disk, IMG_SIZE);
     close(fd);
 }
