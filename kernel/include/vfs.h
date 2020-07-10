@@ -40,7 +40,13 @@ struct _inode {
     inode_t* nxtBrother;
 };
 
-typedef struct _file{
+typedef struct _dinode{
+    uint32_t type;
+    char path[28];
+    uint32_t firstBlock;
+} dinode_t;
+
+typedef struct _file {
     int fd;
     //char path[128];
     inode_t* inode;

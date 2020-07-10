@@ -31,6 +31,12 @@ struct _inode {
     inode_t* nxtBrother;
 };
 
+typedef struct _dinode {
+    uint32_t type;
+    char path[28];
+    uint32_t firstBlock;
+} dinode_t;
+
 int main(int argc, char* argv[])
 {
     int fd;
@@ -60,10 +66,10 @@ int main(int argc, char* argv[])
 
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
 
-    inode_t rootInode;
+    dinode_t rootInode;
     strcpy(rootInode.path, "/");
-    rootInode.firstChild = rootInode.nxtBrother = NULL;
-    rootInode.parent = NULL;
+    //rootInode.firstChild = rootInode.nxtBrother = NULL;
+    //rootInode.parent = NULL;
     rootInode.type = T_DIR;
     rootInode.firstBlock = 0;
     memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));

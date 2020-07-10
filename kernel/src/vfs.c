@@ -90,17 +90,15 @@ void vfs_init()
     sda->ops->read(sda, FS_OFFSET, &sb, sizeof(sb));
     printf("blk_size:%u inode_size:%u inode_head:%u fat_head:%u data_head:%u fst_free_data_blk:%u fst_free_inode:%u\n", sb.blk_size,sb.inode_size,sb.inode_head, sb.fat_head, sb.data_head, sb.fst_free_data_blk,sb.fst_free_inode);
 
+    dinode_t* d_root = pmm->alloc(sizeof(dinode_t));
+    sda->ops->read(sda, FS_OFFSET + sb.inode_head, (void*)d_root, sizeof(dinode_t));
     root = pmm->alloc(sizeof(inode_t));
-    // root->firstChild = root->nxtBrother = NULL;
-    // root->parent = root;
-    // sprintf(root->path, "/");
-    // root->type = T_DIR;
-    // root->firstBlock = sb.fst_free_data_blk;
-    // ++sb.fst_free_data_blk;
-    // sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
-    sda->ops->read(sda, FS_OFFSET + sb.inode_head, (void*)root, sizeof(inode_t));
     root->parent = root;
-    printf("current:%d\n", root->type);
+    root->firstChild = root->nxtBrother = NULL;
+    root->firstBlock = d_root->firstBlock;
+    root->type = d_root->type;
+    strcpy(root->path, d_root->path);
+    printf("ss:%u\n", root->type);
 
     // entry_t e;
     // memset(&e, 0, sizeof(e));
