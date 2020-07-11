@@ -62,18 +62,19 @@
 //     }
 // }
 
-void vfs_test(){
+void vfs_test()
+{
     // int a = vfs->open("/a", O_CREAT);
     // int b = vfs->open("/bcd", O_CREAT);
     // vfs->write(0, "ABCDEFGABCDEFGABCDEFGABCDEFGABCDEFG", 35);
     // vfs->write(0, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 35);
     // vfs->write(1, "Hello world!", 12);
 
-    vfs->open("/a", O_CREAT);
-    vfs->open("/a/b", O_CREAT);
-    vfs->open("/b", O_CREAT);
-    vfs->open("/b/a", O_CREAT);
-    vfs->open("/a/c", O_CREAT);
+    int a = vfs->open("/a", O_CREAT);
+    int b = vfs->open("/a/b", O_CREAT);
+    vfs->write(a, "ABCDEFGABCDEFGABCDEFGABCDEFGABCDEFG", 35);
+    vfs->write(a, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 35);
+    vfs->write(b, "Hello world!", 12);
     while (1)
         ;
 }
@@ -111,7 +112,7 @@ static void os_init()
 
     vfs->init();
 
-    kmt->create(pmm->alloc(sizeof(task_t)), "t1",vfs_test , NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)), "t1", vfs_test, NULL);
 }
 
 static void os_run()
