@@ -71,7 +71,9 @@ void vfs_test(){
 
     vfs->open("/a", O_CREAT);
     vfs->open("/a/b", O_CREAT);
-
+    vfs->open("/b", O_CREAT);
+    vfs->open("/b/a", O_CREAT);
+    vfs->open("/a/c", O_CREAT);
     while (1)
         ;
 }
