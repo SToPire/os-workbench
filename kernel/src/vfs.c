@@ -30,12 +30,12 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
         return inodeSearch(cur, myPath);
     }
 
+        printf("1111111\n");
     assert(path[0] == '/');
     char* curName = pmm->alloc(strlen(path) + 1);
     int i = 1;
     while (i < strlen(path) && path[i] != '/') ++i;
     if (i == 1) {
-        printf("1111111\n");
         strcpy(curName, path + 1);
     } else {
         strncpy(curName, path + 1, i - 1);
