@@ -35,7 +35,6 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
     int i = 1;
     while (i < strlen(path) && path[i] != '/') ++i;
     if (i == strlen(path)) {
-        printf("1111111\n");
         strcpy(curName, path + 1);
     } else {
         strncpy(curName, path + 1, i - 1);
@@ -247,6 +246,10 @@ int vfs_open(const char* pathname, int flags)
             newFile->offset = 0;
             newFile->valid = 1;
             current->fds[newFile->fd] = newFile;
+
+            printf("%s %s %s\n", root->name, root->firstChild->name, root->firstChild->firstChild->name);
+
+
             return newFile->fd;
         }
     }
