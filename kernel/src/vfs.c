@@ -7,10 +7,10 @@
 
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
-    if (strcmp(cur->path, path) == 0) return cur;
+    if (strcmp(cur->name, path) == 0) return cur;
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
-        if (strncmp(path, ptr->path, strlen(ptr->path)) == 0) {
-            if (strlen(path) == strlen(ptr->path))
+        if (strncmp(path, ptr->name, strlen(ptr->name)) == 0) {
+            if (strlen(path) == strlen(ptr->name))
                 return ptr;
             else
                 return inodeSearch(ptr, path);
@@ -96,7 +96,7 @@ void vfs_init()
     root->firstChild = root->nxtBrother = NULL;
     root->firstBlock = d_root->firstBlock;
     root->type = d_root->type;
-    strcpy(root->path, d_root->path);
+    strcpy(root->name, d_root->name);
 }
 
 int vfs_write(int fd, void* buf, int count)
@@ -170,7 +170,7 @@ int vfs_open(const char* pathname, int flags)
 
             inode_t* ip = inodeSearch(root, dirname);
             // printf("ip->path:%s\n", ip->path);
-            if (strcmp(ip->path, dirname) != 0) return -1;
+            if (strcmp(ip->name, dirname) != 0) return -1;
 
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
             //printf("entryBlk:%u\n", entryBlkNO);
@@ -184,7 +184,7 @@ int vfs_open(const char* pathname, int flags)
             newInode->iNum = sb.fst_free_inode;
             newInode->firstBlock = sb.fst_free_data_blk;
             newInode->type = T_FILE;
-            strcpy(newInode->path, pathname);
+            strcpy(newInode->name, pathname);
             inodeInsert(ip, newInode);
 
             dinode_t* newDinode = pmm->alloc(sizeof(dinode_t));
@@ -192,7 +192,7 @@ int vfs_open(const char* pathname, int flags)
             newDinode->iNum = sb.fst_free_inode;
             newDinode->firstBlock = sb.fst_free_data_blk;
             newDinode->type = T_FILE;
-            strcpy(newDinode->path, pathname);
+            strcpy(newDinode->name, pathname);
             sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
             ++sb.fst_free_inode;
             ++sb.fst_free_data_blk;
@@ -201,7 +201,7 @@ int vfs_open(const char* pathname, int flags)
             entry_t newEntry;
             memset(&newEntry, 0, sizeof(newEntry));
             newEntry.dir_entry.inode = newInode->iNum;
-            strcpy(newEntry.dir_entry.name, newInode->path);
+            strcpy(newEntry.dir_entry.name, newInode->name);
             writeEntry(entryBlkNO, &newEntry);
 
             file_t* newFile = pmm->alloc(sizeof(file_t));

@@ -24,7 +24,7 @@ typedef struct _inode inode_t;
 struct _inode {
     uint32_t iNum;
     uint32_t type;
-    char path[28];
+    char name[28];
     uint32_t firstBlock;
 
     inode_t* parent;
@@ -35,7 +35,7 @@ struct _inode {
 typedef struct _dinode {
     uint32_t iNum;
     uint32_t type;
-    char path[28];
+    char name[28];
     uint32_t firstBlock;
 } dinode_t;
 
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 
     dinode_t rootInode;
     memset(&rootInode, 0, sizeof(rootInode));
-    strcpy(rootInode.path, "/");
+    strcpy(rootInode.name, "/");
     //rootInode.firstChild = rootInode.nxtBrother = NULL;
     //rootInode.parent = NULL;
     rootInode.iNum = 0;
