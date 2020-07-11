@@ -35,14 +35,14 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
     char* curName = pmm->alloc(strlen(path) + 1);
     int i = 1;
     while (i < strlen(path) && path[i] != '/') ++i;
-    if (i == 1) {
+    if (i == strlen) {
         strcpy(curName, path + 1);
     } else {
         strncpy(curName, path + 1, i - 1);
     }
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
         if (strcmp(ptr->name, curName) == 0) {
-            if (i == 1)
+            if (i == strlen(path))
                 return ptr;
             else
                 return inodeSearch(ptr, path + i);
