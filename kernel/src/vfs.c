@@ -196,7 +196,7 @@ int vfs_open(const char* pathname, int flags)
             strcpy(filename, pathname + i + 1);
             strncpy(dirname, pathname, i + 1);
             dirname[i + 1] = '\0';
-            //printf("dirname:%s filename:%s\n", dirname, filename);
+            printf("dirname:%s filename:%s\n", dirname, filename);
 
             inode_t* ip = inodeSearch(root, dirname);
             // printf("ip->path:%s\n", ip->path);
