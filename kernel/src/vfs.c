@@ -246,7 +246,7 @@ int vfs_open(const char* pathname, int flags)
             newFile->offset = 0;
             newFile->valid = 1;
             current->fds[newFile->fd] = newFile;
-if(strcpy(pathname,"/a/c")==0)printf("%s %s %s\n", root->name, root->firstChild->name, root->firstChild->firstChild->name);
+if(strcmp(pathname,"/a/c")==0)printf("%s %s %s\n", root->name, root->firstChild->name, root->firstChild->firstChild->name);
             return newFile->fd;
         }
     }
