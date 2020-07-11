@@ -1,23 +1,52 @@
 #include <common.h>
 #include <devices.h>
 #include <vfs.h>
-#include <string.h>
 
 #define current cpu_local[_cpu()].current
 #define getFileFromFD(fd) current->fds[fd];
 
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
-    if (strcmp(cur->name, path) == 0) return cur;
+    // if (strcmp(cur->name, path) == 0) return cur;
+    // for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
+    //     if (strncmp(path, ptr->name, strlen(ptr->name)) == 0) {
+    //         if (strlen(path) == strlen(ptr->name))
+    //             return ptr;
+    //         else
+    //             return inodeSearch(ptr, path);
+    //     }
+    // }
+    // return cur;
+    if(strcmp(path,"/")==0){
+        if (strcmp(cur->name, "/") == 0) return cur;
+        else
+            return (void*)(-1);
+    }
+
+    if (path[strlen(path) - 1] == '/') {
+        char* myPath = pmm->alloc(strlen(path));
+        strncpy(myPath, path, strlen(path) - 1);
+        return inodeSearch(cur, myPath);
+    }
+
+    assert(path[0] == '/');
+    char* curName = pmm->alloc(strlen(path) + 1);
+    int i = 1;
+    while (i < strlen(path) && path[i] != '/') ++i;
+    if (i == 1) {
+        strcpy(curName, path + 1);
+    } else {
+        strncpy(curName, path + 1, i - 1);
+    }
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
-        if (strncmp(path, ptr->name, strlen(ptr->name)) == 0) {
-            if (strlen(path) == strlen(ptr->name))
+        if (strcmp(ptr->name, curName) == 0) {
+            if (i == 1)
                 return ptr;
             else
-                return inodeSearch(ptr, path);
+                return inodeSearch(ptr, path + i);
         }
     }
-    return cur;
+    return (void*)(-1);
 }
 
 void inodeInsert(inode_t* parent, inode_t* cur)
@@ -88,7 +117,7 @@ void vfs_init()
 {
     sda = dev->lookup("sda");
     sda->ops->read(sda, FS_OFFSET, &sb, sizeof(sb));
-    printf("blk_size:%u inode_size:%u inode_head:%u fat_head:%u data_head:%u fst_free_data_blk:%u fst_free_inode:%u\n", sb.blk_size,sb.inode_size,sb.inode_head, sb.fat_head, sb.data_head, sb.fst_free_data_blk,sb.fst_free_inode);
+    printf("blk_size:%u inode_size:%u inode_head:%u fat_head:%u data_head:%u fst_free_data_blk:%u fst_free_inode:%u\n", sb.blk_size, sb.inode_size, sb.inode_head, sb.fat_head, sb.data_head, sb.fst_free_data_blk, sb.fst_free_inode);
 
     dinode_t* d_root = pmm->alloc(sizeof(dinode_t));
     sda->ops->read(sda, FS_OFFSET + sb.inode_head, (void*)d_root, sizeof(dinode_t));
@@ -171,7 +200,7 @@ int vfs_open(const char* pathname, int flags)
 
             inode_t* ip = inodeSearch(root, dirname);
             // printf("ip->path:%s\n", ip->path);
-            if (strcmp(ip->name, dirname) != 0) return -1;
+            if (ip == (void*)(-1)) return -1;
 
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
             //printf("entryBlk:%u\n", entryBlkNO);
@@ -179,13 +208,14 @@ int vfs_open(const char* pathname, int flags)
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
-
             inode_t* newInode = pmm->alloc(sizeof(inode_t));
             memset(newInode, 0, sizeof(inode_t));
             newInode->iNum = sb.fst_free_inode;
             newInode->firstBlock = sb.fst_free_data_blk;
             newInode->type = T_FILE;
-            strcpy(newInode->name, pathname);
+            // strcpy(newInode->name, pathname);
+            strcpy(newInode->name, filename);
+
             inodeInsert(ip, newInode);
 
             dinode_t* newDinode = pmm->alloc(sizeof(dinode_t));
@@ -193,7 +223,7 @@ int vfs_open(const char* pathname, int flags)
             newDinode->iNum = sb.fst_free_inode;
             newDinode->firstBlock = sb.fst_free_data_blk;
             newDinode->type = T_FILE;
-            strcpy(newDinode->name, pathname);
+            strcpy(newDinode->name, filename);
             sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
             ++sb.fst_free_inode;
             ++sb.fst_free_data_blk;
