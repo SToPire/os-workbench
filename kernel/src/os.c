@@ -72,9 +72,9 @@ void vfs_test()
 
     int a = vfs->open("/a", O_CREAT);
     int b = vfs->open("/b", O_CREAT);
-    // vfs->write(a, "ABCDEFGABCDEFGABCDEFGABCDEFGABCDEFG", 35);
-    // vfs->write(a, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 35);
-    // vfs->write(b, "Hello world!", 12);
+    vfs->write(a, "ABCDEFGABCDEFGABCDEFGABCDEFGABCDEFG", 35);
+    vfs->write(a, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 35);
+    vfs->write(b, "Hello world!", 12);
     while (1)
         ;
 }
