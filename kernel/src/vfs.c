@@ -35,6 +35,7 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
     int i = 1;
     while (i < strlen(path) && path[i] != '/') ++i;
     if (i == 1) {
+        printf("1111111\n");
         strcpy(curName, path + 1);
     } else {
         strncpy(curName, path + 1, i - 1);
