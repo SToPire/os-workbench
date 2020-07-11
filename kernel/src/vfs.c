@@ -1,6 +1,7 @@
 #include <common.h>
 #include <devices.h>
 #include <vfs.h>
+#include <string.h>
 
 #define current cpu_local[_cpu()].current
 #define getFileFromFD(fd) current->fds[fd];
