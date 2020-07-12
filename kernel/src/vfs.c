@@ -283,9 +283,7 @@ int vfs_open(const char* pathname, int flags)
 
 int vfs_lseek(int fd, int offset, int whence)
 {
-    file_t* file = getFileFromFD(fd);
-    file->offset = offset;
-    return offset;
+
 }
 
 MODULE_DEF(vfs) = {

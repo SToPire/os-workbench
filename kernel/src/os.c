@@ -71,12 +71,6 @@ void vfs_test()
     vfs->write(a, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 35);
     vfs->write(b, "Hello world!", 12);
 
-    char* s = pmm->alloc(128);
-    memset(s, 0, 128);
-    vfs->lseek(a, 600, 0);
-    int c = vfs->read(a, s, 120);
-    printf("%s\n %d", s,c);
-
     while (1)
         ;
 }
