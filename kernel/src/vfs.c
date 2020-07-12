@@ -197,6 +197,9 @@ int vfs_read(int fd, void* buf, int count)
             readCnt += (sb.blk_size - offset);
             count -= (sb.blk_size - offset);
             offset = 0;
+
+            curBlk = getNextFAT(curBlk);
+            assert(curBlk != 0);
         }
     }
     file->offset += readCnt;
