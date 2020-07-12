@@ -5,20 +5,12 @@
 #define current cpu_local[_cpu()].current
 #define getFileFromFD(fd) current->fds[fd];
 
+/* ---------- Inode Operation ----------*/
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
-    // if (strcmp(cur->name, path) == 0) return cur;
-    // for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
-    //     if (strncmp(path, ptr->name, strlen(ptr->name)) == 0) {
-    //         if (strlen(path) == strlen(ptr->name))
-    //             return ptr;
-    //         else
-    //             return inodeSearch(ptr, path);
-    //     }
-    // }
-    // return cur;
     if (strcmp(path, "/") == 0) {
-        if (strcmp(cur->name, "/") == 0) return cur;
+        if (strcmp(cur->name, "/") == 0)
+            return cur;
         else
             return (void*)(-1);
     }
@@ -74,6 +66,7 @@ void inodeDelete(inode_t* parent, inode_t* child)
             i->nxtBrother = child->nxtBrother;
     }
 }
+/* ---------- Inode Operation ----------*/
 
 #define FS_OFFSET 1 * 1024 * 1024
 superblock_t sb;
@@ -134,7 +127,7 @@ int vfs_write(int fd, void* buf, int count)
     file_t* file = getFileFromFD(fd);
     off_t offset = file->offset;
     uint32_t curBlk = file->inode->firstBlock;
-    while (offset >= sb.blk_size) {
+    while (offset >= sb.blk_size) {  //move to required block
         curBlk = getNextFAT(curBlk);
         offset -= sb.blk_size;
         if (curBlk == 0) return 0;
@@ -142,7 +135,6 @@ int vfs_write(int fd, void* buf, int count)
 
     int writeCnt = 0;
     while (count > 0) {
-        printf("wc:%d, offset:%d\n", writeCnt, offset);
         entry_t entry;
         readEntry(curBlk, &entry);
         if (offset + count <= sb.blk_size) {
@@ -159,7 +151,7 @@ int vfs_write(int fd, void* buf, int count)
             writeEntry(curBlk, &entry);
 
             uint32_t nxtBlk = getNextFAT(curBlk);
-            if (nxtBlk == 0) {
+            if (nxtBlk == 0) {  // must add a new block
                 addFAT(curBlk, sb.fst_free_data_blk);
                 ++sb.fst_free_data_blk;
                 sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
@@ -178,19 +170,38 @@ int vfs_write(int fd, void* buf, int count)
     return writeCnt;
 }
 
-// int vfs_read(int fd, void* buf, int count)
-// {
-//     file_t* file = getFileFromFD(fd);
-//     off_t offset = file->offset;
-//     uint32_t curBlk = file->inode->firstBlock;
-//     while(offset >= sb.blk_size){
-//         curBlk = getNextFAT(curBlk);
-//         offset -= sb.blk_size;
-//         if (curBlk == 0) return 0;
-//     }
+int vfs_read(int fd, void* buf, int count)
+{
+    file_t* file = getFileFromFD(fd);
+    if (file->inode->stat.size <= file->offset) return 0;
+    if (file->inode->stat.size - file->offset < count) count = file->inode->stat.size - file->offset;
+    off_t offset = file->offset;
+    uint32_t curBlk = file->inode->firstBlock;
+    while (offset >= sb.blk_size) {
+        curBlk = getNextFAT(curBlk);
+        offset -= sb.blk_size;
+        if (curBlk == 0) return 0;
+    }
 
-
-// }
+    int readCnt = 0;
+    while (count > 0) {
+        entry_t entry;
+        readEntry(curBlk, &entry);
+        if (offset + count <= sb.blk_size) {
+            memcpy(buf + readCnt, entry.Bytes + offset, count);
+            offset = (offset + count) % sb.blk_size;
+            readCnt += count;
+            count = 0;
+        } else {
+            memcpy(buf + readCnt, entry.Bytes + offset, sb.blk_size - offset);
+            readCnt == (sb.blk_size - offset);
+            count -= (sb.blk_size - offset);
+            offset = 0;
+        }
+    }
+    file->offset += readCnt;
+    return readCnt;
+}
 
 // int vfs_close(int fd)
 // {
@@ -271,4 +282,5 @@ MODULE_DEF(vfs) = {
     .init = vfs_init,
     .open = vfs_open,
     .write = vfs_write,
+    .read = vfs_read,
 };
