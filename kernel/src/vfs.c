@@ -194,7 +194,7 @@ int vfs_read(int fd, void* buf, int count)
             count = 0;
         } else {
             memcpy(buf + readCnt, entry.Bytes + offset, sb.blk_size - offset);
-            readCnt == (sb.blk_size - offset);
+            readCnt += (sb.blk_size - offset);
             count -= (sb.blk_size - offset);
             offset = 0;
         }
