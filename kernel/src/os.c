@@ -70,6 +70,12 @@ void vfs_test()
     vfs->write(a, "ABCDEFGABCDEFGABCDEFGABCDEFGABCDEFG", 35);
     vfs->write(a, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 35);
     vfs->write(b, "Hello world!", 12);
+
+    char* s = pmm->alloc(128);
+    vfs->lseek(a, 0, 0);
+    vfs->read(a, s, 1);
+    printf("%s\n", s);
+
     while (1)
         ;
 }
