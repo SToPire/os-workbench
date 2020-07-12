@@ -208,11 +208,13 @@ int vfs_open(const char* pathname, int flags)
             //printf("dirname:%s filename:%s\n", dirname, filename);
 
             inode_t* ip = inodeSearch(root, dirname);
-            // printf("ip->path:%s\n", ip->path);
             if (ip == (void*)(-1)) return -1;
+            ip->stat.size += sizeof(struct ufs_dirent);
+            dinode_t newParentDinode;
+            memcpy(&newParentDinode, ip, sizeof(dinode_t));
+            sda->ops->write(sda, FS_OFFSET + sb.inode_head + ip->stat.id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
 
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
-            //printf("entryBlk:%u\n", entryBlkNO);
             addFAT(entryBlkNO, sb.fst_free_data_blk);
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
@@ -223,7 +225,6 @@ int vfs_open(const char* pathname, int flags)
             newInode->stat.type = T_FILE;
             newInode->stat.size = 0;
             newInode->firstBlock = sb.fst_free_data_blk;
-            // strcpy(newInode->name, pathname);
             strcpy(newInode->name, filename);
 
             inodeInsert(ip, newInode);
