@@ -22,8 +22,9 @@ typedef union _entry{
 
 typedef struct _inode inode_t;
 struct _inode {
-    uint32_t iNum;
-    uint32_t type;
+    // uint32_t iNum;
+    // uint32_t type;
+    struct ufs_stat stat;
     char name[28];
     uint32_t firstBlock;
 
@@ -33,8 +34,9 @@ struct _inode {
 };
 
 typedef struct _dinode{
-    uint32_t iNum;
-    uint32_t type;
+    // uint32_t iNum;
+    // uint32_t type;
+    struct ufs_stat stat;
     char name[28];
     uint32_t firstBlock;
 } dinode_t;

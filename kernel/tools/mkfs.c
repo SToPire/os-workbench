@@ -20,10 +20,12 @@ typedef struct _superblock {
     uint8_t padding[4];
 } superblock_t;
 
+
 typedef struct _inode inode_t;
 struct _inode {
-    uint32_t iNum;
-    uint32_t type;
+    // uint32_t iNum;
+    // uint32_t type;
+    struct ufs_stat stat;
     char name[28];
     uint32_t firstBlock;
 
@@ -33,8 +35,9 @@ struct _inode {
 };
 
 typedef struct _dinode {
-    uint32_t iNum;
-    uint32_t type;
+    // uint32_t iNum;
+    // uint32_t type;
+    struct ufs_stat stat;
     char name[28];
     uint32_t firstBlock;
 } dinode_t;
@@ -73,8 +76,9 @@ int main(int argc, char* argv[])
     strcpy(rootInode.name, "/");
     //rootInode.firstChild = rootInode.nxtBrother = NULL;
     //rootInode.parent = NULL;
-    rootInode.iNum = 0;
-    rootInode.type = T_DIR;
+    rootInode.stat.id = 0;
+    rootInode.stat.type = T_DIR;
+    rootInode.stat.size = 0;
     rootInode.firstBlock = 0;
     memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 

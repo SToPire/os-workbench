@@ -125,7 +125,7 @@ void vfs_init()
     root->parent = root;
     root->firstChild = root->nxtBrother = NULL;
     root->firstBlock = d_root->firstBlock;
-    root->type = d_root->type;
+    memcpy(&(root->stat), &(d_root->stat), sizeof(root->stat));
     strcpy(root->name, d_root->name);
 }
 
@@ -176,6 +176,15 @@ int vfs_write(int fd, void* buf, int count)
 
 // int vfs_read(int fd, void* buf, int count)
 // {
+//     file_t* file = getFileFromFD(fd);
+//     off_t offset = file->offset;
+//     uint32_t curBlk = file->inode->firstBlock;
+//     while(offset >= sb.blk_size){
+//         curBlk = getNextFAT(curBlk);
+//         offset -= sb.blk_size;
+//         if (curBlk == 0) return 0;
+//     }
+
 
 // }
 
@@ -210,9 +219,10 @@ int vfs_open(const char* pathname, int flags)
 
             inode_t* newInode = pmm->alloc(sizeof(inode_t));
             memset(newInode, 0, sizeof(inode_t));
-            newInode->iNum = sb.fst_free_inode;
+            newInode->stat.id = sb.fst_free_inode;
+            newInode->stat.type = T_FILE;
+            newInode->stat.size = 0;
             newInode->firstBlock = sb.fst_free_data_blk;
-            newInode->type = T_FILE;
             // strcpy(newInode->name, pathname);
             strcpy(newInode->name, filename);
 
@@ -220,9 +230,10 @@ int vfs_open(const char* pathname, int flags)
 
             dinode_t* newDinode = pmm->alloc(sizeof(dinode_t));
             memset(newDinode, 0, sizeof(dinode_t));
-            newDinode->iNum = sb.fst_free_inode;
+            newDinode->stat.id = sb.fst_free_inode;
+            newDinode->stat.type = T_FILE;
+            newDinode->stat.size = 0;
             newDinode->firstBlock = sb.fst_free_data_blk;
-            newDinode->type = T_FILE;
             strcpy(newDinode->name, filename);
             sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
             ++sb.fst_free_inode;
@@ -231,7 +242,7 @@ int vfs_open(const char* pathname, int flags)
 
             entry_t newEntry;
             memset(&newEntry, 0, sizeof(newEntry));
-            newEntry.dir_entry.inode = newInode->iNum;
+            newEntry.dir_entry.inode = newInode->stat.id;
             strcpy(newEntry.dir_entry.name, newInode->name);
             writeEntry(entryBlkNO, &newEntry);
 
