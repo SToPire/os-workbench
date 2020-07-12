@@ -170,6 +170,10 @@ int vfs_write(int fd, void* buf, int count)
         }
     }
     file->offset += writeCnt;
+    file->inode->stat.size += writeCnt;
+    dinode_t newDinode;
+    memcpy(&newDinode, file->inode, sizeof(newDinode));
+    sda->ops->write(sda, FS_OFFSET + sb.inode_head + file->inode->stat.id * sb.inode_size, &newDinode, sizeof(dinode_t));
 
     return writeCnt;
 }
