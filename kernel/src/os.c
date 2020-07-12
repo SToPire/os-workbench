@@ -73,7 +73,7 @@ void vfs_test()
 
     char* s = pmm->alloc(128);
     memset(s, 0, 128);
-    vfs->lseek(a, 0, 0);
+    vfs->lseek(a, 6, 0);
     vfs->read(a, s, 40);
     printf("%s\n", s);
 
