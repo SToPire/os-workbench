@@ -163,7 +163,7 @@ int vfs_write(int fd, void* buf, int count)
     }
 
     if (file->inode->stat.size < file->offset + writeCnt)
-        file->inode->stat.size += writeCnt;
+        file->inode->stat.size = file->offset + writeCnt;
     file->offset += writeCnt;
     dinode_t newDinode;
     memcpy(&newDinode, file->inode, sizeof(newDinode));
