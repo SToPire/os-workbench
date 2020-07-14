@@ -222,7 +222,7 @@ int vfs_close(int fd)
 
 int vfs_open(const char* pathname, int flags)
 {
-    if ((flags & (O_RDONLY | O_RDWR | O_WRONLY)) == 0) return -1;
+    //if ((flags & (O_RDONLY | O_RDWR | O_WRONLY)) == 0) return -1;
 
     if (flags & O_CREAT) {
         if (pathname[0] == '/') {
