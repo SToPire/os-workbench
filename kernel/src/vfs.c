@@ -286,6 +286,8 @@ int vfs_open(const char* pathname, int flags)
             current->fds[newFile->fd] = newFile;
             return newFile->fd;
         }
+    } else {   //do not create file
+        printf("else\n");
     }
     return -1;
 }
