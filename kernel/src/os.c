@@ -76,8 +76,8 @@ void vfs_test()
     memset(s, 0, 128);
 
     vfs->lseek(a, 40, SEEK_END);
-    vfs->read(a, s, 10);
-    for (int i = 0; i < 10; i++) printf("%x ",s[i]);
+    vfs->read(a, s, 30);
+    for (int i = 0; i < 30; i++) printf("%x ",s[i]);
 
     while (1)
         ;
