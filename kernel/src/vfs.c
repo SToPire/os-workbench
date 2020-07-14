@@ -128,9 +128,12 @@ int vfs_write(int fd, void* buf, int count)
     off_t offset = file->offset;
     uint32_t curBlk = file->inode->firstBlock;
     while (offset >= sb.blk_size) {  //move to required block
-        curBlk = getNextFAT(curBlk);
+        uint32_t nxtBlk = getNextFAT(curBlk);
         offset -= sb.blk_size;
-        if (curBlk == 0) return 0;
+        if (nxtBlk == 0) return 0;
+        else{
+            curBlk = nxtBlk;
+        }
     }
 
     int writeCnt = 0;
