@@ -283,6 +283,23 @@ int vfs_open(const char* pathname, int flags)
 
 int vfs_lseek(int fd, int offset, int whence)
 {
+    file_t* file = getFileFromFD(fd);
+    if(whence == SEEK_CUR){
+        file->offset = file->offset + offset;
+    } else if (whence == SEEK_END) {
+        file->offset = file->inode->stat.size + offset;
+    } else if (whence == SEEK_SET) {
+        file->offset = offset;
+    } else{
+        assert(0);
+    }
+
+    if(file->offset > file->inode->stat.size){
+        printf("%u %u\n", file->offset, file->inode->stat.size);
+    }
+
+    return file->offset;
+
     return 0;
 }
 
