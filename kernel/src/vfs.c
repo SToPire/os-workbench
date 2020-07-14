@@ -214,10 +214,11 @@ int vfs_read(int fd, void* buf, int count)
     return readCnt;
 }
 
-// int vfs_close(int fd)
-// {
-
-// }
+int vfs_close(int fd)
+{
+    current->fds[fd]->valid = 0;
+    return 0;
+}
 
 int vfs_open(const char* pathname, int flags)
 {
@@ -309,6 +310,7 @@ int vfs_lseek(int fd, int offset, int whence)
 MODULE_DEF(vfs) = {
     .init = vfs_init,
     .open = vfs_open,
+    .close = vfs_close,
     .write = vfs_write,
     .read = vfs_read,
     .lseek = vfs_lseek,

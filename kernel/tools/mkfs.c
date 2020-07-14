@@ -70,8 +70,6 @@ int main(int argc, char* argv[])
     dinode_t rootInode;
     memset(&rootInode, 0, sizeof(rootInode));
     strcpy(rootInode.name, "/");
-    //rootInode.firstChild = rootInode.nxtBrother = NULL;
-    //rootInode.parent = NULL;
     rootInode.stat.id = 0;
     rootInode.stat.type = T_DIR;
     rootInode.stat.size = 0;
