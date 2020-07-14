@@ -68,7 +68,7 @@ void vfs_test()
     int b = vfs->open("/bcd", O_CREAT);
     assert(a != -1 && b != -1);
     vfs->write(a, "ABCDEFGABCDEFGABCDEFGABCDEFGABCDEFG", 35);
-    vfs->lseek(a, 10, SEEK_END);
+    vfs->lseek(a, 30, SEEK_END);
     vfs->write(a, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 35);
     vfs->write(b, "Hello world!", 12);
 
