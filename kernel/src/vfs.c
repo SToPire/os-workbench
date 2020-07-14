@@ -279,6 +279,7 @@ int vfs_open(const char* pathname, int flags)
             for (; free_fd < 128; free_fd++) {
                 if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
             }
+            if (free_fd == 128) return -1;
             newFile->fd = free_fd;
             newFile->inode = newInode;
             newFile->offset = 0;
@@ -287,9 +288,21 @@ int vfs_open(const char* pathname, int flags)
             return newFile->fd;
         }
     } else {   //do not create file
-        printf("else\n");
-        inode_t* newInode = inodeSearch(root, pathname);
-        printf("id:%d\n", newInode->stat.id);
+        inode_t* existInode = inodeSearch(root, pathname);
+        if (existInode == (void*)(-1)) return -1;
+
+        file_t* newFile = pmm->alloc(sizeof(file_t));
+        int free_fd = 0;
+        for (; free_fd < 128; free_fd++) {
+            if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
+        }
+        if (free_fd == 128) return -1;
+        newFile->fd = free_fd;
+        newFile->inode = existInode;
+        newFile->offset = 0;
+        newFile->valid = 1;
+        current->fds[newFile->fd] = newFile;
+        return newFile->fd;
     }
     return -1;
 }
