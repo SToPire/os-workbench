@@ -74,7 +74,7 @@ void vfs_test()
     char* s = pmm->alloc(128);
     memset(s, 0, 128);
 
-    vfs->lseek(a, -10, SEEK_END);
+    vfs->lseek(a, 10, SEEK_END);
     vfs->read(a, s, 10);
     printf("%s\n", s);
 
