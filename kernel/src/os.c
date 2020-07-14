@@ -77,7 +77,7 @@ void vfs_test()
 
     vfs->lseek(a, 10, SEEK_END);
     vfs->read(a, s, 10);
-    printf("%s\n", s);
+    for (int i = 0; i < 10; i++) printf("%x ",s[i]);
 
     while (1)
         ;

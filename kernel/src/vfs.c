@@ -130,10 +130,13 @@ int vfs_write(int fd, void* buf, int count)
     while (offset >= sb.blk_size) {  //move to required block
         uint32_t nxtBlk = getNextFAT(curBlk);
         offset -= sb.blk_size;
-        if (nxtBlk == 0) return 0;
-        else{
+        if (nxtBlk == 0) {
+            addFAT(curBlk, sb.fst_free_data_blk);
+            ++sb.fst_free_data_blk;
+            sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+            curBlk = getNextFAT(curBlk);
+        } else
             curBlk = nxtBlk;
-        }
     }
 
     int writeCnt = 0;
