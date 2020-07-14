@@ -66,18 +66,7 @@ void vfs_test()
 {
     int a = vfs->open("/a", O_CREAT);
     int b = vfs->open("/bcd", O_CREAT);
-    assert(a != -1 && b != -1);
-    vfs->write(a, "ABCDEFGABCDEFGABCDEFGABCDEFGABCDEFG", 35);
-    vfs->lseek(a, 62, SEEK_END);
-    vfs->write(a, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 35);
-    vfs->write(b, "Hello world!", 12);
-
-    char* s = pmm->alloc(128);
-    memset(s, 0, 128);
-
-    vfs->lseek(a,90, SEEK_SET);
-    vfs->read(a, s, 30);
-    for (int i = 0; i < 30; i++) printf("%x ",s[i]);
+    printf("%d %d\n", a, b);
 
     while (1)
         ;
