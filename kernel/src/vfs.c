@@ -294,7 +294,8 @@ int vfs_lseek(int fd, int offset, int whence)
         assert(0);
     }
 
-    if(file->offset > file->inode->stat.size){
+    assert(file->offset >= 0);
+    if (file->offset > file->inode->stat.size) {
         printf("%u %u\n", file->offset, file->inode->stat.size);
     }
 
