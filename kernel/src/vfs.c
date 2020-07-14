@@ -161,8 +161,10 @@ int vfs_write(int fd, void* buf, int count)
             }
         }
     }
+
+    if (file->inode->stat.size < file->offset + writeCnt)
+        file->inode->stat.size += writeCnt;
     file->offset += writeCnt;
-    file->inode->stat.size += writeCnt;
     dinode_t newDinode;
     memcpy(&newDinode, file->inode, sizeof(newDinode));
     sda->ops->write(sda, FS_OFFSET + sb.inode_head + file->inode->stat.id * sb.inode_size, &newDinode, sizeof(dinode_t));
@@ -284,13 +286,13 @@ int vfs_open(const char* pathname, int flags)
 int vfs_lseek(int fd, int offset, int whence)
 {
     file_t* file = getFileFromFD(fd);
-    if(whence == SEEK_CUR){
+    if (whence == SEEK_CUR) {
         file->offset = file->offset + offset;
     } else if (whence == SEEK_END) {
         file->offset = file->inode->stat.size + offset;
     } else if (whence == SEEK_SET) {
         file->offset = offset;
-    } else{
+    } else {
         assert(0);
     }
 
