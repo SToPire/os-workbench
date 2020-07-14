@@ -288,6 +288,8 @@ int vfs_open(const char* pathname, int flags)
         }
     } else {   //do not create file
         printf("else\n");
+        inode_t* newInode = inodeSearch(root, pathname);
+        printf("id:%d\n", newInode->stat.id);
     }
     return -1;
 }
