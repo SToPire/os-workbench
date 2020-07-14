@@ -67,6 +67,9 @@ void vfs_test()
     int a = vfs->open("/a", O_CREAT);
     int b = vfs->open("/bcd", O_CREAT);
     printf("%d %d\n", a, b);
+    vfs->close(a);
+    int c = vfs->open("/e", O_CREAT);
+    printf("%d %d\n", b, c);
 
     while (1)
         ;
