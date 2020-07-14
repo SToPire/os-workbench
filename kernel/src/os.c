@@ -64,7 +64,7 @@
 
 void vfs_test()
 {
-    int a = vfs->open("/a", O_CREAT);
+    int a = vfs->open("/a", O_CREAT | O_RDONLY);
     int b = vfs->open("/bcd", O_CREAT);
     vfs->close(a);
     int c = vfs->open("/a",0);
