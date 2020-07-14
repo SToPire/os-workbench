@@ -39,7 +39,6 @@ typedef struct _dinode{
 
 typedef struct _file {
     int fd;
-    //char path[128];
     inode_t* inode;
     off_t offset;
     int valid;
