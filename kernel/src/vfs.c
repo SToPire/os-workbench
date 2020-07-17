@@ -287,8 +287,13 @@ int vfs_open(const char* pathname, int flags)
             newFile->inode = newInode;
             newFile->offset = 0;
             newFile->valid = 1;
-            current->fds[free_fd] = cnt_ofile;
-            ofiles[++cnt_ofile] = newFile;
+            int fst_ofile_ptr = 0;
+            for (; fst_ofile_ptr < NUM_OFILE;fst_ofile_ptr++){
+                if (ofiles[fst_ofile_ptr] == NULL || ofiles[fst_ofile_ptr]->valid == 0) break;
+            }
+            current->fds[free_fd] = fst_ofile_ptr;
+            ofiles[fst_ofile_ptr] = newFile;
+            ++cnt_ofile;
             return newFile->fd;
         }
     } else {   //do not create file
@@ -305,8 +310,13 @@ int vfs_open(const char* pathname, int flags)
         newFile->inode = existInode;
         newFile->offset = 0;
         newFile->valid = 1;
-        current->fds[free_fd] = cnt_ofile;
-        ofiles[++cnt_ofile] = newFile;
+        int fst_ofile_ptr = 0;
+        for (; fst_ofile_ptr < NUM_OFILE; fst_ofile_ptr++) {
+            if (ofiles[fst_ofile_ptr] == NULL || ofiles[fst_ofile_ptr]->valid == 0) break;
+        }
+        current->fds[free_fd] = fst_ofile_ptr;
+        ofiles[fst_ofile_ptr] = newFile;
+        ++cnt_ofile;
         return newFile->fd;
     }
     return -1;
