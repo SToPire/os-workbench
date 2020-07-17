@@ -228,6 +228,7 @@ int vfs_open(const char* pathname, int flags)
 {
     if (flags & O_CREAT) {
         if (pathname[0] == '/') {
+            printf("here:%s\n", pathname);
             int i = strlen(pathname);
             while (pathname[i] != '/') --i;
             char filename[128], dirname[128];
@@ -320,7 +321,6 @@ int vfs_open(const char* pathname, int flags)
         ++cnt_ofile;
         return newFile->fd;
     }
-    printf("sss");
     return -1;
 }
 
