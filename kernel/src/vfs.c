@@ -4,6 +4,8 @@
 
 #define current cpu_local[_cpu()].current
 #define getFileFromFD(fd) current->fds[fd];
+#define NUM_OFILE 128
+file_t* ofiles[NUM_OFILE];
 
 /* ---------- Inode Operation ----------*/
 inode_t* inodeSearch(inode_t* cur, const char* path)
