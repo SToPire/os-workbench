@@ -228,7 +228,6 @@ int vfs_open(const char* pathname, int flags)
 {
     if (flags & O_CREAT) {
         if (pathname[0] == '/') {
-            printf("here:%s\n", pathname);
             int i = strlen(pathname);
             while (pathname[i] != '/') --i;
             char filename[128], dirname[128];
@@ -246,6 +245,7 @@ int vfs_open(const char* pathname, int flags)
             memcpy(&newParentDinode, ip, sizeof(dinode_t));
             sda->ops->write(sda, FS_OFFSET + sb.inode_head + ip->stat.id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
 
+            printf("here:%s\n", pathname);
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
             addFAT(entryBlkNO, sb.fst_free_data_blk);
             ++sb.fst_free_data_blk;
