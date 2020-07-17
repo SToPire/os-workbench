@@ -296,6 +296,7 @@ int vfs_open(const char* pathname, int flags)
             ofiles[fst_ofile_ptr] = newFile;
             printf("here:%s %d %d\n", pathname, newFile->fd,fst_ofile_ptr);
             ++cnt_ofile;
+            printf("ff:%d\n", newFile->fd);
             return newFile->fd;
         }
     } else {   //do not create file
