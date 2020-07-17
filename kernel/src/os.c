@@ -64,10 +64,10 @@
 
 void vfs_test()
 {
-    int a = vfs->open("/a", O_CREAT | O_RDONLY);
-    int b = vfs->open("/bcd", O_CREAT);
-    vfs->close(b);
-    int c = vfs->open("/bcd",0);
+    int a = vfs->open("/a", O_CREAT);
+    int b = vfs->open("/b", O_CREAT);
+    int c = vfs->open("/c", O_CREAT);
+
     printf("%d %d %d\n", a, b, c);
 
     while (1)
