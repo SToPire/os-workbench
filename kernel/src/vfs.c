@@ -219,6 +219,7 @@ int vfs_read(int fd, void* buf, int count)
 
 int vfs_close(int fd)
 {
+    ofiles[current->fds[fd]]->valid = 0;
     current->fds[fd] = -1;
     return 0;
 }
