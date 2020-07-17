@@ -272,7 +272,6 @@ int vfs_open(const char* pathname, int flags)
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
-            printf("here:%s\n", pathname);
             entry_t newEntry;
             memset(&newEntry, 0, sizeof(newEntry));
             newEntry.dir_entry.inode = newInode->stat.id;
@@ -284,6 +283,7 @@ int vfs_open(const char* pathname, int flags)
             for (; free_fd < 128; free_fd++) {
                 if (current->fds[free_fd] == -1) break;
             }
+            printf("here:%s\n", pathname);
             if (free_fd == 128) return -1;
             newFile->fd = free_fd;
             newFile->inode = newInode;
