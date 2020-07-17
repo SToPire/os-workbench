@@ -245,7 +245,6 @@ int vfs_open(const char* pathname, int flags)
             memcpy(&newParentDinode, ip, sizeof(dinode_t));
             sda->ops->write(sda, FS_OFFSET + sb.inode_head + ip->stat.id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
 
-            printf("here:%s\n", pathname);
             uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
             addFAT(entryBlkNO, sb.fst_free_data_blk);
             ++sb.fst_free_data_blk;
@@ -273,6 +272,7 @@ int vfs_open(const char* pathname, int flags)
             ++sb.fst_free_data_blk;
             sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
+            printf("here:%s\n", pathname);
             entry_t newEntry;
             memset(&newEntry, 0, sizeof(newEntry));
             newEntry.dir_entry.inode = newInode->stat.id;
