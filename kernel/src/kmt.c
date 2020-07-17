@@ -18,7 +18,7 @@ int create(task_t* task, const char* name, void (*entry)(void* arg), void* arg)
     task->stack.start = pmm->alloc(STACK_SIZE);
     task->stack.end = task->stack.start + STACK_SIZE;
     task->context = _kcontext(task->stack, entry, arg);
-    memset(task->fds, 0, sizeof(task->fds));
+    memset(task->fds, 0xff, sizeof(task->fds));
 
     if (MAX_TASKS == TASKS_CNT) panic("No more TASKS can be created!");
     if (TASKS_CNT++ == 0)  // first task in os

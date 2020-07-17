@@ -3,9 +3,10 @@
 #include <vfs.h>
 
 #define current cpu_local[_cpu()].current
-#define getFileFromFD(fd) current->fds[fd];
+#define getFileFromFD(fd) ofiles[current->fds[fd]];
 #define NUM_OFILE 128
 file_t* ofiles[NUM_OFILE];
+int cnt_ofile;
 
 /* ---------- Inode Operation ----------*/
 inode_t* inodeSearch(inode_t* cur, const char* path)
@@ -218,14 +219,12 @@ int vfs_read(int fd, void* buf, int count)
 
 int vfs_close(int fd)
 {
-    current->fds[fd]->valid = 0;
+    current->fds[fd] = -1;
     return 0;
 }
 
 int vfs_open(const char* pathname, int flags)
 {
-    //if ((flags & (O_RDONLY | O_RDWR | O_WRONLY)) == 0) return -1;
-
     if (flags & O_CREAT) {
         if (pathname[0] == '/') {
             int i = strlen(pathname);
@@ -281,14 +280,15 @@ int vfs_open(const char* pathname, int flags)
             file_t* newFile = pmm->alloc(sizeof(file_t));
             int free_fd = 0;
             for (; free_fd < 128; free_fd++) {
-                if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
+                if (current->fds[free_fd] != -1) break;
             }
             if (free_fd == 128) return -1;
             newFile->fd = free_fd;
             newFile->inode = newInode;
             newFile->offset = 0;
             newFile->valid = 1;
-            current->fds[newFile->fd] = newFile;
+            current->fds[free_fd] = cnt_ofile;
+            ofiles[++cnt_ofile] = newFile;
             return newFile->fd;
         }
     } else {   //do not create file
@@ -298,14 +298,15 @@ int vfs_open(const char* pathname, int flags)
         file_t* newFile = pmm->alloc(sizeof(file_t));
         int free_fd = 0;
         for (; free_fd < 128; free_fd++) {
-            if (current->fds[free_fd] == NULL || current->fds[free_fd]->valid == 0) break;
+            if (current->fds[free_fd] != -1) break;
         }
         if (free_fd == 128) return -1;
         newFile->fd = free_fd;
         newFile->inode = existInode;
         newFile->offset = 0;
         newFile->valid = 1;
-        current->fds[newFile->fd] = newFile;
+        current->fds[free_fd] = cnt_ofile;
+        ofiles[++cnt_ofile] = newFile;
         return newFile->fd;
     }
     return -1;

@@ -21,7 +21,7 @@ struct task {
     _Context* context;
     _Area stack;
 
-    file_t* fds[128];
+    int fds[128];
     //int sticky;
 };
 #define MAX_TASKS 32
