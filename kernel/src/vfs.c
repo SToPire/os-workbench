@@ -226,7 +226,7 @@ int vfs_close(int fd)
 
 int vfs_open(const char* pathname, int flags)
 {
-    if (flags & O_CREAT) {
+    if ((flags & O_CREAT) && inodeSearch(root, pathname) == (void*)-1) {
         if (pathname[0] == '/') {
             int i = strlen(pathname);
             while (pathname[i] != '/') --i;
@@ -289,7 +289,7 @@ int vfs_open(const char* pathname, int flags)
             newFile->offset = 0;
             newFile->valid = 1;
             int fst_ofile_ptr = 0;
-            for (; fst_ofile_ptr < NUM_OFILE;fst_ofile_ptr++){
+            for (; fst_ofile_ptr < NUM_OFILE; fst_ofile_ptr++) {
                 if (ofiles[fst_ofile_ptr] == NULL || ofiles[fst_ofile_ptr]->valid == 0) break;
             }
             current->fds[free_fd] = fst_ofile_ptr;
@@ -297,7 +297,7 @@ int vfs_open(const char* pathname, int flags)
             ++cnt_ofile;
             return newFile->fd;
         }
-    } else {   //do not create file
+    } else {  //do not create file
         inode_t* existInode = inodeSearch(root, pathname);
         if (existInode == (void*)(-1)) return -1;
 
