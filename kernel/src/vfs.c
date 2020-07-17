@@ -239,7 +239,10 @@ int vfs_open(const char* pathname, int flags)
             //printf("dirname:%s filename:%s\n", dirname, filename);
 
             inode_t* ip = inodeSearch(root, dirname);
-            if (ip == (void*)(-1)) return -1;
+            if (ip == (void*)(-1)) {
+                printf("sss");
+                return -1;
+            }
             ip->stat.size += sizeof(struct ufs_dirent);
             dinode_t newParentDinode;
             memcpy(&newParentDinode, ip, sizeof(dinode_t));
