@@ -74,7 +74,7 @@ void vfs_test()
     vfs->write(a, "Hello World", 11);
     vfs->write(b, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
     vfs->close(b);
-    int c = vfs->open("/b", O_CREAT);
+    int c = vfs->open("/c", O_CREAT);
     vfs->lseek(c, 25, SEEK_SET);
     vfs->read(c, ss, 10);
 
