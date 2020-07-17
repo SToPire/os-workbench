@@ -71,6 +71,7 @@ void vfs_test()
     memset(ss, 0, 128);
 
     vfs->write(b, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
+    vfs->write(a, "Hello World", 11);
     vfs->write(b, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
     vfs->close(b);
     int c = vfs->open("/b", 0);
