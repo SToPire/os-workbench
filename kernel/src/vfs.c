@@ -227,6 +227,7 @@ int vfs_close(int fd)
 int vfs_open(const char* pathname, int flags)
 {
     if ((flags & O_CREAT) && inodeSearch(root, pathname) == (void*)-1) {
+        printf("here:%s", pathname);
         if (pathname[0] == '/') {
             int i = strlen(pathname);
             while (pathname[i] != '/') --i;
