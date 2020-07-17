@@ -66,11 +66,18 @@ void vfs_test()
 {
     int a = vfs->open("/a", O_CREAT);
     int b = vfs->open("/b", O_CREAT);
+
+    char* ss= pmm->alloc(128);
+    memset(ss, 0, 128);
+
+    vfs->write(b, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
+    vfs->write(b, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
     vfs->close(b);
-    int c = vfs->open("/b", O_CREAT);
+    int c = vfs->open("/b", 0);
+    vfs->lseek(c, 25, SEEK_SET);
+    vfs->read(c, ss, 10);
 
-    printf("%d %d %d\n", a, b, c);
-
+    printf("%s\n", ss);
     while (1)
         ;
 }
