@@ -294,7 +294,7 @@ int vfs_open(const char* pathname, int flags)
             }
             current->fds[free_fd] = fst_ofile_ptr;
             ofiles[fst_ofile_ptr] = newFile;
-            printf("here:%s %d %d\n", pathname, free_fd,fst_ofile_ptr);
+            printf("here:%s %d %d\n", pathname, newFile->fd,fst_ofile_ptr);
             ++cnt_ofile;
             return newFile->fd;
         }
