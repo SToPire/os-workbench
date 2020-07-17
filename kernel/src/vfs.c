@@ -284,7 +284,6 @@ int vfs_open(const char* pathname, int flags)
                 if (current->fds[free_fd] == -1) break;
             }
             if (free_fd == 128) return -1;
-            printf("here:%s %d\n", pathname, free_fd);
             newFile->fd = free_fd;
             newFile->inode = newInode;
             newFile->offset = 0;
@@ -295,6 +294,7 @@ int vfs_open(const char* pathname, int flags)
             }
             current->fds[free_fd] = fst_ofile_ptr;
             ofiles[fst_ofile_ptr] = newFile;
+            printf("here:%s %d %d\n", pathname, free_fd,fst_ofile_ptr);
             ++cnt_ofile;
             return newFile->fd;
         }
