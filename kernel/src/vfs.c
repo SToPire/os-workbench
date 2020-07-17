@@ -301,14 +301,12 @@ int vfs_open(const char* pathname, int flags)
         }
     } else {   //do not create file
         inode_t* existInode = inodeSearch(root, pathname);
-        if (existInode == (void*)(-1)) {
-            printf("ss");
-            return -1;}
+        if (existInode == (void*)(-1)) return -1;
 
-            file_t* newFile = pmm->alloc(sizeof(file_t));
-            int free_fd = 0;
-            for (; free_fd < 128; free_fd++) {
-                if (current->fds[free_fd] == -1) break;
+        file_t* newFile = pmm->alloc(sizeof(file_t));
+        int free_fd = 0;
+        for (; free_fd < 128; free_fd++) {
+            if (current->fds[free_fd] == -1) break;
         }
         if (free_fd == 128) return -1;
         newFile->fd = free_fd;
