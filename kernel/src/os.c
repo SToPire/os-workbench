@@ -111,6 +111,10 @@ void vfs_test()
     vfs->read(v3, s, 13);
     assert(strcmp(s, "ABCDEFGHIJ@@@") == 0);
 
+    vfs->fstat(v6, &stat);
+    assert(stat.id == 1);
+    assert(stat.size == 35);
+
     while (1)
         ;
 }
