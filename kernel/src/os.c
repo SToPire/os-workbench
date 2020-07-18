@@ -82,7 +82,7 @@ void vfs_test()
     memset(ss, 0, 128);
 
     int v1 = vfs->open("/abc", O_CREAT);
-    int v2 = vfs->close(b);
+    int v2 = 233;
     int v3 = vfs->dup(v1);
     vfs->write(v1, "aaaaa", 5);
     vfs->write(v3, "ddddd", 5);
@@ -92,7 +92,7 @@ void vfs_test()
     printf("%s\n", ss);
 
     struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
-    vfs->fstat(v1, status);
+    vfs->fstat(c, status);
     printf("id:%u,size:%u,type:%u\n", status->id, status->size, status->type);
     while (1)
         ;
