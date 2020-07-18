@@ -393,6 +393,12 @@ int ufs_link(const char* oldpath, const char* newpath)
     newInode->firstChild = newInode->nxtBrother = newInode->parent = NULL;
     strcpy(newInode->name, filename);
     inodeInsert(ip, newInode);
+
+    dinode_t newDinode;
+    sda->ops->read(sda, FS_OFFSET + sb.inode_head + sb.inode_size * newInode->dInodeNum, &newDinode, sizeof(dinode_t));
+    ++newDinode.refCnt;
+    sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.inode_size * newInode->dInodeNum, &newDinode, sizeof(dinode_t));
+
     return 0;
 }
 
