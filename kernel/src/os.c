@@ -88,7 +88,7 @@ void vfs_test()
     vfs->lseek(v4, 29, SEEK_SET);
     memset(s, 0, 128);
     vfs->read(v4, s, 6);
-    assert(s[0] == 0 && strcmp(s + 1, "54321")==0);
+    assert(s[0] == 0 && strcmp(s + 1, "54321") == 0);
 
     struct ufs_stat stat;
     vfs->fstat(v5, &stat);
@@ -118,6 +118,7 @@ void vfs_test()
 
     vfs->unlink("linkf2");
     vfs->unlink("f2");
+    assert(vfs->open("f2", 0) == -1);
     while (1)
         ;
 }
