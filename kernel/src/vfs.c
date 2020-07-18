@@ -382,12 +382,10 @@ int ufs_link(const char* oldpath, const char* newpath)
     dirname[i + 1] = '\0';
 
     inode_t* ip = inodeSearch(root, dirname);
-    printf("%s ", ip->name);
     if (ip == (void*)(-1)) return -1;
 
     inode_t* oldInode = inodeSearch(root, absoluteOldpath);
     if (oldInode == (void*)(-1)) return -1;
-    printf("%s ", oldInode->name);
 
     inode_t* newInode = pmm->alloc(sizeof(inode_t));
     newInode->dInodeNum = oldInode->dInodeNum;
