@@ -72,6 +72,13 @@ void vfs_test()
     vfs->close(v2);
     int v4 = vfs->open("/f3", O_CREAT);
     assert(v4 == 0);
+
+    vfs->write(v3, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
+    vfs->lseek(v3, 25, SEEK_SET);
+    char* s[128];
+    memset(s, 0, 128);
+    vfs->read(v3, s, 10);
+    assert(strcmp("Z123456789", s) == 0);
     while (1)
         ;
 }
