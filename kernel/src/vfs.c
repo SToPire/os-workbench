@@ -175,7 +175,9 @@ int ufs_write(int fd, void* buf, int count)
         file->inode->stat.size = file->offset + writeCnt;
     file->offset += writeCnt;
     dinode_t newDinode;
-    memcpy(&newDinode, file->inode, sizeof(newDinode));
+    newDinode.firstBlock = file->inode->firstBlock;
+    memcpy(&(newDinode.stat), &(file->inode->stat), sizeof(struct ufs_stat));
+    strcpy(newDinode.name, file->inode->name);
     sda->ops->write(sda, FS_OFFSET + sb.inode_head + file->inode->stat.id * sb.inode_size, &newDinode, sizeof(dinode_t));
 
     return writeCnt;
@@ -221,6 +223,7 @@ int ufs_close(int fd)
 {
     ofiles[current->fds[fd]]->valid = 0;
     current->fds[fd] = -1;
+    --cnt_ofile;
     return 0;
 }
 
@@ -247,7 +250,9 @@ int ufs_open(const char* pathname, int flags)
         if (ip == (void*)(-1)) return -1;
         ip->stat.size += sizeof(struct ufs_dirent);
         dinode_t newParentDinode;
-        memcpy(&newParentDinode, ip, sizeof(dinode_t));
+        newParentDinode.firstBlock = ip->firstBlock;
+        memcpy(&(newParentDinode.stat), &(ip->stat), sizeof(struct ufs_stat));
+        strcpy(newParentDinode.name, ip->name);
         sda->ops->write(sda, FS_OFFSET + sb.inode_head + ip->stat.id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
 
         uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
