@@ -85,7 +85,7 @@ void vfs_test()
     vfs->write(v4, "54321", 5);
     vfs->lseek(v4, 29, SEEK_SET);
     vfs->read(v4, s, 6);
-    assert(s[0] == 0 && strcmp(s + 1, "54321"));
+    assert(s[0] == 1 && strcmp(s + 1, "54321"));
     while (1)
         ;
 }
