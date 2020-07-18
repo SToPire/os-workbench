@@ -356,8 +356,7 @@ int ufs_chdir(const char* path)
         absolutePathname[strlen(absolutePathname)] = '/';
         absolutePathname[strlen(absolutePathname)] = '\0';
     }
-    memset(current->cwd, 0, sizeof(current->cwd));
-    printf("%d",(int)sizeof(current->cwd));
+    strcpy(current->cwd, absolutePathname);
     return 0;
 }
 
