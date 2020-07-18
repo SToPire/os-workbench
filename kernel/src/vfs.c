@@ -381,6 +381,8 @@ int ufs_link(const char* oldpath, const char* newpath)
     strncpy(dirname, absoluteNewpath, i + 1);
     dirname[i + 1] = '\0';
 
+    if (inodeSearch(root, absoluteNewpath) != (void*)(-1)) return -1;
+
     inode_t* ip = inodeSearch(root, dirname);
     if (ip == (void*)(-1)) return -1;
 
