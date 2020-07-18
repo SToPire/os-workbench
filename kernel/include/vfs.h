@@ -44,6 +44,4 @@ typedef struct _file {
     int valid;
 } file_t;
 
-
-
 #endif

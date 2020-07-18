@@ -92,7 +92,7 @@ void vfs_test()
     printf("%s\n", ss);
 
     struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
-    vfs->fstat(c, status);
+    vfs->fstat(a, status);
     printf("id:%u,size:%u,type:%u\n", status->id, status->size, status->type);
     while (1)
         ;
