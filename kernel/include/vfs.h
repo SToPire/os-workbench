@@ -44,9 +44,6 @@ typedef struct _file {
     int valid;
 } file_t;
 
-int vfs_write(int fd, void* buf, int count);
-int vfs_read(int fd, void* buf, int count);
-int vfs_close(int fd);
-int vfs_open(const char* pathname, int flags);
+
 
 #endif
