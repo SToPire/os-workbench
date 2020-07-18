@@ -441,6 +441,11 @@ int ufs_fstat(int fd, struct ufs_stat* buf)
     return 0;
 }
 
+int ufs_mkdir(const char* pathname)
+{
+    return 0;
+}
+
 int ufs_chdir(const char* path)
 {
     char absolutePathname[128];
@@ -480,6 +485,7 @@ MODULE_DEF(vfs) = {
     .link = ufs_link,
     .unlink = ufs_unlink,
     .fstat = ufs_fstat,
+    .mkdir = ufs_mkdir,
     .chdir = ufs_chdir,
     .dup = ufs_dup,
 };
