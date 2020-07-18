@@ -80,6 +80,8 @@ void vfs_test()
     vfs->read(v3, s, 10);
     assert(strcmp("Z123456789", s) == 0);
 
+    int v5 = vfs->dup(v4);
+    assert(v5 == 2);
     vfs->write(v4, "12345", 5);
     vfs->lseek(v4, 25, SEEK_END);
     vfs->write(v4, "54321", 5);
@@ -87,7 +89,8 @@ void vfs_test()
     memset(s, 0, 128);
     vfs->read(v4, s, 6);
     assert(s[0] == 0 && strcmp(s + 1, "54321")==0);
-    for (int i = 0; i < 10; i++) printf("%x ", s[i]);
+
+
 
     while (1)
         ;
