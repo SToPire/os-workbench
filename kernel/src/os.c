@@ -83,6 +83,9 @@ void vfs_test()
     int v1 = vfs->open("/abc", O_CREAT);
     int v2 = vfs->open("/def", O_CREAT);
     int v3 = vfs->dup(v1);
+    vfs->write(2, "aaaaa", 5);
+    vfs->write(4, "ddddd", 5);
+
     printf("%d %d %d\n", v1, v2, v3);
     while (1)
         ;
