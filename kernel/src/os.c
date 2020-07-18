@@ -93,6 +93,7 @@ void vfs_test()
     struct ufs_stat stat;
     vfs->fstat(v5, &stat);
     assert(stat.id == 2);
+    assert(stat.type == T_FILE);
     while (1)
         ;
 }
