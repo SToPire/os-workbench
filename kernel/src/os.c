@@ -78,7 +78,7 @@ void vfs_test()
     char s[128];
     memset(s, 0, 128);
     vfs->read(v3, s, 10);
-    assert(strcmp("Z123456789", s) == 0);
+    assert(strcmp("Z1234567s89", s) == 0);
     while (1)
         ;
 }
