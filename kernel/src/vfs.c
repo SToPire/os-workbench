@@ -372,7 +372,6 @@ int ufs_link(const char* oldpath, const char* newpath)
         strcpy(absoluteNewpath, newpath);
     else
         sprintf(absoluteNewpath, "%s%s", current->cwd, newpath);
-    printf("%s %s\n", absoluteOldpath, absoluteNewpath);
     int i = strlen(absoluteNewpath);
     while (absoluteNewpath[i] != '/') --i;
     char filename[128], dirname[128];
@@ -383,10 +382,13 @@ int ufs_link(const char* oldpath, const char* newpath)
     dirname[i + 1] = '\0';
 
     inode_t* ip = inodeSearch(root, dirname);
+    printf("%s ", ip->name);
     if (ip == (void*)(-1)) return -1;
 
     inode_t* oldInode = inodeSearch(root, absoluteOldpath);
     if (oldInode == (void*)(-1)) return -1;
+    printf("%s ", oldInode->name);
+
     inode_t* newInode = pmm->alloc(sizeof(inode_t));
     newInode->dInodeNum = oldInode->dInodeNum;
     newInode->firstBlock = oldInode->firstBlock;
