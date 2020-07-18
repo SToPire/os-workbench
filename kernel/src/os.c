@@ -94,7 +94,7 @@ void vfs_test()
     vfs->fstat(v5, &stat);
     assert(stat.id == 2);
     assert(stat.type == T_FILE);
-    assert(stat.size == 35);
+    assert(stat.size == 34);
 
     while (1)
         ;
