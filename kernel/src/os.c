@@ -90,9 +90,9 @@ void vfs_test()
     vfs->read(v4, s, 6);
     assert(s[0] == 0 && strcmp(s + 1, "54321")==0);
 
-    vfs->chdir("a/b");
-    vfs->chdir("tmp");
-
+    struct ufs_stat stat;
+    vfs->fstat(v5, &stat);
+    assert(stat.id == 2);
     while (1)
         ;
 }
