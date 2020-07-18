@@ -101,6 +101,7 @@ void vfs_test()
     assert(stat.size == 35);
 
     vfs->link("f2", "linkf2");
+    assert(vfs->link("f3", "/linkf2") == -1);
     int v6 = vfs->open("/linkf2", 0);
     memset(s, 0, 128);
     vfs->read(v6, s, 10);
