@@ -119,6 +119,11 @@ void vfs_test()
     vfs->unlink("linkf2");
     vfs->unlink("f2");
     assert(vfs->open("f2", 0) == -1);
+    int v7 = vfs->open("/f2", O_CREAT);
+    vfs->fstat(v7, &stat);
+    assert(stat.id == 3);
+    assert(stat.size == 0);
+    
     while (1)
         ;
 }
