@@ -8,7 +8,7 @@
 file_t* ofiles[NUM_OFILE];
 int cnt_ofile;
 
-/* ---------- Inode Operation ----------*/
+/* ---------- Inode Operation ---------- */
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
     if (strcmp(path, "/") == 0) {
@@ -69,8 +69,8 @@ void inodeDelete(inode_t* parent, inode_t* child)
             i->nxtBrother = child->nxtBrother;
     }
 }
-/* ---------- Inode Operation ----------*/
-
+/* ---------- Inode Operation ---------- */
+/* ---------- UFS ---------- */
 #define FS_OFFSET 1 * 1024 * 1024
 superblock_t sb;
 device_t* sda;
@@ -109,7 +109,7 @@ void readEntry(uint32_t NO, entry_t* e)
 
 inode_t* root;
 
-void vfs_init()
+void ufs_init()
 {
     sda = dev->lookup("sda");
     sda->ops->read(sda, FS_OFFSET, &sb, sizeof(sb));
@@ -125,7 +125,7 @@ void vfs_init()
     strcpy(root->name, d_root->name);
 }
 
-int vfs_write(int fd, void* buf, int count)
+int ufs_write(int fd, void* buf, int count)
 {
     file_t* file = getFileFromFD(fd);
     off_t offset = file->offset;
@@ -181,7 +181,7 @@ int vfs_write(int fd, void* buf, int count)
     return writeCnt;
 }
 
-int vfs_read(int fd, void* buf, int count)
+int ufs_read(int fd, void* buf, int count)
 {
     file_t* file = getFileFromFD(fd);
     if (file->inode->stat.size <= file->offset) return 0;
@@ -217,14 +217,14 @@ int vfs_read(int fd, void* buf, int count)
     return readCnt;
 }
 
-int vfs_close(int fd)
+int ufs_close(int fd)
 {
     ofiles[current->fds[fd]]->valid = 0;
     current->fds[fd] = -1;
     return 0;
 }
 
-int vfs_open(const char* pathname, int flags)
+int ufs_open(const char* pathname, int flags)
 {
     if ((flags & O_CREAT) && inodeSearch(root, pathname) == (void*)-1) {
         printf("here:%s\n", pathname);
@@ -324,7 +324,7 @@ int vfs_open(const char* pathname, int flags)
     return -1;
 }
 
-int vfs_lseek(int fd, int offset, int whence)
+int ufs_lseek(int fd, int offset, int whence)
 {
     file_t* file = getFileFromFD(fd);
     if (whence == SEEK_CUR) {
@@ -342,10 +342,10 @@ int vfs_lseek(int fd, int offset, int whence)
 }
 
 MODULE_DEF(vfs) = {
-    .init = vfs_init,
-    .open = vfs_open,
-    .close = vfs_close,
-    .write = vfs_write,
-    .read = vfs_read,
-    .lseek = vfs_lseek,
+    .init = ufs_init,
+    .open = ufs_open,
+    .close = ufs_close,
+    .write = ufs_write,
+    .read = ufs_read,
+    .lseek = ufs_lseek,
 };
