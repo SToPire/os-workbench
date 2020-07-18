@@ -122,8 +122,8 @@ void vfs_test()
     int v7 = vfs->open("/f2", O_CREAT);
     vfs->fstat(v7, &stat);
     assert(stat.id == 3);
-    assert(stat.size == 0);
-    
+    assert(stat.size == 1);
+
     while (1)
         ;
 }
