@@ -117,7 +117,7 @@ void vfs_test()
     assert(stat.size == 35);
 
     vfs->unlink("linkf2");
-
+    vfs->unlink("f2");
     while (1)
         ;
 }

@@ -423,6 +423,7 @@ int ufs_unlink(const char* pathname)
     inode_t* inode = inodeSearch(root, absolutePathname);
     if (inode == (void*)(-1) || pinode == (void*)(-1)) return -1;
     /* TBD:  unlink an opening file*/
+    /* TBD:  reusing block & dinode*/
 
     dinode_t newDinode;
     sda->ops->read(sda, FS_OFFSET + sb.inode_head + sb.inode_size * inode->dInodeNum, &newDinode, sizeof(dinode_t));
