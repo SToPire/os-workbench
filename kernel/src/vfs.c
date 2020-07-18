@@ -122,7 +122,7 @@ void ufs_init()
     root->firstChild = root->nxtBrother = NULL;
     root->firstBlock = d_root->firstBlock;
     memcpy(&(root->stat), &(d_root->stat), sizeof(root->stat));
-    strcpy(root->name, d_root->name);
+    strcpy(root->name, "/");
 }
 
 int ufs_write(int fd, void* buf, int count)
@@ -177,7 +177,6 @@ int ufs_write(int fd, void* buf, int count)
     dinode_t newDinode;
     newDinode.firstBlock = file->inode->firstBlock;
     memcpy(&(newDinode.stat), &(file->inode->stat), sizeof(struct ufs_stat));
-    strcpy(newDinode.name, file->inode->name);
     sda->ops->write(sda, FS_OFFSET + sb.inode_head + file->inode->stat.id * sb.inode_size, &newDinode, sizeof(dinode_t));
 
     return writeCnt;
@@ -252,7 +251,6 @@ int ufs_open(const char* pathname, int flags)
         dinode_t newParentDinode;
         newParentDinode.firstBlock = ip->firstBlock;
         memcpy(&(newParentDinode.stat), &(ip->stat), sizeof(struct ufs_stat));
-        strcpy(newParentDinode.name, ip->name);
         sda->ops->write(sda, FS_OFFSET + sb.inode_head + ip->stat.id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
 
         uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
@@ -276,7 +274,6 @@ int ufs_open(const char* pathname, int flags)
         newDinode->stat.type = T_FILE;
         newDinode->stat.size = 0;
         newDinode->firstBlock = sb.fst_free_data_blk;
-        strcpy(newDinode->name, filename);
         sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
         ++sb.fst_free_inode;
         ++sb.fst_free_data_blk;

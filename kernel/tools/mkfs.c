@@ -34,7 +34,6 @@ struct _inode {
 
 typedef struct _dinode {
     struct ufs_stat stat;
-    char name[28];
     uint32_t firstBlock;
 } dinode_t;
 
@@ -69,7 +68,6 @@ int main(int argc, char* argv[])
 
     dinode_t rootInode;
     memset(&rootInode, 0, sizeof(rootInode));
-    strcpy(rootInode.name, "/");
     rootInode.stat.id = 0;
     rootInode.stat.type = T_DIR;
     rootInode.stat.size = 0;

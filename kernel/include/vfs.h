@@ -33,7 +33,6 @@ struct _inode {
 
 typedef struct _dinode{
     struct ufs_stat stat;
-    char name[28];
     uint32_t firstBlock;
 } dinode_t;
 
