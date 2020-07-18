@@ -34,6 +34,7 @@ struct _inode {
 typedef struct _dinode{
     struct ufs_stat stat;
     uint32_t firstBlock;
+    uint32_t refCnt;
 } dinode_t;
 
 typedef struct _file {

@@ -2,7 +2,6 @@
 #define __KMT_H__
 
 #include <am.h>
-//#include<vfs.h>
 typedef struct task task_t;
 
 enum {

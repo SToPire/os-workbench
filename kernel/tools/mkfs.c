@@ -23,6 +23,7 @@ typedef struct _superblock {
 typedef struct _dinode {
     struct ufs_stat stat;
     uint32_t firstBlock;
+    uint32_t refCnt;
 } dinode_t;
 
 int main(int argc, char* argv[])
@@ -60,6 +61,7 @@ int main(int argc, char* argv[])
     rootInode.stat.type = T_DIR;
     rootInode.stat.size = 0;
     rootInode.firstBlock = 0;
+    rootInode.refCnt = 1;
     memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
     munmap(disk, IMG_SIZE);

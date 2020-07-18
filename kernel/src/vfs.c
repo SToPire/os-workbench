@@ -181,15 +181,12 @@ int ufs_write(int fd, void* buf, int count)
         }
     }
 
-    struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
-    getStatFromDinode(file->inode->dInodeNum, status);
-    if (status->size < file->offset + writeCnt)
-        status->size = file->offset + writeCnt;
-    file->offset += writeCnt;
     dinode_t newDinode;
-    newDinode.firstBlock = file->inode->firstBlock;
-    memcpy(&(newDinode.stat), status, sizeof(struct ufs_stat));
-    sda->ops->write(sda, FS_OFFSET + sb.inode_head + status->id * sb.inode_size, &newDinode, sizeof(dinode_t));
+    sda->ops->read(sda, FS_OFFSET + sb.inode_head + sb.inode_size * file->inode->dInodeNum, &newDinode, sizeof(dinode_t));
+    if (newDinode.stat.size < file->offset + writeCnt)
+        newDinode.stat.size = file->offset + writeCnt;
+    file->offset += writeCnt;
+    sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.inode_size * file->inode->dInodeNum, &newDinode, sizeof(dinode_t));
 
     return writeCnt;
 }
@@ -266,6 +263,7 @@ int ufs_open(const char* pathname, int flags)
         status->size += sizeof(struct ufs_dirent);
         dinode_t newParentDinode;
         newParentDinode.firstBlock = ip->firstBlock;
+        newParentDinode.refCnt = 1;
         memcpy(&(newParentDinode.stat), status, sizeof(struct ufs_stat));
         sda->ops->write(sda, FS_OFFSET + sb.inode_head + status->id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
 
@@ -288,6 +286,7 @@ int ufs_open(const char* pathname, int flags)
         newDinode->stat.type = T_FILE;
         newDinode->stat.size = 0;
         newDinode->firstBlock = sb.fst_free_data_blk;
+        newDinode->refCnt = 1;
         sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
         ++sb.fst_free_inode;
         ++sb.fst_free_data_blk;
@@ -360,6 +359,19 @@ int ufs_lseek(int fd, int offset, int whence)
 
     assert(file->offset >= 0);
     return file->offset;
+}
+
+int ufs_link(const char* oldpath, const char* newpath)
+{
+    char absoluteOldpath[128], absoluteNewpath[128];
+    if (oldpath[0] == '/')
+        strcpy(absoluteOldpath, oldpath);
+    else
+        sprintf(absoluteOldpath, "%s%s", current->cwd, oldpath);
+    if (newpath[0] == '/')
+        strcpy(absoluteNewpath, newpath);
+    else
+        sprintf(absoluteNewpath, "%s%s", current->cwd, newpath);
 }
 
 int ufs_fstat(int fd, struct ufs_stat* buf)
