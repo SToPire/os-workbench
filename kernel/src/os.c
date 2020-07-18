@@ -92,6 +92,7 @@ void vfs_test()
     printf("%s\n", ss);
 
     vfs->chdir("a/b/c");
+    vfs->chdir("tmp");
     while (1)
         ;
 }
