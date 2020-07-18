@@ -100,6 +100,8 @@ void vfs_test()
     assert(stat.id == 1);
     assert(stat.size == 35);
 
+    vfs->link("f2", "linkf2");
+
     while (1)
         ;
 }

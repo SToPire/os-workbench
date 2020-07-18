@@ -372,6 +372,27 @@ int ufs_link(const char* oldpath, const char* newpath)
         strcpy(absoluteNewpath, newpath);
     else
         sprintf(absoluteNewpath, "%s%s", current->cwd, newpath);
+    printf("%s %s\n", absoluteOldpath, absoluteNewpath);
+    int i = strlen(absoluteNewpath);
+    while (absoluteNewpath[i] != '/') --i;
+    char filename[128], dirname[128];
+    memset(filename, 0, 128);
+    memset(dirname, 0, 128);
+    strcpy(filename, absoluteNewpath + i + 1);
+    strncpy(dirname, absoluteNewpath, i + 1);
+    dirname[i + 1] = '\0';
+
+    inode_t* ip = inodeSearch(root, dirname);
+    if (ip == (void*)(-1)) return -1;
+
+    inode_t* oldInode = inodeSearch(root, absoluteOldpath);
+    if (oldInode == (void*)(-1)) return -1;
+    inode_t* newInode = pmm->alloc(sizeof(inode_t));
+    newInode->dInodeNum = oldInode->dInodeNum;
+    newInode->firstBlock = oldInode->firstBlock;
+    newInode->firstChild = newInode->nxtBrother = newInode->parent = NULL;
+    strcpy(newInode->name, filename);
+    inodeInsert(ip, newInode);
 }
 
 int ufs_fstat(int fd, struct ufs_stat* buf)
@@ -417,6 +438,7 @@ MODULE_DEF(vfs) = {
     .close = ufs_close,
     .open = ufs_open,
     .lseek = ufs_lseek,
+    .link = ufs_link,
     .fstat = ufs_fstat,
     .chdir = ufs_chdir,
     .dup = ufs_dup,
