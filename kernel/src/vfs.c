@@ -227,76 +227,74 @@ int ufs_close(int fd)
 int ufs_open(const char* pathname, int flags)
 {
     if ((flags & O_CREAT) && inodeSearch(root, pathname) == (void*)-1) {
-        if (pathname[0] == '/') {
-            int i = strlen(pathname);
-            while (pathname[i] != '/') --i;
-            char filename[128], dirname[128];
-            memset(filename, 0, 128);
-            memset(dirname, 0, 128);
-            strcpy(filename, pathname + i + 1);
-            strncpy(dirname, pathname, i + 1);
-            dirname[i + 1] = '\0';
-            //printf("dirname:%s filename:%s\n", dirname, filename);
+        int i = strlen(pathname);
+        while (pathname[i] != '/') --i;
+        char filename[128], dirname[128];
+        memset(filename, 0, 128);
+        memset(dirname, 0, 128);
+        strcpy(filename, pathname + i + 1);
+        strncpy(dirname, pathname, i + 1);
+        dirname[i + 1] = '\0';
+        //printf("dirname:%s filename:%s\n", dirname, filename);
 
-            inode_t* ip = inodeSearch(root, dirname);
-            if (ip == (void*)(-1)) return -1;
-            ip->stat.size += sizeof(struct ufs_dirent);
-            dinode_t newParentDinode;
-            memcpy(&newParentDinode, ip, sizeof(dinode_t));
-            sda->ops->write(sda, FS_OFFSET + sb.inode_head + ip->stat.id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
+        inode_t* ip = inodeSearch(root, dirname);
+        if (ip == (void*)(-1)) return -1;
+        ip->stat.size += sizeof(struct ufs_dirent);
+        dinode_t newParentDinode;
+        memcpy(&newParentDinode, ip, sizeof(dinode_t));
+        sda->ops->write(sda, FS_OFFSET + sb.inode_head + ip->stat.id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
 
-            uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
-            addFAT(entryBlkNO, sb.fst_free_data_blk);
-            ++sb.fst_free_data_blk;
-            sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+        uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
+        addFAT(entryBlkNO, sb.fst_free_data_blk);
+        ++sb.fst_free_data_blk;
+        sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
-            inode_t* newInode = pmm->alloc(sizeof(inode_t));
-            memset(newInode, 0, sizeof(inode_t));
-            newInode->stat.id = sb.fst_free_inode;
-            newInode->stat.type = T_FILE;
-            newInode->stat.size = 0;
-            newInode->firstBlock = sb.fst_free_data_blk;
-            strcpy(newInode->name, filename);
+        inode_t* newInode = pmm->alloc(sizeof(inode_t));
+        memset(newInode, 0, sizeof(inode_t));
+        newInode->stat.id = sb.fst_free_inode;
+        newInode->stat.type = T_FILE;
+        newInode->stat.size = 0;
+        newInode->firstBlock = sb.fst_free_data_blk;
+        strcpy(newInode->name, filename);
 
-            inodeInsert(ip, newInode);
+        inodeInsert(ip, newInode);
 
-            dinode_t* newDinode = pmm->alloc(sizeof(dinode_t));
-            memset(newDinode, 0, sizeof(dinode_t));
-            newDinode->stat.id = sb.fst_free_inode;
-            newDinode->stat.type = T_FILE;
-            newDinode->stat.size = 0;
-            newDinode->firstBlock = sb.fst_free_data_blk;
-            strcpy(newDinode->name, filename);
-            sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
-            ++sb.fst_free_inode;
-            ++sb.fst_free_data_blk;
-            sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+        dinode_t* newDinode = pmm->alloc(sizeof(dinode_t));
+        memset(newDinode, 0, sizeof(dinode_t));
+        newDinode->stat.id = sb.fst_free_inode;
+        newDinode->stat.type = T_FILE;
+        newDinode->stat.size = 0;
+        newDinode->firstBlock = sb.fst_free_data_blk;
+        strcpy(newDinode->name, filename);
+        sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
+        ++sb.fst_free_inode;
+        ++sb.fst_free_data_blk;
+        sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
-            entry_t newEntry;
-            memset(&newEntry, 0, sizeof(newEntry));
-            newEntry.dir_entry.inode = newInode->stat.id;
-            strcpy(newEntry.dir_entry.name, newInode->name);
-            writeEntry(entryBlkNO, &newEntry);
+        entry_t newEntry;
+        memset(&newEntry, 0, sizeof(newEntry));
+        newEntry.dir_entry.inode = newInode->stat.id;
+        strcpy(newEntry.dir_entry.name, newInode->name);
+        writeEntry(entryBlkNO, &newEntry);
 
-            file_t* newFile = pmm->alloc(sizeof(file_t));
-            int free_fd = 0;
-            for (; free_fd < 128; free_fd++) {
-                if (current->fds[free_fd] == -1) break;
-            }
-            if (free_fd == 128) return -1;
-            newFile->fd = free_fd;
-            newFile->inode = newInode;
-            newFile->offset = 0;
-            newFile->valid = 1;
-            int fst_ofile_ptr = 0;
-            for (; fst_ofile_ptr < NUM_OFILE; fst_ofile_ptr++) {
-                if (ofiles[fst_ofile_ptr] == NULL || ofiles[fst_ofile_ptr]->valid == 0) break;
-            }
-            current->fds[free_fd] = fst_ofile_ptr;
-            ofiles[fst_ofile_ptr] = newFile;
-            ++cnt_ofile;
-            return newFile->fd;
+        file_t* newFile = pmm->alloc(sizeof(file_t));
+        int free_fd = 0;
+        for (; free_fd < 128; free_fd++) {
+            if (current->fds[free_fd] == -1) break;
         }
+        if (free_fd == 128) return -1;
+        newFile->fd = free_fd;
+        newFile->inode = newInode;
+        newFile->offset = 0;
+        newFile->valid = 1;
+        int fst_ofile_ptr = 0;
+        for (; fst_ofile_ptr < NUM_OFILE; fst_ofile_ptr++) {
+            if (ofiles[fst_ofile_ptr] == NULL || ofiles[fst_ofile_ptr]->valid == 0) break;
+        }
+        current->fds[free_fd] = fst_ofile_ptr;
+        ofiles[fst_ofile_ptr] = newFile;
+        ++cnt_ofile;
+        return newFile->fd;
     } else {  //do not create file
         inode_t* existInode = inodeSearch(root, pathname);
         if (existInode == (void*)(-1)) return -1;
