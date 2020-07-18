@@ -96,6 +96,10 @@ void vfs_test()
     assert(stat.type == T_FILE);
     assert(stat.size == 35);
 
+    vfs->fstat(v3, &stat);
+    assert(stat.id == 1);
+    assert(stat.size == 35);
+
     while (1)
         ;
 }
