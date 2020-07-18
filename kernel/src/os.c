@@ -105,7 +105,7 @@ void vfs_test()
     memset(s, 0, 128);
     vfs->read(v6, s, 10);
     printf("%s\n", s);
-    assert(strcpy(s, "ABCDEFGHIJ") == 0);
+    assert(strcmp(s, "ABCDEFGHIJ") == 0);
 
     while (1)
         ;
