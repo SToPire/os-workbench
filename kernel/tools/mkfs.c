@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 
     superblock_t sb;
     sb.blk_size = 32U;
-    sb.inode_size = 64U; 
+    sb.inode_size = 32U; 
     sb.inode_head = sizeof(superblock_t);
     sb.fat_head = sb.inode_head + 1024U;
     sb.data_head = sb.fat_head + 1024U;
