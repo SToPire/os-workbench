@@ -101,6 +101,8 @@ void vfs_test()
     assert(stat.size == 35);
 
     vfs->link("f2", "linkf2");
+    vfs->link("f2", "linkf22");
+    vfs->link("f2", "linkf222");
     int v6 = vfs->open("/linkf2", 0);
     memset(s, 0, 128);
     vfs->read(v6, s, 10);
