@@ -181,7 +181,7 @@ int ufs_write(int fd, void* buf, int count)
         }
     }
 
-    struct ufs_stat* status;
+    struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
     getStatFromDinode(file->inode->dInodeNum, status);
     if (status->size < file->offset + writeCnt)
         status->size = file->offset + writeCnt;
@@ -197,7 +197,7 @@ int ufs_write(int fd, void* buf, int count)
 int ufs_read(int fd, void* buf, int count)
 {
     file_t* file = getFileFromFD(fd);
-    struct ufs_stat* status;
+    struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
     getStatFromDinode(file->inode->dInodeNum, status);
     if (status->size <= file->offset) return 0;
     if (status->size - file->offset < count) count = status->size - file->offset;
@@ -261,7 +261,7 @@ int ufs_open(const char* pathname, int flags)
 
         inode_t* ip = inodeSearch(root, dirname);
         if (ip == (void*)(-1)) return -1;
-        struct ufs_stat* status;
+        struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
         getStatFromDinode(ip->dInodeNum, status);
         status->size += sizeof(struct ufs_dirent);
         dinode_t newParentDinode;
@@ -349,7 +349,7 @@ int ufs_lseek(int fd, int offset, int whence)
     if (whence == SEEK_CUR) {
         file->offset = file->offset + offset;
     } else if (whence == SEEK_END) {
-        struct ufs_stat* status;
+        struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
         getStatFromDinode(file->inode->dInodeNum, status);
         file->offset = status->size + offset;
     } else if (whence == SEEK_SET) {
