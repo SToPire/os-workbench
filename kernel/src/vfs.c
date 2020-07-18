@@ -226,14 +226,20 @@ int ufs_close(int fd)
 
 int ufs_open(const char* pathname, int flags)
 {
-    if ((flags & O_CREAT) && inodeSearch(root, pathname) == (void*)-1) {
-        int i = strlen(pathname);
-        while (pathname[i] != '/') --i;
+    char absolutePathname[128];
+    if (pathname[0] == '/')
+        strcpy(absolutePathname, pathname);
+    else
+        sprintf(absolutePathname, "%s%s", current->cwd, pathname);
+        
+    if ((flags & O_CREAT) && inodeSearch(root, absolutePathname) == (void*)-1) {
+        int i = strlen(absolutePathname);
+        while (absolutePathname[i] != '/') --i;
         char filename[128], dirname[128];
         memset(filename, 0, 128);
         memset(dirname, 0, 128);
-        strcpy(filename, pathname + i + 1);
-        strncpy(dirname, pathname, i + 1);
+        strcpy(filename, absolutePathname + i + 1);
+        strncpy(dirname, absolutePathname, i + 1);
         dirname[i + 1] = '\0';
         //printf("dirname:%s filename:%s\n", dirname, filename);
 
@@ -296,7 +302,7 @@ int ufs_open(const char* pathname, int flags)
         ++cnt_ofile;
         return newFile->fd;
     } else {  //do not create file
-        inode_t* existInode = inodeSearch(root, pathname);
+        inode_t* existInode = inodeSearch(root, absolutePathname);
         if (existInode == (void*)(-1)) return -1;
 
         file_t* newFile = pmm->alloc(sizeof(file_t));
