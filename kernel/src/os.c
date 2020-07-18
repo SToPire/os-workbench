@@ -64,36 +64,8 @@
 
 void vfs_test()
 {
-    int a = vfs->open("/a", O_CREAT);
-    int b = vfs->open("/b", O_CREAT);
-
-    char* ss= pmm->alloc(128);
-    memset(ss, 0, 128);
-
-    vfs->write(b, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
-    vfs->write(a, "Hello World", 11);
-    vfs->write(b, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
-    vfs->close(b);
-    int c = vfs->open("/b", O_CREAT);
-    vfs->lseek(c, 25, SEEK_SET);
-    vfs->read(c, ss, 10);
-
-    printf("%s\n", ss);
-    memset(ss, 0, 128);
-
-    int v1 = vfs->open("/abc", O_CREAT);
-    int v2 = 233;
-    int v3 = vfs->dup(v1);
-    vfs->write(v1, "aaaaa", 5);
-    vfs->write(v3, "ddddd", 5);
-    vfs->lseek(v1, 0, SEEK_SET);
-    vfs->read(v3, ss, 10);
-    printf("%d %d %d\n", v1, v2, v3);
-    printf("%s\n", ss);
-
-    struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
-    vfs->fstat(a, status);
-    printf("id:%u,size:%u,type:%u\n", status->id, status->size, status->type);
+    int v1 = vfs->open("/f1", 0);
+    assert(v1 == -1);
     while (1)
         ;
 }
