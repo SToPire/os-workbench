@@ -20,18 +20,6 @@ typedef struct _superblock {
     uint8_t padding[4];
 } superblock_t;
 
-
-typedef struct _inode inode_t;
-struct _inode {
-    struct ufs_stat stat;
-    char name[28];
-    uint32_t firstBlock;
-
-    inode_t* parent;
-    inode_t* firstChild;
-    inode_t* nxtBrother;
-};
-
 typedef struct _dinode {
     struct ufs_stat stat;
     uint32_t firstBlock;
