@@ -98,6 +98,15 @@ uint32_t getLastEntryBlk(uint32_t headBlk)
     }
 }
 
+void getStatFromDinode(uint32_t dInodeNum, struct ufs_stat* status)
+{
+    dinode_t d;
+    sda->ops->read(sda, FS_OFFSET + sb.inode_head + sb.inode_size * dInodeNum, &d, sizeof(dinode_t));
+    status->id = d.stat.id;
+    status->size = d.stat.size;
+    status->type = d.stat.type;
+}
+
 void writeEntry(uint32_t NO, entry_t* e)
 {
     sda->ops->write(sda, FS_OFFSET + sb.data_head + NO * sb.blk_size, (void*)(e), sizeof(entry_t));
@@ -121,7 +130,8 @@ void ufs_init()
     root->parent = root;
     root->firstChild = root->nxtBrother = NULL;
     root->firstBlock = d_root->firstBlock;
-    memcpy(&(root->stat), &(d_root->stat), sizeof(root->stat));
+    root->dInodeNum = 0;
+    //memcpy(&(root->stat), &(d_root->stat), sizeof(root->stat));
     strcpy(root->name, "/");
 }
 
@@ -171,13 +181,15 @@ int ufs_write(int fd, void* buf, int count)
         }
     }
 
-    if (file->inode->stat.size < file->offset + writeCnt)
-        file->inode->stat.size = file->offset + writeCnt;
+    struct ufs_stat* status;
+    getStatFromDinode(file->inode->dInodeNum, status);
+    if (status->size < file->offset + writeCnt)
+        status->size = file->offset + writeCnt;
     file->offset += writeCnt;
     dinode_t newDinode;
     newDinode.firstBlock = file->inode->firstBlock;
-    memcpy(&(newDinode.stat), &(file->inode->stat), sizeof(struct ufs_stat));
-    sda->ops->write(sda, FS_OFFSET + sb.inode_head + file->inode->stat.id * sb.inode_size, &newDinode, sizeof(dinode_t));
+    memcpy(&(newDinode.stat), status, sizeof(struct ufs_stat));
+    sda->ops->write(sda, FS_OFFSET + sb.inode_head + status->id * sb.inode_size, &newDinode, sizeof(dinode_t));
 
     return writeCnt;
 }
@@ -185,8 +197,10 @@ int ufs_write(int fd, void* buf, int count)
 int ufs_read(int fd, void* buf, int count)
 {
     file_t* file = getFileFromFD(fd);
-    if (file->inode->stat.size <= file->offset) return 0;
-    if (file->inode->stat.size - file->offset < count) count = file->inode->stat.size - file->offset;
+    struct ufs_stat* status;
+    getStatFromDinode(file->inode->dInodeNum, status);
+    if (status->size <= file->offset) return 0;
+    if (status->size - file->offset < count) count = status->size - file->offset;
     off_t offset = file->offset;
     uint32_t curBlk = file->inode->firstBlock;
     while (offset >= sb.blk_size) {
@@ -247,11 +261,13 @@ int ufs_open(const char* pathname, int flags)
 
         inode_t* ip = inodeSearch(root, dirname);
         if (ip == (void*)(-1)) return -1;
-        ip->stat.size += sizeof(struct ufs_dirent);
+        struct ufs_stat* status;
+        getStatFromDinode(ip->dInodeNum, status);
+        status->size += sizeof(struct ufs_dirent);
         dinode_t newParentDinode;
         newParentDinode.firstBlock = ip->firstBlock;
-        memcpy(&(newParentDinode.stat), &(ip->stat), sizeof(struct ufs_stat));
-        sda->ops->write(sda, FS_OFFSET + sb.inode_head + ip->stat.id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
+        memcpy(&(newParentDinode.stat), status, sizeof(struct ufs_stat));
+        sda->ops->write(sda, FS_OFFSET + sb.inode_head + status->id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
 
         uint32_t entryBlkNO = getLastEntryBlk(ip->firstBlock);
         addFAT(entryBlkNO, sb.fst_free_data_blk);
@@ -260,9 +276,7 @@ int ufs_open(const char* pathname, int flags)
 
         inode_t* newInode = pmm->alloc(sizeof(inode_t));
         memset(newInode, 0, sizeof(inode_t));
-        newInode->stat.id = sb.fst_free_inode;
-        newInode->stat.type = T_FILE;
-        newInode->stat.size = 0;
+        newInode->dInodeNum = sb.fst_free_inode;
         newInode->firstBlock = sb.fst_free_data_blk;
         strcpy(newInode->name, filename);
 
@@ -281,7 +295,7 @@ int ufs_open(const char* pathname, int flags)
 
         entry_t newEntry;
         memset(&newEntry, 0, sizeof(newEntry));
-        newEntry.dir_entry.inode = newInode->stat.id;
+        newEntry.dir_entry.inode = newDinode->stat.id;
         strcpy(newEntry.dir_entry.name, newInode->name);
         writeEntry(entryBlkNO, &newEntry);
 
@@ -335,7 +349,9 @@ int ufs_lseek(int fd, int offset, int whence)
     if (whence == SEEK_CUR) {
         file->offset = file->offset + offset;
     } else if (whence == SEEK_END) {
-        file->offset = file->inode->stat.size + offset;
+        struct ufs_stat* status;
+        getStatFromDinode(file->inode->dInodeNum, status);
+        file->offset = status->size + offset;
     } else if (whence == SEEK_SET) {
         file->offset = offset;
     } else {
@@ -349,9 +365,7 @@ int ufs_lseek(int fd, int offset, int whence)
 int ufs_fstat(int fd, struct ufs_stat* buf)
 {
     file_t* file = getFileFromFD(fd);
-    buf->id = file->inode->stat.id;
-    buf->size = file->inode->stat.size;
-    buf->type = file->inode->stat.type;
+    getStatFromDinode(file->inode->dInodeNum, buf);
     return 0;
 }
 
@@ -362,8 +376,8 @@ int ufs_chdir(const char* path)
         strcpy(absolutePathname, path);
     else
         sprintf(absolutePathname, "%s%s", current->cwd, path);
-    
-    if(absolutePathname[strlen(absolutePathname)-1] != '/'){
+
+    if (absolutePathname[strlen(absolutePathname) - 1] != '/') {
         absolutePathname[strlen(absolutePathname)] = '/';
         absolutePathname[strlen(absolutePathname)] = '\0';
     }
