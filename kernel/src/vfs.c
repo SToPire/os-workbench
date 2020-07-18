@@ -227,7 +227,6 @@ int ufs_close(int fd)
 int ufs_open(const char* pathname, int flags)
 {
     if ((flags & O_CREAT) && inodeSearch(root, pathname) == (void*)-1) {
-        printf("here:%s\n", pathname);
         if (pathname[0] == '/') {
             int i = strlen(pathname);
             while (pathname[i] != '/') --i;

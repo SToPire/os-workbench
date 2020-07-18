@@ -22,6 +22,7 @@ struct task {
     _Area stack;
 
     int fds[128];
+    char cwd[128];
     //int sticky;
 };
 #define MAX_TASKS 32
