@@ -104,8 +104,12 @@ void vfs_test()
     int v6 = vfs->open("/linkf2", 0);
     memset(s, 0, 128);
     vfs->read(v6, s, 10);
-    printf("%s\n", s);
     assert(strcmp(s, "ABCDEFGHIJ") == 0);
+    vfs->write(v6, "@@@", 3);
+    vfs->lseek(v3, 0, SEEK_SET);
+    memset(s, 0, 128);
+    vfs->read(v3, s, 13);
+    assert(strcmp(s, "ABCDEFGHIJ@@@") == 0);
 
     while (1)
         ;
