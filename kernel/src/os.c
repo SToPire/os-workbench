@@ -91,8 +91,9 @@ void vfs_test()
     printf("%d %d %d\n", v1, v2, v3);
     printf("%s\n", ss);
 
-    vfs->chdir("a/b/c");
-    vfs->chdir("tmp");
+    struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
+    vfs->fstat(v1, status);
+    printf("id:%u,size:%u,type:%u\n", status->id, status->size, status->type);
     while (1)
         ;
 }

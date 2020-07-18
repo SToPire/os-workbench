@@ -344,6 +344,15 @@ int ufs_lseek(int fd, int offset, int whence)
     return file->offset;
 }
 
+int ufs_fstat(int fd, struct ufs_stat* buf)
+{
+    file_t* file = getFileFromFD(fd);
+    buf->id = file->inode->stat.id;
+    buf->size = file->inode->stat.size;
+    buf->type = file->inode->stat.type;
+    return 0;
+}
+
 int ufs_chdir(const char* path)
 {
     char absolutePathname[128];
@@ -381,6 +390,7 @@ MODULE_DEF(vfs) = {
     .close = ufs_close,
     .open = ufs_open,
     .lseek = ufs_lseek,
+    .fstat = ufs_fstat,
     .chdir = ufs_chdir,
     .dup = ufs_dup,
 };
