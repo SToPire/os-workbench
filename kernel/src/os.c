@@ -79,6 +79,12 @@ void vfs_test()
     vfs->read(c, ss, 10);
 
     printf("%s\n", ss);
+
+    int v1 = vfs->open("/abc", O_CREAT);
+    int v2 = vfs->open("/def", O_CREAT);
+    int v3 = vfs->open("/ghi", O_CREAT);
+
+    printf("%d %d %d\n", v1, v2, v3);
     while (1)
         ;
 }

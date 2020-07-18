@@ -341,11 +341,25 @@ int ufs_lseek(int fd, int offset, int whence)
     return file->offset;
 }
 
+int ufs_dup(int fd)
+{
+    int free_fd = 0;
+    for (; free_fd < 128; free_fd++) {
+        if (current->fds[free_fd] == -1) break;
+    }
+    if (free_fd == 128) return -1;
+    current->fds[free_fd] = current->fds[fd];
+    return free_fd;
+}
+
+/* ---------- UFS ---------- */
+
 MODULE_DEF(vfs) = {
     .init = ufs_init,
-    .open = ufs_open,
-    .close = ufs_close,
     .write = ufs_write,
     .read = ufs_read,
+    .close = ufs_close,
+    .open = ufs_open,
     .lseek = ufs_lseek,
+    .dup = ufs_dup,
 };
