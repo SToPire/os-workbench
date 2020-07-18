@@ -83,8 +83,8 @@ void vfs_test()
     int v5 = vfs->dup(v4);
     assert(v5 == 2);
     vfs->write(v4, "12345", 5);
-    vfs->lseek(v4, 25, SEEK_END);
-    vfs->write(v4, "54321", 5);
+    vfs->lseek(v5, 25, SEEK_END);
+    vfs->write(v5, "54321", 5);
     vfs->lseek(v4, 29, SEEK_SET);
     memset(s, 0, 128);
     vfs->read(v4, s, 6);
