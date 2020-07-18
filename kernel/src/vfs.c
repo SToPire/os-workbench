@@ -404,6 +404,35 @@ int ufs_link(const char* oldpath, const char* newpath)
     return 0;
 }
 
+int ufs_unlink(const char* pathname)
+{
+    char absolutePathname[128];
+    if (pathname[0] == '/')
+        strcpy(absolutePathname, pathname);
+    else
+        sprintf(absolutePathname, "%s%s", current->cwd, pathname);
+
+    int i = strlen(absolutePathname);
+    while (absolutePathname[i] != '/') --i;
+    char dirname[128];
+    memset(dirname, 0, 128);
+    strncpy(dirname, absolutePathname, i + 1);
+    dirname[i + 1] = '\0';
+
+    inode_t* pinode = inodeSearch(root, dirname);
+    inode_t* inode = inodeSearch(root, absolutePathname);
+    if (inode == (void*)(-1) || pinode == (void*)(-1)) return -1;
+    /* TBD:  unlink an opening file*/
+
+    dinode_t newDinode;
+    sda->ops->read(sda, FS_OFFSET + sb.inode_head + sb.inode_size * inode->dInodeNum, &newDinode, sizeof(dinode_t));
+    --newDinode.refCnt;
+    sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.inode_size * inode->dInodeNum, &newDinode, sizeof(dinode_t));
+
+    inodeDelete(pinode, inode);
+    return 0;
+}
+
 int ufs_fstat(int fd, struct ufs_stat* buf)
 {
     file_t* file = getFileFromFD(fd);
@@ -448,6 +477,7 @@ MODULE_DEF(vfs) = {
     .open = ufs_open,
     .lseek = ufs_lseek,
     .link = ufs_link,
+    .unlink = ufs_unlink,
     .fstat = ufs_fstat,
     .chdir = ufs_chdir,
     .dup = ufs_dup,
