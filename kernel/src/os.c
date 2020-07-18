@@ -87,7 +87,7 @@ void vfs_test()
     memset(s, 0, 128);
     vfs->read(v4, s, 6);
     assert(s[0] == 0 && strcmp(s + 1, "54321")==0);
-    for (int i = 0; i < 6; i++) printf("%x ", s[i]);
+    for (int i = 0; i < 10; i++) printf("%x ", s[i]);
 
     while (1)
         ;
