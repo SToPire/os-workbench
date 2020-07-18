@@ -81,7 +81,7 @@ void vfs_test()
     printf("%s\n", ss);
     memset(ss, 0, 128);
 
-    int v1 = vfs->open("abc", O_CREAT);
+    int v1 = vfs->open("/abc", O_CREAT);
     int v2 = vfs->close(b);
     int v3 = vfs->dup(v1);
     vfs->write(v1, "aaaaa", 5);
@@ -90,6 +90,8 @@ void vfs_test()
     vfs->read(v3, ss, 10);
     printf("%d %d %d\n", v1, v2, v3);
     printf("%s\n", ss);
+
+    vfs->chdir("/a/b/c");
     while (1)
         ;
 }

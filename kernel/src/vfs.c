@@ -231,7 +231,7 @@ int ufs_open(const char* pathname, int flags)
         strcpy(absolutePathname, pathname);
     else
         sprintf(absolutePathname, "%s%s", current->cwd, pathname);
-        
+
     if ((flags & O_CREAT) && inodeSearch(root, absolutePathname) == (void*)-1) {
         int i = strlen(absolutePathname);
         while (absolutePathname[i] != '/') --i;
@@ -344,6 +344,23 @@ int ufs_lseek(int fd, int offset, int whence)
     return file->offset;
 }
 
+int ufs_chdir(const char* path)
+{
+    char absolutePathname[128];
+    if (path[0] == '/')
+        strcpy(absolutePathname, path);
+    else
+        sprintf(absolutePathname, "%s%s", current->cwd, path);
+    
+    if(absolutePathname[strlen(absolutePathname)-1] != '/'){
+        absolutePathname[strlen(absolutePathname)] = '/';
+        absolutePathname[strlen(absolutePathname)] = '\0';
+    }
+    memset(current->cwd, 0, sizeof(current->cwd));
+    printf("%d",(int)sizeof(current->cwd));
+    return 0;
+}
+
 int ufs_dup(int fd)
 {
     int free_fd = 0;
@@ -364,5 +381,6 @@ MODULE_DEF(vfs) = {
     .close = ufs_close,
     .open = ufs_open,
     .lseek = ufs_lseek,
+    .chdir = ufs_chdir,
     .dup = ufs_dup,
 };
