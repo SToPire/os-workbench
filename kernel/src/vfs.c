@@ -393,6 +393,7 @@ int ufs_link(const char* oldpath, const char* newpath)
     newInode->firstChild = newInode->nxtBrother = newInode->parent = NULL;
     strcpy(newInode->name, filename);
     inodeInsert(ip, newInode);
+    return 0;
 }
 
 int ufs_fstat(int fd, struct ufs_stat* buf)
