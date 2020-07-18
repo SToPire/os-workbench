@@ -65,7 +65,10 @@
 void vfs_test()
 {
     int v1 = vfs->open("/f1", 0);
-    assert(v1 != -1);
+    assert(v1 == -1);
+    int v2 = vfs->open("/f2", O_CREAT);
+    int v3 = vfs->open("/f2", O_CREAT);
+    assert(v2 == 0 && v3 == 1);
     while (1)
         ;
 }
