@@ -462,6 +462,7 @@ int ufs_mkdir(const char* pathname)
 
     inode_t* pInode = inodeSearch(root, pdirname);
     if (pInode == (void*)(-1)) return -1;
+    printf("%d\n", pInode->dInodeNum);
 
     return 0;
 }
