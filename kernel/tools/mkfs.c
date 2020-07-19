@@ -64,6 +64,9 @@ int main(int argc, char* argv[])
     rootInode.refCnt = 1;
     memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
+    int mountPoint = open(argv[3], O_RDWR);
+    printf("moun:%d\n", mountPoint);
+
     munmap(disk, IMG_SIZE);
     close(fd);
 }
