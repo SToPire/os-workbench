@@ -458,11 +458,46 @@ int ufs_mkdir(const char* pathname)
     strcpy(dirname, absolutePathname + i + 1);
     strncpy(pdirname, absolutePathname, i + 1);
     pdirname[i + 1] = '\0';
-    printf("%s %s\n", pdirname, dirname);
 
     inode_t* pInode = inodeSearch(root, pdirname);
     if (pInode == (void*)(-1)) return -1;
-    printf("%d\n", pInode->dInodeNum);
+    struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
+    getStatFromDinode(pInode->dInodeNum, status);
+    status->size += sizeof(struct ufs_dirent);
+    dinode_t newParentDinode;
+    newParentDinode.firstBlock = pInode->firstBlock;
+    newParentDinode.refCnt = 1;
+    memcpy(&(newParentDinode.stat), status, sizeof(struct ufs_stat));
+    sda->ops->write(sda, FS_OFFSET + sb.inode_head + status->id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
+
+    uint32_t entryBlkNO = getLastEntryBlk(pInode->firstBlock);
+    addFAT(entryBlkNO, sb.fst_free_data_blk);
+    ++sb.fst_free_data_blk;
+    sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+
+    inode_t* newInode = pmm->alloc(sizeof(inode_t));
+    newInode->dInodeNum = sb.fst_free_inode;
+    newInode->firstBlock = sb.fst_free_data_blk;
+    strcpy(newInode->name, dirname);
+
+    inodeInsert(pInode, newInode);
+
+    dinode_t* newDinode = pmm->alloc(sizeof(dinode_t));
+    newDinode->stat.id = sb.fst_free_inode;
+    newDinode->stat.type = T_DIR;
+    newDinode->stat.size = 0;
+    newDinode->firstBlock = sb.fst_free_data_blk;
+    newDinode->refCnt = 1;
+    sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
+    ++sb.fst_free_inode;
+    ++sb.fst_free_data_blk;
+    sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+
+    entry_t newEntry;
+    memset(&newEntry, 0, sizeof(newEntry));
+    newEntry.dir_entry.inode = newDinode->stat.id;
+    strcpy(newEntry.dir_entry.name, newInode->name);
+    writeEntry(entryBlkNO, &newEntry);
 
     return 0;
 }
