@@ -443,6 +443,20 @@ int ufs_fstat(int fd, struct ufs_stat* buf)
 
 int ufs_mkdir(const char* pathname)
 {
+    char absolutePathname[128];
+    if (pathname[0] == '/')
+        strcpy(absolutePathname, pathname);
+    else
+        sprintf(absolutePathname, "%s%s", current->cwd, pathname);
+    int i = strlen(absolutePathname);
+    while (absolutePathname[i] != '/') --i;
+    char dirname[128], pdirname[128];
+    memset(pdirname, 0, 128);
+    memset(dirname, 0, 128);
+    strcpy(dirname, absolutePathname + i + 1);
+    strncpy(pdirname, absolutePathname, i + 1);
+    pdirname[i + 1] = '\0';
+    printf("%s %s\n", pdirname, dirname);
     return 0;
 }
 
