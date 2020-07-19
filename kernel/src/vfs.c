@@ -31,11 +31,12 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
     while (i < strlen(path) && path[i] != '/') ++i;
     if (i == strlen(path)) {
         strcpy(curName, path + 1);
+        if (strcmp(curName, ".") == 0) return cur;
     } else {
         strncpy(curName, path + 1, i - 1);
+        if (strcmp(curName, ".") == 0) return inodeSearch(cur, path + i);
     }
     printf("curnMe:%s\n", curName);
-    if (strcmp(curName, ".") == 0) return inodeSearch(cur, path + i);
 
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
         if (strcmp(ptr->name, curName) == 0) {
