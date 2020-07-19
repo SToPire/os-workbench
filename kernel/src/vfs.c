@@ -11,6 +11,7 @@ int cnt_ofile;
 /* ---------- Inode Operation ---------- */
 inode_t* inodeSearch(inode_t* cur, const char* path)
 {
+    printf("%s\n", path);
     if (strcmp(path, "/") == 0) {
         if (strcmp(cur->name, "/") == 0)
             return cur;
