@@ -126,11 +126,11 @@ void vfs_test()
 
     vfs->mkdir("./.././.././.././../dir");
     int v8 = vfs->open("dir/f1", O_CREAT);
-    // vfs->write(v8, "Once", 4);
-    // memset(s, 0, 128);
-    // vfs->lseek(v8, -3, SEEK_END);
-    // vfs->read(v8, s, 3);
-    // printf("%s", s);
+    vfs->write(v8, "Once", 4);
+    memset(s, 0, 128);
+    vfs->lseek(v8, -3, SEEK_END);
+    vfs->read(v8, s, 3);
+    printf("%s", s);
     while (1)
         ;
 }
