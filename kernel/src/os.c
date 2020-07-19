@@ -124,7 +124,7 @@ void vfs_test()
     assert(stat.id == 3);
     assert(stat.size == 0);
 
-    vfs->mkdir("dir");
+    vfs->mkdir("./dir");
     while (1)
         ;
 }
