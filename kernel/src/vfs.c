@@ -470,6 +470,11 @@ int ufs_mkdir(const char* pathname)
     memcpy(&(newParentDinode.stat), status, sizeof(struct ufs_stat));
     sda->ops->write(sda, FS_OFFSET + sb.inode_head + status->id * sb.inode_size, &newParentDinode, sizeof(dinode_t));
 
+    uint32_t entryBlkNO = getLastEntryBlk(pInode->firstBlock);
+    addFAT(entryBlkNO, sb.fst_free_data_blk);
+    ++sb.fst_free_data_blk;
+    sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+
     inode_t* newInode = pmm->alloc(sizeof(inode_t));
     newInode->dInodeNum = sb.fst_free_inode;
     newInode->firstBlock = sb.fst_free_data_blk;
@@ -480,7 +485,7 @@ int ufs_mkdir(const char* pathname)
     dinode_t* newDinode = pmm->alloc(sizeof(dinode_t));
     newDinode->stat.id = sb.fst_free_inode;
     newDinode->stat.type = T_DIR;
-    newDinode->stat.size = 0;
+    newDinode->stat.size = 2 * sizeof(struct ufs_dirent);
     newDinode->firstBlock = sb.fst_free_data_blk;
     newDinode->refCnt = 1;
     sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.fst_free_inode * sb.inode_size, (void*)newDinode, sizeof(dinode_t));
@@ -488,16 +493,28 @@ int ufs_mkdir(const char* pathname)
     ++sb.fst_free_data_blk;
     sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
 
-
-    uint32_t entryBlkNO = getLastEntryBlk(pInode->firstBlock);
-    addFAT(entryBlkNO, sb.fst_free_data_blk);
-    ++sb.fst_free_data_blk;
-    sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
     entry_t newEntry;
     memset(&newEntry, 0, sizeof(newEntry));
     newEntry.dir_entry.inode = newDinode->stat.id;
     strcpy(newEntry.dir_entry.name, newInode->name);
     writeEntry(entryBlkNO, &newEntry);
+
+    //. && ..
+    int tmp = sb.fst_free_data_blk;
+    addFAT(newDinode->firstBlock, sb.fst_free_data_blk);
+    ++sb.fst_free_data_blk;
+    addFAT(tmp, sb.fst_free_data_blk);
+    ++sb.fst_free_data_blk;
+    sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+    entry_t e1, e2;
+    memset(&e1, 0, sizeof(e1));
+    memset(&e2, 0, sizeof(e2));
+    e1.dir_entry.inode = newInode->dInodeNum;
+    e2.dir_entry.inode = pInode->dInodeNum;
+    strcpy(e1.dir_entry.name, ".");
+    strcpy(e2.dir_entry.name, "..");
+    writeEntry(newDinode->firstBlock, &e1);
+    writeEntry(tmp, &e2);
 
     return 0;
 }
