@@ -132,6 +132,11 @@ void vfs_test()
     vfs->read(v8, s, 3);
     assert(strcmp(s, "nce") == 0);
 
+    vfs->chdir("dir");
+    int v9 = vfs->open("./../f3", 0);
+    vfs->fstat(v9, &stat);
+    assert(stat.id == 2);
+
     while (1)
         ;
 }
