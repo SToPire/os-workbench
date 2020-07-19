@@ -33,6 +33,7 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
     } else {
         strncpy(curName, path + 1, i - 1);
     }
+    printf("ss:%s\n", curName);
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
         if (strcmp(ptr->name, curName) == 0) {
             if (i == strlen(path))
