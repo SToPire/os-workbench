@@ -32,9 +32,12 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
     if (i == strlen(path)) {
         strcpy(curName, path + 1);
         if (strcmp(curName, ".") == 0) return cur;
+        if (strcmp(curName, "..") == 0) return cur->parent;
+
     } else {
         strncpy(curName, path + 1, i - 1);
         if (strcmp(curName, ".") == 0) return inodeSearch(cur, path + i);
+        if (strcmp(curName, "..") == 0) return inodeSearch(cur->parent, path + i);
     }
     printf("curnMe:%s\n", curName);
 
