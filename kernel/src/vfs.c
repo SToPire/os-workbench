@@ -133,6 +133,23 @@ void ufs_init()
     root->dInodeNum = 0;
     //memcpy(&(root->stat), &(d_root->stat), sizeof(root->stat));
     strcpy(root->name, "/");
+
+    //. && ..
+    int tmp = sb.fst_free_data_blk;
+    addFAT(root->firstBlock, sb.fst_free_data_blk);
+    ++sb.fst_free_data_blk;
+    addFAT(tmp, sb.fst_free_data_blk);
+    ++sb.fst_free_data_blk;
+    sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+    entry_t e1, e2;
+    memset(&e1, 0, sizeof(e1));
+    memset(&e2, 0, sizeof(e2));
+    e1.dir_entry.inode = root->dInodeNum;
+    e2.dir_entry.inode = root->dInodeNum;
+    strcpy(e1.dir_entry.name, ".");
+    strcpy(e2.dir_entry.name, "..");
+    writeEntry(root->firstBlock, &e1);
+    writeEntry(tmp, &e2);
 }
 
 int ufs_write(int fd, void* buf, int count)

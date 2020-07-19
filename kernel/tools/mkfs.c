@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
     memset(&rootInode, 0, sizeof(rootInode));
     rootInode.stat.id = 0;
     rootInode.stat.type = T_DIR;
-    rootInode.stat.size = 0;
+    rootInode.stat.size = 2*sizeof(struct ufs_dirent);
     rootInode.firstBlock = 0;
     rootInode.refCnt = 1;
     memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
