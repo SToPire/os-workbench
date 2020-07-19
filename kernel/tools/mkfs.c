@@ -6,6 +6,8 @@
 #include <fcntl.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/type.h>
+#include <dirent.h>
 
 #define FS_OFFSET 1 * 1024 * 1024
 
@@ -37,7 +39,6 @@ int main(int argc, char* argv[])
     // char* newwd = malloc(strlen(cwd) - strlen("/tools") + 1);
     // strncpy(newwd, cwd, strlen(cwd) - strlen("/tools"));
     // assert(chdir(newwd) == 0);
-    printf("%s\n", getcwd(0, 0));
 
     assert((fd = open(argv[2], O_RDWR)) > 0);
     assert((ftruncate(fd, IMG_SIZE)) == 0);
@@ -65,8 +66,7 @@ int main(int argc, char* argv[])
     rootInode.refCnt = 1;
     memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
-    int mountPoint = open(argv[3], O_RDWR);
-    printf("moun:%d\n", mountPoint);
+    
 
     munmap(disk, IMG_SIZE);
     close(fd);
