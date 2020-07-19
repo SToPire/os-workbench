@@ -136,6 +136,8 @@ void vfs_test()
     int v9 = vfs->open("./../f3", 0);
     vfs->fstat(v9, &stat);
     assert(stat.id == 2);
+    vfs->read(v9, s, 5);
+    printf("%s\n", s);
 
     while (1)
         ;
