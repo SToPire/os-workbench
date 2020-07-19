@@ -33,10 +33,10 @@ int main(int argc, char* argv[])
 
     int IMG_SIZE = atoi(argv[1]) * 1024 * 1024;
 
-    char* cwd = getcwd(NULL, 0);
-    char* newwd = malloc(strlen(cwd) - strlen("/tools") + 1);
-    strncpy(newwd, cwd, strlen(cwd) - strlen("/tools"));
-    assert(chdir(newwd) == 0);
+    // char* cwd = getcwd(NULL, 0);
+    // char* newwd = malloc(strlen(cwd) - strlen("/tools") + 1);
+    // strncpy(newwd, cwd, strlen(cwd) - strlen("/tools"));
+    // assert(chdir(newwd) == 0);
 
     assert((fd = open(argv[2], O_RDWR)) > 0);
     assert((ftruncate(fd, IMG_SIZE)) == 0);
