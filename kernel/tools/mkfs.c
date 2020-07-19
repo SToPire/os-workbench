@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 
     superblock_t sb;
     sb.blk_size = 32U;
-    sb.inode_size = 32U; 
+    sb.inode_size = 32U;
     sb.inode_head = sizeof(superblock_t);
     sb.fat_head = sb.inode_head + 1024U;
     sb.data_head = sb.fat_head + 1024U;
@@ -66,7 +66,11 @@ int main(int argc, char* argv[])
     rootInode.refCnt = 1;
     memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
-    DIR* mntPoint = opendir(argv[3]);
+    DIR* dir = opendir(argv[3]);
+    struct dirent* dir_entry;
+    while ((dir_entry = readdir(dir)) != NULL) {
+        printf("%s\n", dir_entry->d_name);
+    }
 
     munmap(disk, IMG_SIZE);
     close(fd);
