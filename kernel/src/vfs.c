@@ -39,7 +39,6 @@ inode_t* inodeSearch(inode_t* cur, const char* path)
         if (strcmp(curName, ".") == 0) return inodeSearch(cur, path + i);
         if (strcmp(curName, "..") == 0) return inodeSearch(cur->parent, path + i);
     }
-    printf("curnMe:%s\n", curName);
 
     for (inode_t* ptr = cur->firstChild; ptr != NULL; ptr = ptr->nxtBrother) {
         if (strcmp(ptr->name, curName) == 0) {
