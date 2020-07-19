@@ -125,11 +125,11 @@ void vfs_test()
     assert(stat.size == 0);
 
     vfs->mkdir("./.././.././.././../dir");
-    // int v7 = vfs->open("dir/f1", O_CREAT);
-    // vfs->write(v7, "Once", 4);
+    int v8 = vfs->open("dir/f1", O_CREAT);
+    // vfs->write(v8, "Once", 4);
     // memset(s, 0, 128);
-    // vfs->lseek(v7, -3, SEEK_END);
-    // vfs->read(v7, s, 3);
+    // vfs->lseek(v8, -3, SEEK_END);
+    // vfs->read(v8, s, 3);
     // printf("%s", s);
     while (1)
         ;
