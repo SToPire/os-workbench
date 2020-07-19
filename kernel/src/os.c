@@ -64,65 +64,65 @@
 
 void vfs_test()
 {
-    // int v1 = vfs->open("/f1", 0);
-    // assert(v1 == -1);
-    // int v2 = vfs->open("/f2", O_CREAT);
-    // int v3 = vfs->open("/f2", O_CREAT);
-    // assert(v2 == 0 && v3 == 1);
-    // vfs->close(v2);
-    // int v4 = vfs->open("/f3", O_CREAT);
-    // assert(v4 == 0);
+    int v1 = vfs->open("/f1", 0);
+    assert(v1 == -1);
+    int v2 = vfs->open("/f2", O_CREAT);
+    int v3 = vfs->open("/f2", O_CREAT);
+    assert(v2 == 0 && v3 == 1);
+    vfs->close(v2);
+    int v4 = vfs->open("/f3", O_CREAT);
+    assert(v4 == 0);
 
-    // vfs->write(v3, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
-    // vfs->lseek(v3, 25, SEEK_SET);
-    // char s[128];
-    // memset(s, 0, 128);
-    // vfs->read(v3, s, 10);
-    // assert(strcmp("Z123456789", s) == 0);
+    vfs->write(v3, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789", 35);
+    vfs->lseek(v3, 25, SEEK_SET);
+    char s[128];
+    memset(s, 0, 128);
+    vfs->read(v3, s, 10);
+    assert(strcmp("Z123456789", s) == 0);
 
-    // int v5 = vfs->dup(v4);
-    // assert(v5 == 2);
-    // vfs->write(v4, "12345", 5);
-    // vfs->lseek(v5, 25, SEEK_END);
-    // vfs->write(v5, "54321", 5);
-    // vfs->lseek(v4, 29, SEEK_SET);
-    // memset(s, 0, 128);
-    // vfs->read(v4, s, 6);
-    // assert(s[0] == 0 && strcmp(s + 1, "54321") == 0);
+    int v5 = vfs->dup(v4);
+    assert(v5 == 2);
+    vfs->write(v4, "12345", 5);
+    vfs->lseek(v5, 25, SEEK_END);
+    vfs->write(v5, "54321", 5);
+    vfs->lseek(v4, 29, SEEK_SET);
+    memset(s, 0, 128);
+    vfs->read(v4, s, 6);
+    assert(s[0] == 0 && strcmp(s + 1, "54321") == 0);
 
-    // struct ufs_stat stat;
-    // vfs->fstat(v5, &stat);
-    // assert(stat.id == 2);
-    // assert(stat.type == T_FILE);
-    // assert(stat.size == 35);
+    struct ufs_stat stat;
+    vfs->fstat(v5, &stat);
+    assert(stat.id == 2);
+    assert(stat.type == T_FILE);
+    assert(stat.size == 35);
 
-    // vfs->fstat(v3, &stat);
-    // assert(stat.id == 1);
-    // assert(stat.size == 35);
+    vfs->fstat(v3, &stat);
+    assert(stat.id == 1);
+    assert(stat.size == 35);
 
-    // vfs->link("f2", "linkf2");
-    // assert(vfs->link("f3", "/linkf2") == -1);
-    // int v6 = vfs->open("/linkf2", 0);
-    // memset(s, 0, 128);
-    // vfs->read(v6, s, 10);
-    // assert(strcmp(s, "ABCDEFGHIJ") == 0);
-    // vfs->write(v6, "@@@", 3);
-    // vfs->lseek(v3, 0, SEEK_SET);
-    // memset(s, 0, 128);
-    // vfs->read(v3, s, 13);
-    // assert(strcmp(s, "ABCDEFGHIJ@@@") == 0);
+    vfs->link("f2", "linkf2");
+    assert(vfs->link("f3", "/linkf2") == -1);
+    int v6 = vfs->open("/linkf2", 0);
+    memset(s, 0, 128);
+    vfs->read(v6, s, 10);
+    assert(strcmp(s, "ABCDEFGHIJ") == 0);
+    vfs->write(v6, "@@@", 3);
+    vfs->lseek(v3, 0, SEEK_SET);
+    memset(s, 0, 128);
+    vfs->read(v3, s, 13);
+    assert(strcmp(s, "ABCDEFGHIJ@@@") == 0);
 
-    // vfs->fstat(v6, &stat);
-    // assert(stat.id == 1);
-    // assert(stat.size == 35);
+    vfs->fstat(v6, &stat);
+    assert(stat.id == 1);
+    assert(stat.size == 35);
 
-    // vfs->unlink("linkf2");
-    // vfs->unlink("f2");
-    // assert(vfs->open("f2", 0) == -1);
-    // int v7 = vfs->open("/f2", O_CREAT);
-    // vfs->fstat(v7, &stat);
-    // assert(stat.id == 3);
-    // assert(stat.size == 0);
+    vfs->unlink("linkf2");
+    vfs->unlink("f2");
+    assert(vfs->open("f2", 0) == -1);
+    int v7 = vfs->open("/f2", O_CREAT);
+    vfs->fstat(v7, &stat);
+    assert(stat.id == 3);
+    assert(stat.size == 0);
 
     vfs->mkdir("dir");
 
