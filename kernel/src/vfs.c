@@ -448,6 +448,8 @@ int ufs_mkdir(const char* pathname)
         strcpy(absolutePathname, pathname);
     else
         sprintf(absolutePathname, "%s%s", current->cwd, pathname);
+    if (inodeSearch(root, absolutePathname) != (void*)(-1)) return -1;
+
     int i = strlen(absolutePathname);
     while (absolutePathname[i] != '/') --i;
     char dirname[128], pdirname[128];
@@ -457,6 +459,10 @@ int ufs_mkdir(const char* pathname)
     strncpy(pdirname, absolutePathname, i + 1);
     pdirname[i + 1] = '\0';
     printf("%s %s\n", pdirname, dirname);
+
+    inode_t* pInode = inodeSearch(root, pdirname);
+    if (pInode == (void*)(-1)) return -1;
+
     return 0;
 }
 
