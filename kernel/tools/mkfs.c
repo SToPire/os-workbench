@@ -6,7 +6,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <sys/mman.h>
-#include <sys/type.h>
+#include <sys/types.h>
 #include <dirent.h>
 
 #define FS_OFFSET 1 * 1024 * 1024
