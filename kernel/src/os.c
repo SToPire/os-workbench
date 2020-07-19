@@ -130,7 +130,8 @@ void vfs_test()
     memset(s, 0, 128);
     vfs->lseek(v8, -3, SEEK_END);
     vfs->read(v8, s, 3);
-    printf("%s", s);
+    assert(strcmp(s, "nce") == 0);
+
     while (1)
         ;
 }
