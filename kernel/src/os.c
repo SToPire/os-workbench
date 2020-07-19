@@ -126,6 +126,8 @@ void vfs_test()
 
     vfs->mkdir("dir");
     vfs->chdir("dir");
+    int v8 = vfs->open("ddd", O_CREAT);
+    vfs->write(v8, "hahahahaha", 10);
     while (1)
         ;
 }
