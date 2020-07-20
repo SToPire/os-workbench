@@ -40,7 +40,7 @@ uint32_t getNextFAT(uint32_t curBlk)
 {
     uint32_t ret = 0;
     off_t offset = sb.fat_head + curBlk * sizeof(uint32_t);
-    memcpy(fs_head + offset, (void*)ret, sizeof(uint32_t));
+    memcpy(fs_head + offset, (void*)(&ret), sizeof(uint32_t));
     return ret;
 }
 uint32_t getLastEntryBlk(uint32_t headBlk)
