@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 
 #define FS_OFFSET 1 * 1024 * 1024
@@ -75,11 +76,25 @@ int main(int argc, char* argv[])
     dirInode.refCnt = 1;
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, &dirInode, sizeof(dirInode));
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
-    
+
     DIR* dir = opendir(argv[3]);
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
         printf("%s:%d\n", dir_entry->d_name, dir_entry->d_type);
+        if (dir_entry->d_type == 8) {  // file
+
+            int fd = open(dir_entry->d_name, O_RDWR);
+            assert(fd > 0);
+            struct stat* statbuf;
+            fstat(fd, statbuf);
+            printf("%s %d\n", dir_entry->d_name, statbuf->st_size);
+
+            dinode_t newDinode;
+            memset(&newDinode, 0, sizeof(newDinode));
+            newDinode.stat.id = ++sb.fst_free_inode;
+            newDinode.stat.type = T_FILE;
+            newDinode.stat.size = 0;
+        }
     }
 
     munmap(disk, IMG_SIZE);
