@@ -55,14 +55,6 @@ uint32_t getLastEntryBlk(uint32_t headBlk)
     }
 }
 
-void addDirEntry(dinode_t* dinode)
-{
-    uint32_t leb = getLastEntryBlk(dinode->firstBlock);
-    uint32_t newBlk = sb.fst_free_data_blk++;
-    addFAT(leb, newBlk);
-    printf("leb:%u", leb);
-}
-
 void traverse(char* pathname)
 {
     dinode_t dirInode;
@@ -73,10 +65,20 @@ void traverse(char* pathname)
     dirInode.firstBlock = sb.fst_free_data_blk++;
     dirInode.refCnt = 1;
 
+    uint32_t lstBlk = dirInode.firstBlock;
+
     DIR* dir = opendir(pathname);
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
-        addDirEntry(&dirInode);
+        uint32_t newInode = sb.fst_free_inode++;
+        uint32_t newBlk = sb.fst_free_data_blk++;
+        addFAT(lstBlk, newBlk);
+        struct ufs_dirent d;
+        d.inode = newInode;
+        strcpy(d.name, dir_entry->d_name);
+        memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+        lstBlk = newBlk;
+
         if (dir_entry->d_type == 8) {  // file
             char fullPath[512];
             sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
@@ -98,7 +100,6 @@ void traverse(char* pathname)
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, &dirInode, sizeof(dirInode));
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
 }
-
 
 int main(int argc, char* argv[])
 {
