@@ -71,9 +71,8 @@ void traverse(char* pathname)
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
         uint32_t newInode = sb.fst_free_inode++;
-        printf("%s %d %u\n", dir_entry->d_name, newInode, lstBlk);
         uint32_t newBlk = sb.fst_free_data_blk++;
-        printf("%d %d\n", lstBlk, newBlk);
+        printf("%s %d %u\n", dir_entry->d_name, newInode, lstBlk, newBlk);
         addFAT(lstBlk, newBlk);
         struct ufs_dirent d;
         memset(&d, 0, sizeof(struct ufs_dirent));
@@ -140,7 +139,7 @@ int main(int argc, char* argv[])
     // rootInode.refCnt = 1;
     // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
-    //traverse(argv[3]);
+    traverse(argv[3]);
 
     munmap(disk, IMG_SIZE);
     close(fd);
