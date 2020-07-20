@@ -65,10 +65,10 @@ void traverse(char* pathname)
 {
     dinode_t dirInode;
     memset(&dirInode, 0, sizeof(dirInode));
-    dirInode.stat.id = ++sb.fst_free_inode;
+    dirInode.stat.id = sb.fst_free_inode++;
     dirInode.stat.type = T_DIR;
     dirInode.stat.size = 2 * sizeof(struct ufs_dirent);
-    dirInode.firstBlock = ++sb.fst_free_data_blk;
+    dirInode.firstBlock = sb.fst_free_data_blk++;
     dirInode.refCnt = 1;
 
     DIR* dir = opendir(pathname);
