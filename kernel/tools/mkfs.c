@@ -52,20 +52,30 @@ int main(int argc, char* argv[])
     sb.inode_head = sizeof(superblock_t);
     sb.fat_head = sb.inode_head + 1024U;
     sb.data_head = sb.fat_head + 1024U;
-    sb.fst_free_data_blk = 1;
-    sb.fst_free_inode = 1;
+    sb.fst_free_data_blk = 0;
+    sb.fst_free_inode = 0;
 
+    // memcpy(fs_head, (void*)(&sb), sizeof(sb));
+
+    // dinode_t rootInode;
+    // memset(&rootInode, 0, sizeof(rootInode));
+    // rootInode.stat.id = 0;
+    // rootInode.stat.type = T_DIR;
+    // rootInode.stat.size = 2*sizeof(struct ufs_dirent);
+    // rootInode.firstBlock = 0;
+    // rootInode.refCnt = 1;
+    // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
+
+    dinode_t dirInode;
+    memset(&dirInode, 0, sizeof(dirInode));
+    dirInode.stat.id = ++sb.fst_free_inode;
+    dirInode.stat.type = T_DIR;
+    dirInode.stat.size = 2 * sizeof(struct ufs_dirent);
+    dirInode.firstBlock = ++sb.fst_free_data_blk;
+    dirInode.refCnt = 1;
+    memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, &dirInode, sizeof(dirInode));
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
-
-    dinode_t rootInode;
-    memset(&rootInode, 0, sizeof(rootInode));
-    rootInode.stat.id = 0;
-    rootInode.stat.type = T_DIR;
-    rootInode.stat.size = 2*sizeof(struct ufs_dirent);
-    rootInode.firstBlock = 0;
-    rootInode.refCnt = 1;
-    memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
-
+    
     DIR* dir = opendir(argv[3]);
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
