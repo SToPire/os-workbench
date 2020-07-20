@@ -108,7 +108,7 @@ void traverse(char* pathname, uint32_t parentino)
             // TBD:link
             dinode_t newDinode;
             memset(&newDinode, 0, sizeof(newDinode));
-            newDinode.stat.id = ++sb.fst_free_inode;
+            newDinode.stat.id = sb.fst_free_inode++;
             newDinode.stat.type = T_FILE;
             newDinode.stat.size = statbuf.st_size;
             newDinode.refCnt = 1;
