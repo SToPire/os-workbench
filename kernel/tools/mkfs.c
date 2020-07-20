@@ -55,7 +55,7 @@ uint32_t getLastEntryBlk(uint32_t headBlk)
     }
 }
 
-void traverse(char* pathname)
+void traverse(char* pathname, uint32_t parentino)
 {
     dinode_t dirInode;
     memset(&dirInode, 0, sizeof(dirInode));
@@ -70,17 +70,29 @@ void traverse(char* pathname)
     DIR* dir = opendir(pathname);
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
-        uint32_t newInode = sb.fst_free_inode++;
         uint32_t newBlk = sb.fst_free_data_blk++;
-        //printf("%s %d %u %u\n", dir_entry->d_name, newInode, lstBlk, newBlk);
         addFAT(lstBlk, newBlk);
         struct ufs_dirent d;
-        memset(&d, 0, sizeof(struct ufs_dirent));
-        d.inode = newInode;
-        strcpy(d.name, dir_entry->d_name);
-        memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
-        lstBlk = newBlk;
-
+        if (strcmp(dir_entry->d_name, ".") == 0) {
+            d.inode = dirInode.stat.id;
+            strcpy(d.name, ".");
+            memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+            lstBlk = newBlk;
+            continue;
+        } else if (strcmp(dir_entry->d_name, "..") == 0) {
+            d.inode = parentino;
+            strcpy(d.name, "..");
+            memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+            lstBlk = newBlk;
+            continue;
+        } else {
+            uint32_t newInode = sb.fst_free_inode++;
+            memset(&d, 0, sizeof(struct ufs_dirent));
+            d.inode = newInode;
+            strcpy(d.name, dir_entry->d_name);
+            memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+            lstBlk = newBlk;
+        }
         // if (dir_entry->d_type == 8) {  // file
         //     char fullPath[512];
         //     sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
@@ -139,7 +151,7 @@ int main(int argc, char* argv[])
     // rootInode.refCnt = 1;
     // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
-    traverse(argv[3]);
+    traverse(argv[3], 0);
 
     munmap(disk, IMG_SIZE);
     close(fd);
