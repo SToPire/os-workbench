@@ -71,7 +71,6 @@ void traverse(char* pathname)
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
         uint32_t newInode = sb.fst_free_inode++;
-        printf("%d %u\n", newInode,lstBlk);
         uint32_t newBlk = sb.fst_free_data_blk++;
         addFAT(lstBlk, newBlk);
         struct ufs_dirent d;
@@ -79,6 +78,7 @@ void traverse(char* pathname)
         d.inode = newInode;
         strcpy(d.name, dir_entry->d_name);
         memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+        printf("%d ", d.inode);
         lstBlk = newBlk;
 
         if (dir_entry->d_type == 8) {  // file
