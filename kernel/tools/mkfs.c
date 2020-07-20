@@ -81,20 +81,20 @@ void traverse(char* pathname)
         lstBlk = newBlk;
 
         if (dir_entry->d_type == 8) {  // file
-            char fullPath[512];
-            sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
+            // char fullPath[512];
+            // sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
 
-            int fd = open(fullPath, O_RDWR);
-            assert(fd > 0);
-            struct stat statbuf;
-            fstat(fd, &statbuf);
-            printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
+            // int fd = open(fullPath, O_RDWR);
+            // assert(fd > 0);
+            // struct stat statbuf;
+            // fstat(fd, &statbuf);
+            // printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
 
-            dinode_t newDinode;
-            memset(&newDinode, 0, sizeof(newDinode));
-            newDinode.stat.id = ++sb.fst_free_inode;
-            newDinode.stat.type = T_FILE;
-            newDinode.stat.size = 0;
+            // dinode_t newDinode;
+            // memset(&newDinode, 0, sizeof(newDinode));
+            // newDinode.stat.id = ++sb.fst_free_inode;
+            // newDinode.stat.type = T_FILE;
+            // newDinode.stat.size = 0;
         } else if (dir_entry->d_type == 4) {  // dir
         }
     }
