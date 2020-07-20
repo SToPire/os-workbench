@@ -112,7 +112,7 @@ void traverse(char* pathname, uint32_t parentino)
             newDinode.stat.type = T_FILE;
             newDinode.stat.size = statbuf.st_size;
             newDinode.refCnt = 1;
-            newDinode.firstBlock = ++sb.fst_free_data_blk;
+            newDinode.firstBlock = sb.fst_free_data_blk++;
             memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
 
         } else if (dir_entry->d_type == 4) {  // dir
