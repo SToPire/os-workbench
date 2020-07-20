@@ -74,8 +74,8 @@ int main(int argc, char* argv[])
     dirInode.firstBlock = ++sb.fst_free_data_blk;
     dirInode.refCnt = 1;
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, &dirInode, sizeof(dirInode));
-    memcpy(fs_head, (void*)(&sb), sizeof(sb));
-    
+    //memcpy(fs_head, (void*)(&sb), sizeof(sb));
+
     DIR* dir = opendir(argv[3]);
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
