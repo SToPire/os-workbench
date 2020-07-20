@@ -74,7 +74,7 @@ void traverse(char* pathname)
         uint32_t newBlk = sb.fst_free_data_blk++;
         addFAT(lstBlk, newBlk);
         struct ufs_dirent d;
-        memset(d, 0, sizeof(struct ufs_dirent));
+        memset(&d, 0, sizeof(struct ufs_dirent));
         d.inode = newInode;
         strcpy(d.name, dir_entry->d_name);
         memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
