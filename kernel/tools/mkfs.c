@@ -80,7 +80,6 @@ int main(int argc, char* argv[])
     DIR* dir = opendir(argv[3]);
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
-        printf("%s:%d\n", dir_entry->d_name, dir_entry->d_type);
         if (dir_entry->d_type == 8) {  // file
 
             char fullPath[512];
