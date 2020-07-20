@@ -72,7 +72,7 @@ void traverse(char* pathname)
     while ((dir_entry = readdir(dir)) != NULL) {
         uint32_t newInode = sb.fst_free_inode++;
         uint32_t newBlk = sb.fst_free_data_blk++;
-        printf("%s %d %u\n", dir_entry->d_name, newInode, lstBlk, newBlk);
+        printf("%s %d %u %u\n", dir_entry->d_name, newInode, lstBlk, newBlk);
         addFAT(lstBlk, newBlk);
         struct ufs_dirent d;
         memset(&d, 0, sizeof(struct ufs_dirent));
