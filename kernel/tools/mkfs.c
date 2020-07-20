@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
         printf("%s:%d\n", dir_entry->d_name, dir_entry->d_type);
         if (dir_entry->d_type == 8) {  // file
 
-            char fullPath[128];
+            char fullPath[256];
             sprintf(fullPath, "%s/%s", argv[3], dir_entry->d_name);
 
             int fd = open(fullPath, O_RDWR);
