@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
             assert(fd > 0);
             struct stat statbuf;
             fstat(fd, &statbuf);
-            printf("%s %d\n", dir_entry->d_name, statbuf.st_size);
+            printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
 
             dinode_t newDinode;
             memset(&newDinode, 0, sizeof(newDinode));
