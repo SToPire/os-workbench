@@ -58,7 +58,9 @@ uint32_t getLastEntryBlk(uint32_t headBlk)
 void addDirEntry(dinode_t* dinode)
 {
     uint32_t leb = getLastEntryBlk(dinode->firstBlock);
-    printf("leb:%u\n", leb);
+    uint32_t newBlk = sb.fst_free_data_blk++;
+    addFAT(leb, newBlk);
+    printf("leb:%u", leb);
 }
 
 void traverse(char* pathname)
