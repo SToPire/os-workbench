@@ -34,6 +34,7 @@ uint8_t* fs_head;
 
 void addFAT(uint32_t from, uint32_t to)
 {
+    printf("%lx\n", sb.fat_head + sizeof(uint32_t) * from);
     memcpy(fs_head + sb.fat_head + sizeof(uint32_t) * from, (void*)(&to), sizeof(uint32_t));
 }
 uint32_t getNextFAT(uint32_t curBlk)
@@ -72,7 +73,7 @@ void traverse(char* pathname)
     while ((dir_entry = readdir(dir)) != NULL) {
         uint32_t newInode = sb.fst_free_inode++;
         uint32_t newBlk = sb.fst_free_data_blk++;
-        //printf("%s %d %u %u\n", dir_entry->d_name, newInode, lstBlk, newBlk);
+        printf("%s %d %u %u\n", dir_entry->d_name, newInode, lstBlk, newBlk);
         addFAT(lstBlk, newBlk);
         struct ufs_dirent d;
         memset(&d, 0, sizeof(struct ufs_dirent));
@@ -81,23 +82,23 @@ void traverse(char* pathname)
         memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
         lstBlk = newBlk;
 
-        if (dir_entry->d_type == 8) {  // file
-            // char fullPath[512];
-            // sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
+        // if (dir_entry->d_type == 8) {  // file
+        //     char fullPath[512];
+        //     sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
 
-            // int fd = open(fullPath, O_RDWR);
-            // assert(fd > 0);
-            // struct stat statbuf;
-            // fstat(fd, &statbuf);
-            // printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
+        //     int fd = open(fullPath, O_RDWR);
+        //     assert(fd > 0);
+        //     struct stat statbuf;
+        //     fstat(fd, &statbuf);
+        //     printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
 
-            // dinode_t newDinode;
-            // memset(&newDinode, 0, sizeof(newDinode));
-            // newDinode.stat.id = ++sb.fst_free_inode;
-            // newDinode.stat.type = T_FILE;
-            // newDinode.stat.size = 0;
-        } else if (dir_entry->d_type == 4) {  // dir
-        }
+        //     dinode_t newDinode;
+        //     memset(&newDinode, 0, sizeof(newDinode));
+        //     newDinode.stat.id = ++sb.fst_free_inode;
+        //     newDinode.stat.type = T_FILE;
+        //     newDinode.stat.size = 0;
+        // } else if (dir_entry->d_type == 4) {  // dir
+        // }
     }
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
 }
@@ -139,6 +140,7 @@ int main(int argc, char* argv[])
     // rootInode.refCnt = 1;
     // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
+    printf("disk:%p~%p\n", disk,disk+IMG_SIZE);
     traverse(argv[3]);
 
     munmap(disk, IMG_SIZE);
