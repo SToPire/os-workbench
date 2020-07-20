@@ -118,8 +118,8 @@ void traverse(char* pathname, uint32_t parentino)
             } else if (dir_entry->d_type == 4) {  // dir
             }
         }
-        
-    }
+        }
+    memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, (void*)(&dirInode), sizeof(dinode_t));
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
 }
 
