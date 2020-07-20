@@ -85,9 +85,9 @@ int main(int argc, char* argv[])
 
             int fd = open(dir_entry->d_name, O_RDWR);
             assert(fd > 0);
-            struct stat* statbuf;
-            fstat(fd, statbuf);
-            printf("%s %d\n", dir_entry->d_name, statbuf->st_size);
+            struct stat statbuf;
+            fstat(fd, &statbuf);
+            printf("%s %d\n", dir_entry->d_name, statbuf.st_size);
 
             dinode_t newDinode;
             memset(&newDinode, 0, sizeof(newDinode));
