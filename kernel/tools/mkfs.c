@@ -83,7 +83,10 @@ int main(int argc, char* argv[])
         printf("%s:%d\n", dir_entry->d_name, dir_entry->d_type);
         if (dir_entry->d_type == 8) {  // file
 
-            int fd = open(dir_entry->d_name, O_RDWR);
+            char fullPath[128];
+            sprintf(fullPath, "%s/%s", argv[3], dir_entry->d_name);
+
+            int fd = open(fullPath, O_RDWR);
             assert(fd > 0);
             struct stat statbuf;
             fstat(fd, &statbuf);
