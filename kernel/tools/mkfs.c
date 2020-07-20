@@ -32,6 +32,35 @@ typedef struct _dinode {
 superblock_t sb;
 uint8_t* fs_head;
 
+void addFAT(uint32_t from, uint32_t to)
+{
+    memcpy(fs_head + sb.fat_head + sizeof(uint32_t) * from, (void*)(&to), sizeof(uint32_t));
+}
+uint32_t getNextFAT(uint32_t curBlk)
+{
+    uint32_t ret = 0;
+    off_t offset = sb.fat_head + curBlk * sizeof(uint32_t);
+    memcpy(fs_head + offset, (void*)ret, sizeof(uint32_t));
+    return ret;
+}
+uint32_t getLastEntryBlk(uint32_t headBlk)
+{
+    uint32_t curBlk = headBlk;
+    while (1) {
+        uint32_t nxt = getNextFAT(curBlk);
+        if (nxt == 0)
+            return curBlk;
+        else
+            curBlk = nxt;
+    }
+}
+
+void addDirEntry(dinode_t* dinode)
+{
+    uint32_t leb = getLastEntryBlk(dinode->firstBlock);
+    printf("leb:%u\n", leb);
+}
+
 void traverse(char* pathname)
 {
     dinode_t dirInode;
@@ -41,14 +70,12 @@ void traverse(char* pathname)
     dirInode.stat.size = 2 * sizeof(struct ufs_dirent);
     dirInode.firstBlock = ++sb.fst_free_data_blk;
     dirInode.refCnt = 1;
-    memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, &dirInode, sizeof(dirInode));
-    memcpy(fs_head, (void*)(&sb), sizeof(sb));
 
     DIR* dir = opendir(pathname);
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
+        addDirEntry(&dirInode);
         if (dir_entry->d_type == 8) {  // file
-
             char fullPath[512];
             sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
 
@@ -63,8 +90,11 @@ void traverse(char* pathname)
             newDinode.stat.id = ++sb.fst_free_inode;
             newDinode.stat.type = T_FILE;
             newDinode.stat.size = 0;
+        } else if (dir_entry->d_type == 4) {  // dir
         }
     }
+    memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, &dirInode, sizeof(dirInode));
+    memcpy(fs_head, (void*)(&sb), sizeof(sb));
 }
 
 

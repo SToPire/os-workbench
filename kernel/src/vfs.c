@@ -83,7 +83,7 @@ device_t* sda;
 
 void addFAT(uint32_t from, uint32_t to)
 {
-    sda->ops->write(sda, FS_OFFSET + sb.fat_head + sizeof(int32_t) * from, (void*)(&to), sizeof(uint32_t));
+    sda->ops->write(sda, FS_OFFSET + sb.fat_head + sizeof(uint32_t) * from, (void*)(&to), sizeof(uint32_t));
 }
 uint32_t getNextFAT(uint32_t curBlk)
 {
