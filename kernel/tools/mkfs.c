@@ -29,44 +29,11 @@ typedef struct _dinode {
     uint32_t refCnt;
 } dinode_t;
 
-int main(int argc, char* argv[])
+superblock_t sb;
+uint8_t* fs_head;
+
+void traverse(char* pathname)
 {
-    int fd;
-    uint8_t* disk;
-
-    int IMG_SIZE = atoi(argv[1]) * 1024 * 1024;
-
-    // char* cwd = getcwd(NULL, 0);
-    // char* newwd = malloc(strlen(cwd) - strlen("/tools") + 1);
-    // strncpy(newwd, cwd, strlen(cwd) - strlen("/tools"));
-    // assert(chdir(newwd) == 0);
-
-    assert((fd = open(argv[2], O_RDWR)) > 0);
-    assert((ftruncate(fd, IMG_SIZE)) == 0);
-    assert((disk = mmap(NULL, IMG_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) != MAP_FAILED);
-
-    uint8_t* fs_head = disk + FS_OFFSET;
-
-    superblock_t sb;
-    sb.blk_size = 32U;
-    sb.inode_size = 32U;
-    sb.inode_head = sizeof(superblock_t);
-    sb.fat_head = sb.inode_head + 1024U;
-    sb.data_head = sb.fat_head + 1024U;
-    sb.fst_free_data_blk = 0;
-    sb.fst_free_inode = 0;
-
-    // memcpy(fs_head, (void*)(&sb), sizeof(sb));
-
-    // dinode_t rootInode;
-    // memset(&rootInode, 0, sizeof(rootInode));
-    // rootInode.stat.id = 0;
-    // rootInode.stat.type = T_DIR;
-    // rootInode.stat.size = 2*sizeof(struct ufs_dirent);
-    // rootInode.firstBlock = 0;
-    // rootInode.refCnt = 1;
-    // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
-
     dinode_t dirInode;
     memset(&dirInode, 0, sizeof(dirInode));
     dirInode.stat.id = ++sb.fst_free_inode;
@@ -77,7 +44,7 @@ int main(int argc, char* argv[])
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, &dirInode, sizeof(dirInode));
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
 
-    DIR* dir = opendir(argv[3]);
+    DIR* dir = opendir(pathname);
     struct dirent* dir_entry;
     while ((dir_entry = readdir(dir)) != NULL) {
         if (dir_entry->d_type == 8) {  // file
@@ -98,6 +65,47 @@ int main(int argc, char* argv[])
             newDinode.stat.size = 0;
         }
     }
+}
+
+
+int main(int argc, char* argv[])
+{
+    int fd;
+    uint8_t* disk;
+
+    int IMG_SIZE = atoi(argv[1]) * 1024 * 1024;
+
+    // char* cwd = getcwd(NULL, 0);
+    // char* newwd = malloc(strlen(cwd) - strlen("/tools") + 1);
+    // strncpy(newwd, cwd, strlen(cwd) - strlen("/tools"));
+    // assert(chdir(newwd) == 0);
+
+    assert((fd = open(argv[2], O_RDWR)) > 0);
+    assert((ftruncate(fd, IMG_SIZE)) == 0);
+    assert((disk = mmap(NULL, IMG_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) != MAP_FAILED);
+
+    fs_head = disk + FS_OFFSET;
+
+    sb.blk_size = 32U;
+    sb.inode_size = 32U;
+    sb.inode_head = sizeof(superblock_t);
+    sb.fat_head = sb.inode_head + 1024U;
+    sb.data_head = sb.fat_head + 1024U;
+    sb.fst_free_data_blk = 0;
+    sb.fst_free_inode = 0;
+
+    // memcpy(fs_head, (void*)(&sb), sizeof(sb));
+
+    // dinode_t rootInode;
+    // memset(&rootInode, 0, sizeof(rootInode));
+    // rootInode.stat.id = 0;
+    // rootInode.stat.type = T_DIR;
+    // rootInode.stat.size = 2*sizeof(struct ufs_dirent);
+    // rootInode.firstBlock = 0;
+    // rootInode.refCnt = 1;
+    // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
+
+    traverse();
 
     munmap(disk, IMG_SIZE);
     close(fd);
