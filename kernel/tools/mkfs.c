@@ -34,7 +34,6 @@ uint8_t* fs_head;
 
 void addFAT(uint32_t from, uint32_t to)
 {
-    printf("%lx\n", sb.fat_head + sizeof(uint32_t) * from);
     memcpy(fs_head + sb.fat_head + sizeof(uint32_t) * from, (void*)(&to), sizeof(uint32_t));
 }
 uint32_t getNextFAT(uint32_t curBlk)
@@ -140,7 +139,6 @@ int main(int argc, char* argv[])
     // rootInode.refCnt = 1;
     // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
-    printf("disk:%p~%p\n", disk,disk+IMG_SIZE);
     traverse(argv[3]);
 
     munmap(disk, IMG_SIZE);
