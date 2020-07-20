@@ -137,6 +137,7 @@ void vfs_test()
     vfs->fstat(v9, &stat);
     assert(stat.id == 2);
 
+    printf("success\n");
     while (1)
         ;
 }
