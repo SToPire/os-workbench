@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
     // rootInode.refCnt = 1;
     // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
-    traverse();
+    traverse(argv[3]);
 
     munmap(disk, IMG_SIZE);
     close(fd);
