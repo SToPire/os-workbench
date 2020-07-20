@@ -79,7 +79,6 @@ void traverse(char* pathname)
         d.inode = newInode;
         strcpy(d.name, dir_entry->d_name);
         memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
-        printf("%d ", d.inode);
         lstBlk = newBlk;
 
         if (dir_entry->d_type == 8) {  // file
