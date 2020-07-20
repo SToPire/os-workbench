@@ -99,7 +99,6 @@ void traverse(char* pathname)
         } else if (dir_entry->d_type == 4) {  // dir
         }
     }
-    memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, &dirInode, sizeof(dirInode));
     memcpy(fs_head, (void*)(&sb), sizeof(sb));
 }
 
