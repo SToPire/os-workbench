@@ -128,6 +128,7 @@ void traverse(char* pathname, uint32_t parentino)
                     curBlk = nxtBlk;
                     remain -= curSize;
                 }
+                close(fd); 
             } else if (dir_entry->d_type == 4) {  // dir
             }
         }
