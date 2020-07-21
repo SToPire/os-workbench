@@ -133,7 +133,7 @@ void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
         if (e->dir_entry.name[0] == 0) continue;
         dinode_t dinode;
         sda->ops->read(sda, FS_OFFSET + sb.inode_head + sb.inode_size * e->dir_entry.inode, &dinode, sizeof(dinode_t));
-        printf("%s %u\n", e->dir_entry.name, dinode.stat.id);
+//        printf("%s %u\n", e->dir_entry.name, dinode.stat.id);
 
         inode_t* newInode = pmm->alloc(sizeof(inode_t));
         newInode->dInodeNum = dinode.stat.id;
