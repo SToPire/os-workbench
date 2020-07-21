@@ -142,7 +142,6 @@ void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
         inodeInsert(curRoot, newInode);
 
         curBlk = getNextFAT(curBlk);
-    printf("here\n");
     } while (curBlk != 0);
 
 }
@@ -162,6 +161,7 @@ void ufs_init()
     root->dInodeNum = d_root->stat.id;
     //memcpy(&(root->stat), &(d_root->stat), sizeof(root->stat));
     strcpy(root->name, "/");
+    printf("here\n");
 
     traverse_dir(root, d_root);
     // int tmp = sb.fst_free_data_blk;
