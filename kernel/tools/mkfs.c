@@ -145,15 +145,6 @@ void traverse(char* pathname, uint32_t parentino)
             memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
             lstBlk = newBlk;
 
-            // dinode_t newDinode;
-            // memset(&newDinode, 0, sizeof(newDinode));
-            // newDinode.stat.id = d.inode;
-            // newDinode.stat.size = 0;
-            // newDinode.stat.type = T_DIR;
-            // newDinode.refCnt = 1;
-            // newDinode.firstBlock = sb.fst_free_data_blk++;
-            // memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
-
             char fullPath[512];
             if (strcmp(pathname, "/") == 0) {
                 sprintf(fullPath, "/%s", dir_entry->d_name);
@@ -174,11 +165,6 @@ int main(int argc, char* argv[])
     uint8_t* disk;
 
     int IMG_SIZE = atoi(argv[1]) * 1024 * 1024;
-
-    // char* cwd = getcwd(NULL, 0);
-    // char* newwd = malloc(strlen(cwd) - strlen("/tools") + 1);
-    // strncpy(newwd, cwd, strlen(cwd) - strlen("/tools"));
-    // assert(chdir(newwd) == 0);
 
     assert((fd = open(argv[2], O_RDWR)) > 0);
     assert((ftruncate(fd, IMG_SIZE)) == 0);
