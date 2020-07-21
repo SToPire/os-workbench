@@ -83,7 +83,13 @@ void traverse(char* pathname, uint32_t parentino)
             strcpy(d.name, dir_entry->d_name);
 
             char fullPath[512];
-            sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
+            if (strcmp(pathname, "/") == 0) {
+                sprintf(fullPath, "/%s", dir_entry->d_name);
+            } else if (pathname[strlen(pathname) - 1] != "/"){
+                sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
+            }else{
+                sprintf(fullPath, "%s%s", pathname, dir_entry->d_name);
+            }
             int fd = open(fullPath, O_RDWR);
             assert(fd > 0);
             struct stat statbuf;
@@ -147,6 +153,16 @@ void traverse(char* pathname, uint32_t parentino)
             newDinode.refCnt = 1;
             newDinode.firstBlock = sb.fst_free_data_blk++;
             memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
+
+            char fullPath[512];
+            if (strcmp(pathname, "/") == 0) {
+                sprintf(fullPath, "/%s", dir_entry->d_name);
+            } else if (pathname[strlen(pathname) - 1] != "/") {
+                sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
+            } else {
+                sprintf(fullPath, "%s%s", pathname, dir_entry->d_name);
+            }
+            printf("%s\n", fullPath);
         }
     }
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, (void*)(&dirInode), sizeof(dinode_t));
