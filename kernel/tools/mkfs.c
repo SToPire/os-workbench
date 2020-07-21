@@ -30,10 +30,15 @@ typedef struct _dinode {
     uint32_t refCnt;
 } dinode_t;
 
+typedef struct _linkFileEntry {
+    __ino_t ino;
+    uint32_t myino;
+} linkFileEntry_t;
+
 superblock_t sb;
 uint8_t* fs_head;
 
-__ino_t linkFile[LNKFILE_NUM];
+linkFileEntry_t linkFile[LNKFILE_NUM];
 int linkFileCnt;
 
 void addFAT(uint32_t from, uint32_t to)
@@ -78,8 +83,6 @@ void traverse(char* pathname, uint32_t parentino)
             memset(&d, 0, sizeof(struct ufs_dirent));
             d.inode = newInodeNo;
             strcpy(d.name, dir_entry->d_name);
-            memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
-            lstBlk = newBlk;
 
             if (dir_entry->d_type == 8) {  // file
                 char fullPath[512];
@@ -94,14 +97,17 @@ void traverse(char* pathname, uint32_t parentino)
                 if (1 != statbuf.st_nlink) {
                     char linkFileFlag = 0;
                     for (int i = 0; i < LNKFILE_NUM; i++)
-                        if (linkFile[i] == statbuf.st_ino) {
+                        if (linkFile[i].ino == statbuf.st_ino) {
                             linkFileFlag = 1;
+                            d.inode = linkFile[i].myino;
                             break;
                         }
                     if (linkFileFlag)
                         continue;
-                    else
-                        linkFile[linkFileCnt++] = statbuf.st_ino;
+                    else {
+                        linkFile[linkFileCnt].ino = statbuf.st_ino;
+                        linkFile[linkFileCnt++].myino = newInodeNo;
+                    }
                 }
 
                 dinode_t newDinode;
@@ -129,6 +135,8 @@ void traverse(char* pathname, uint32_t parentino)
                 close(fd);
             } else if (dir_entry->d_type == 4) {  // dir
             }
+            memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+            lstBlk = newBlk;
         }
     }
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, (void*)(&dirInode), sizeof(dinode_t));
