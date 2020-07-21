@@ -11,6 +11,7 @@
 #include <dirent.h>
 
 #define FS_OFFSET 1 * 1024 * 1024
+#define LNKFILE_NUM 128
 
 typedef struct _superblock {
     uint32_t blk_size;
@@ -32,27 +33,12 @@ typedef struct _dinode {
 superblock_t sb;
 uint8_t* fs_head;
 
+__ino_t linkFile[LNKFILE_NUM];
+int linkFileCnt;
+
 void addFAT(uint32_t from, uint32_t to)
 {
     memcpy(fs_head + sb.fat_head + sizeof(uint32_t) * from, (void*)(&to), sizeof(uint32_t));
-}
-uint32_t getNextFAT(uint32_t curBlk)
-{
-    uint32_t ret = 0;
-    off_t offset = sb.fat_head + curBlk * sizeof(uint32_t);
-    memcpy(fs_head + offset, (void*)(&ret), sizeof(uint32_t));
-    return ret;
-}
-uint32_t getLastEntryBlk(uint32_t headBlk)
-{
-    uint32_t curBlk = headBlk;
-    while (1) {
-        uint32_t nxt = getNextFAT(curBlk);
-        if (nxt == 0)
-            return curBlk;
-        else
-            curBlk = nxt;
-    }
 }
 
 void traverse(char* pathname, uint32_t parentino)
@@ -105,8 +91,19 @@ void traverse(char* pathname, uint32_t parentino)
                 fstat(fd, &statbuf);
                 printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
 
-                // TBD:link
-                printf("%d\n", (int)statbuf.st_nlink);
+                if (1 != statbuf.st_nlink) {
+                    char linkFileFlag = 0;
+                    for (int i = 0; i < LNKFILE_NUM; i++)
+                        if (linkFile[i] == statbuf.st_ino) {
+                            linkFileFlag = 1;
+                            break;
+                        }
+                    if (linkFileFlag)
+                        continue;
+                    else
+                        linkFile[linkFileCnt++] = statbuf.st_ino;
+                }
+
                 dinode_t newDinode;
                 memset(&newDinode, 0, sizeof(newDinode));
                 newDinode.stat.id = newInodeNo;
@@ -129,7 +126,7 @@ void traverse(char* pathname, uint32_t parentino)
                     curBlk = nxtBlk;
                     remain -= curSize;
                 }
-                close(fd); 
+                close(fd);
             } else if (dir_entry->d_type == 4) {  // dir
             }
         }
@@ -175,6 +172,8 @@ int main(int argc, char* argv[])
     // rootInode.refCnt = 1;
     // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
+    memset(linkFile, -1, sizeof(linkFile));
+    linkFileCnt = 0;
     traverse(argv[3], 0);
 
     munmap(disk, IMG_SIZE);
