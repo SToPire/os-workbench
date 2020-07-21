@@ -79,14 +79,10 @@ void traverse(char* pathname, uint32_t parentino)
             lstBlk = newBlk;
             continue;
         } else if (dir_entry->d_type == 8) {  // file
-            uint32_t newInodeNo = sb.fst_free_inode++;
-            d.inode = newInodeNo;
             strcpy(d.name, dir_entry->d_name);
-
 
             char fullPath[512];
             sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
-
             int fd = open(fullPath, O_RDWR);
             assert(fd > 0);
             struct stat statbuf;
@@ -107,7 +103,7 @@ void traverse(char* pathname, uint32_t parentino)
                     continue;
                 else {
                     linkFile[linkFileCnt].ino = statbuf.st_ino;
-                    linkFile[linkFileCnt++].myino = newInodeNo;
+                    linkFile[linkFileCnt++].myino = d.inode = sb.fst_free_inode++;
                     memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
                     lstBlk = newBlk;
                 }
@@ -115,7 +111,7 @@ void traverse(char* pathname, uint32_t parentino)
 
             dinode_t newDinode;
             memset(&newDinode, 0, sizeof(newDinode));
-            newDinode.stat.id = newInodeNo;
+            newDinode.stat.id = d.inode;
             newDinode.stat.type = T_FILE;
             newDinode.stat.size = statbuf.st_size;
             newDinode.refCnt = 1;
