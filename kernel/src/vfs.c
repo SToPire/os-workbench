@@ -133,7 +133,7 @@ void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
         atLastExecOneTime =1;
         entry_t* e = pmm->alloc(sizeof(entry_t));
         readEntry(curBlk, e);
-        printf("%d %s\n",++cnt, e->dir_entry.name);
+        printf("%d %s %u\n",++cnt, e->dir_entry.name, curBlk);
 
         curBlk = getNextFAT(curBlk);
     }
