@@ -162,7 +162,7 @@ void traverse(char* pathname, uint32_t parentino)
             } else {
                 sprintf(fullPath, "%s%s", pathname, dir_entry->d_name);
             }
-            printf("%s\n", fullPath);
+            traverse(fullPath, d.inode);
         }
     }
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, (void*)(&dirInode), sizeof(dinode_t));
