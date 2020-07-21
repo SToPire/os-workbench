@@ -140,7 +140,7 @@ void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
         newInode->dInodeNum = dinode.stat.id;
         newInode->firstBlock = dinode.firstBlock;
         strcpy(newInode->name, e->dir_entry.name);
-        //inodeInsert(curRoot, newInode);
+        inodeInsert(curRoot, newInode);
 
     } while (curBlk != 0);
     printf("here\n");
