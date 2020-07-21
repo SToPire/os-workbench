@@ -127,13 +127,13 @@ inode_t* root;
 void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
 {
     uint32_t curBlk = curDinode->firstBlock;
-    while(curBlk != 0){
+    do {
         entry_t* e = pmm->alloc(sizeof(entry_t));
         readEntry(curBlk, e);
         printf("%s\n", e->dir_entry.name);
 
         curBlk = getNextFAT(curBlk);
-    }
+    } while (curBlk != 0);
 }
 
 void ufs_init()
