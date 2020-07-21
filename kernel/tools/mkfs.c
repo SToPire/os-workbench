@@ -117,7 +117,7 @@ void traverse(char* pathname, uint32_t parentino)
 
                 uint32_t curBlk = newDinode.firstBlock;
                 uint32_t remain = newDinode.stat.size;
-                char* buf = pmm->alloc(sb.blk_size);
+                char* buf = malloc(sb.blk_size);
                 while (remain > 0) {
                     memset(buf, 0, sb.blk_size);
                 }
