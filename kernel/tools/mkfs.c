@@ -119,6 +119,7 @@ void traverse(char* pathname, uint32_t parentino)
                 uint32_t remain = newDinode.stat.size;
                 char* buf = malloc(sb.blk_size);
                 while (remain > 0) {
+                    printf("SSSSSSS\n");
                     uint32_t nxtBlk = sb.fst_free_data_blk++;
                     addFAT(curBlk, nxtBlk);
                     memset(buf, 0, sb.blk_size);
