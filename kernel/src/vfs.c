@@ -161,9 +161,9 @@ void ufs_init()
     root->dInodeNum = d_root->stat.id;
     //memcpy(&(root->stat), &(d_root->stat), sizeof(root->stat));
     strcpy(root->name, "/");
-    printf("here\n");
 
     traverse_dir(root, d_root);
+    printf("here\n");
     // int tmp = sb.fst_free_data_blk;
     // addFAT(root->firstBlock, sb.fst_free_data_blk);
     // ++sb.fst_free_data_blk;
