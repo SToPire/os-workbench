@@ -149,6 +149,9 @@ void vfs_test2()
     int v1 = vfs->open("a.c", 0);
     vfs->read(v1, s, 10);
     printf("%s\n", v1);
+
+    while(1)
+        ;
 }
 
 static void os_init()
