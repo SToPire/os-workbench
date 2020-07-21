@@ -142,6 +142,9 @@ void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
         strcpy(newInode->name, e->dir_entry.name);
         inodeInsert(curRoot, newInode);
 
+        if(dinode->stat.type == T_DIR){
+            traverse_dir(newInode, dinode);
+        }
     } while (curBlk != 0);
 }
 
