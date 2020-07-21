@@ -85,7 +85,7 @@ void traverse(char* pathname, uint32_t parentino)
             char fullPath[512];
             if (strcmp(pathname, "/") == 0) {
                 sprintf(fullPath, "/%s", dir_entry->d_name);
-            } else if (pathname[strlen(pathname) - 1] != "/"){
+            } else if (pathname[strlen(pathname) - 1] != '/'){
                 sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
             }else{
                 sprintf(fullPath, "%s%s", pathname, dir_entry->d_name);
