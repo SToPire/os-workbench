@@ -124,6 +124,18 @@ void readEntry(uint32_t NO, entry_t* e)
 
 inode_t* root;
 
+void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
+{
+    uint32_t curBlk = curDinode->firstBlock;
+    while(curBlk != 0){
+        entry_t* e = pmm->alloc(sizeof(entry_t));
+        readEntry(curBlk, e);
+        printf("%s\n", e->dir_entry.name);
+
+        curBlk = getNextFAT(curBlk);
+    }
+}
+
 void ufs_init()
 {
     sda = dev->lookup("sda");
@@ -136,26 +148,25 @@ void ufs_init()
     root->parent = root;
     root->firstChild = root->nxtBrother = NULL;
     root->firstBlock = d_root->firstBlock;
-    root->dInodeNum = 0;
+    root->dInodeNum = d_root->stat.id;
     //memcpy(&(root->stat), &(d_root->stat), sizeof(root->stat));
     strcpy(root->name, "/");
 
-    //. && ..
-    int tmp = sb.fst_free_data_blk;
-    addFAT(root->firstBlock, sb.fst_free_data_blk);
-    ++sb.fst_free_data_blk;
-    addFAT(tmp, sb.fst_free_data_blk);
-    ++sb.fst_free_data_blk;
-    sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
-    entry_t e1, e2;
-    memset(&e1, 0, sizeof(e1));
-    memset(&e2, 0, sizeof(e2));
-    e1.dir_entry.inode = root->dInodeNum;
-    e2.dir_entry.inode = root->dInodeNum;
-    strcpy(e1.dir_entry.name, ".");
-    strcpy(e2.dir_entry.name, "..");
-    writeEntry(root->firstBlock, &e1);
-    writeEntry(tmp, &e2);
+    // int tmp = sb.fst_free_data_blk;
+    // addFAT(root->firstBlock, sb.fst_free_data_blk);
+    // ++sb.fst_free_data_blk;
+    // addFAT(tmp, sb.fst_free_data_blk);
+    // ++sb.fst_free_data_blk;
+    // sda->ops->write(sda, FS_OFFSET, (void*)(&sb), sizeof(sb));
+    // entry_t e1, e2;
+    // memset(&e1, 0, sizeof(e1));
+    // memset(&e2, 0, sizeof(e2));
+    // e1.dir_entry.inode = root->dInodeNum;
+    // e2.dir_entry.inode = root->dInodeNum;
+    // strcpy(e1.dir_entry.name, ".");
+    // strcpy(e2.dir_entry.name, "..");
+    // writeEntry(root->firstBlock, &e1);
+    // writeEntry(tmp, &e2);
 }
 
 int ufs_write(int fd, void* buf, int count)
