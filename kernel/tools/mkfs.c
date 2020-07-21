@@ -114,7 +114,7 @@ void traverse(char* pathname, uint32_t parentino)
             newDinode.stat.id = d.inode;
             newDinode.stat.type = T_FILE;
             newDinode.stat.size = statbuf.st_size;
-            newDinode.refCnt = 1;
+            newDinode.refCnt = statbuf.st_nlink;
             newDinode.firstBlock = sb.fst_free_data_blk++;
             memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
 
@@ -132,15 +132,25 @@ void traverse(char* pathname, uint32_t parentino)
                 remain -= curSize;
             }
             close(fd);
-
             memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
             lstBlk = newBlk;
         } else if (dir_entry->d_type == 4) {  // dir
-            printf("miao\n");
+            d.inode = sb.fst_free_inode++;
+            strcpy(d.name, dir_entry->d_name);
+            memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+            lstBlk = newBlk;
+
+            dinode_t newDinode;
+            memset(&newDinode, 0, sizeof(newDinode));
+            newDinode.stat.id = d.inode;
+            newDinode.stat.size = 0;
+            newDinode.stat.type = T_DIR;
+            newDinode.refCnt = 1;
+            newDinode.firstBlock = sb.fst_free_data_blk++;
+            memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
         }
     }
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, (void*)(&dirInode), sizeof(dinode_t));
-    memcpy(fs_head, (void*)(&sb), sizeof(sb));
 }
 
 int main(int argc, char* argv[])
@@ -172,6 +182,7 @@ int main(int argc, char* argv[])
     memset(linkFile, -1, sizeof(linkFile));
     linkFileCnt = 0;
     traverse(argv[3], 0);
+    memcpy(fs_head, (void*)(&sb), sizeof(sb));
 
     munmap(disk, IMG_SIZE);
     close(fd);
