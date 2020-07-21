@@ -79,6 +79,7 @@ void traverse(char* pathname, uint32_t parentino)
             lstBlk = newBlk;
             continue;
         } else if (dir_entry->d_type == 8) {  // file
+            d.inode = sb.fst_free_inode;
             strcpy(d.name, dir_entry->d_name);
 
             char fullPath[512];
@@ -103,12 +104,11 @@ void traverse(char* pathname, uint32_t parentino)
                     continue;
                 else {
                     linkFile[linkFileCnt].ino = statbuf.st_ino;
-                    linkFile[linkFileCnt++].myino = d.inode = sb.fst_free_inode++;
-                    memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
-                    lstBlk = newBlk;
+                    linkFile[linkFileCnt++].myino = d.inode;
                 }
             }
 
+            ++sb.fst_free_inode;
             dinode_t newDinode;
             memset(&newDinode, 0, sizeof(newDinode));
             newDinode.stat.id = d.inode;
@@ -132,6 +132,9 @@ void traverse(char* pathname, uint32_t parentino)
                 remain -= curSize;
             }
             close(fd);
+
+            memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+            lstBlk = newBlk;
         } else if (dir_entry->d_type == 4) {  // dir
         }
     }
