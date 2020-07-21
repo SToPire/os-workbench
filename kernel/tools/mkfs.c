@@ -82,8 +82,7 @@ void traverse(char* pathname, uint32_t parentino)
             uint32_t newInodeNo = sb.fst_free_inode++;
             d.inode = newInodeNo;
             strcpy(d.name, dir_entry->d_name);
-            memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
-            lstBlk = newBlk;
+
 
             char fullPath[512];
             sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
@@ -94,21 +93,25 @@ void traverse(char* pathname, uint32_t parentino)
             fstat(fd, &statbuf);
             printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
 
-            // if (1 != statbuf.st_nlink) {
-            //     char linkFileFlag = 0;
-            //     for (int i = 0; i < LNKFILE_NUM; i++)
-            //         if (linkFile[i].ino == statbuf.st_ino) {
-            //             linkFileFlag = 1;
-            //             d.inode = linkFile[i].myino;
-            //             break;
-            //         }
-            //     if (linkFileFlag)
-            //         continue;
-            //     else {
-            //         linkFile[linkFileCnt].ino = statbuf.st_ino;
-            //         linkFile[linkFileCnt++].myino = newInodeNo;
-            //     }
-            // }
+            if (1 != statbuf.st_nlink) {
+                char linkFileFlag = 0;
+                for (int i = 0; i < LNKFILE_NUM; i++)
+                    if (linkFile[i].ino == statbuf.st_ino) {
+                        linkFileFlag = 1;
+                        d.inode = linkFile[i].myino;
+                        memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+                        lstBlk = newBlk;
+                        break;
+                    }
+                if (linkFileFlag)
+                    continue;
+                else {
+                    linkFile[linkFileCnt].ino = statbuf.st_ino;
+                    linkFile[linkFileCnt++].myino = newInodeNo;
+                    memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
+                    lstBlk = newBlk;
+                }
+            }
 
             dinode_t newDinode;
             memset(&newDinode, 0, sizeof(newDinode));
