@@ -152,6 +152,7 @@ void ufs_init()
     //memcpy(&(root->stat), &(d_root->stat), sizeof(root->stat));
     strcpy(root->name, "/");
 
+    traverse_dir(root, d_root);
     // int tmp = sb.fst_free_data_blk;
     // addFAT(root->firstBlock, sb.fst_free_data_blk);
     // ++sb.fst_free_data_blk;
