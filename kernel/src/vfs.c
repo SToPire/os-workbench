@@ -137,6 +137,9 @@ void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
 
         inode_t* newInode = pmm->alloc(sizeof(inode_t));
         newInode->dInodeNum = dinode.stat.id;
+        newInode->firstBlock = dinode.firstBlock;
+        strcpy(newInode->name, e->dir_entry.name);
+        inodeInsert(curRoot, newInode);
 
         curBlk = getNextFAT(curBlk);
     } while (curBlk != 0);
