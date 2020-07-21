@@ -115,6 +115,12 @@ void traverse(char* pathname, uint32_t parentino)
                 newDinode.firstBlock = sb.fst_free_data_blk++;
                 memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
 
+                uint32_t curBlk = newDinode.firstBlock;
+                uint32_t remain = newDinode.stat.size;
+                char* buf = pmm->alloc(sb.blk_size);
+                while (remain > 0) {
+                    memset(buf, 0, sb.blk_size);
+                }
             } else if (dir_entry->d_type == 4) {  // dir
             }
         }
