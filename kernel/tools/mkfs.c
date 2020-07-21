@@ -78,65 +78,62 @@ void traverse(char* pathname, uint32_t parentino)
             memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
             lstBlk = newBlk;
             continue;
-        } else {
+        } else if (dir_entry->d_type == 8) {  // file
             uint32_t newInodeNo = sb.fst_free_inode++;
-            memset(&d, 0, sizeof(struct ufs_dirent));
             d.inode = newInodeNo;
             strcpy(d.name, dir_entry->d_name);
-
-            if (dir_entry->d_type == 8) {  // file
-                char fullPath[512];
-                sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
-
-                int fd = open(fullPath, O_RDWR);
-                assert(fd > 0);
-                struct stat statbuf;
-                fstat(fd, &statbuf);
-                printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
-
-                if (1 != statbuf.st_nlink) {
-                    char linkFileFlag = 0;
-                    for (int i = 0; i < LNKFILE_NUM; i++)
-                        if (linkFile[i].ino == statbuf.st_ino) {
-                            linkFileFlag = 1;
-                            d.inode = linkFile[i].myino;
-                            break;
-                        }
-                    if (linkFileFlag)
-                        continue;
-                    else {
-                        linkFile[linkFileCnt].ino = statbuf.st_ino;
-                        linkFile[linkFileCnt++].myino = newInodeNo;
-                    }
-                }
-
-                dinode_t newDinode;
-                memset(&newDinode, 0, sizeof(newDinode));
-                newDinode.stat.id = newInodeNo;
-                newDinode.stat.type = T_FILE;
-                newDinode.stat.size = statbuf.st_size;
-                newDinode.refCnt = 1;
-                newDinode.firstBlock = sb.fst_free_data_blk++;
-                memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
-
-                uint32_t curBlk = newDinode.firstBlock;
-                uint32_t remain = newDinode.stat.size;
-                char* buf = malloc(sb.blk_size);
-                while (remain > 0) {
-                    uint32_t nxtBlk = sb.fst_free_data_blk++;
-                    addFAT(curBlk, nxtBlk);
-                    memset(buf, 0, sb.blk_size);
-                    uint32_t curSize = (sb.blk_size > remain) ? remain : sb.blk_size;
-                    if (read(fd, buf, curSize) <= 0) assert(-1);
-                    memcpy(fs_head + sb.data_head + sb.blk_size * curBlk, buf, curSize);
-                    curBlk = nxtBlk;
-                    remain -= curSize;
-                }
-                close(fd);
-            } else if (dir_entry->d_type == 4) {  // dir
-            }
             memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
             lstBlk = newBlk;
+
+            char fullPath[512];
+            sprintf(fullPath, "%s/%s", pathname, dir_entry->d_name);
+
+            int fd = open(fullPath, O_RDWR);
+            assert(fd > 0);
+            struct stat statbuf;
+            fstat(fd, &statbuf);
+            printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
+
+            // if (1 != statbuf.st_nlink) {
+            //     char linkFileFlag = 0;
+            //     for (int i = 0; i < LNKFILE_NUM; i++)
+            //         if (linkFile[i].ino == statbuf.st_ino) {
+            //             linkFileFlag = 1;
+            //             d.inode = linkFile[i].myino;
+            //             break;
+            //         }
+            //     if (linkFileFlag)
+            //         continue;
+            //     else {
+            //         linkFile[linkFileCnt].ino = statbuf.st_ino;
+            //         linkFile[linkFileCnt++].myino = newInodeNo;
+            //     }
+            // }
+
+            dinode_t newDinode;
+            memset(&newDinode, 0, sizeof(newDinode));
+            newDinode.stat.id = newInodeNo;
+            newDinode.stat.type = T_FILE;
+            newDinode.stat.size = statbuf.st_size;
+            newDinode.refCnt = 1;
+            newDinode.firstBlock = sb.fst_free_data_blk++;
+            memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
+
+            uint32_t curBlk = newDinode.firstBlock;
+            uint32_t remain = newDinode.stat.size;
+            char* buf = malloc(sb.blk_size);
+            while (remain > 0) {
+                uint32_t nxtBlk = sb.fst_free_data_blk++;
+                addFAT(curBlk, nxtBlk);
+                memset(buf, 0, sb.blk_size);
+                uint32_t curSize = (sb.blk_size > remain) ? remain : sb.blk_size;
+                if (read(fd, buf, curSize) <= 0) assert(-1);
+                memcpy(fs_head + sb.data_head + sb.blk_size * curBlk, buf, curSize);
+                curBlk = nxtBlk;
+                remain -= curSize;
+            }
+            close(fd);
+        } else if (dir_entry->d_type == 4) {  // dir
         }
     }
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, (void*)(&dirInode), sizeof(dinode_t));
