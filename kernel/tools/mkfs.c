@@ -120,10 +120,10 @@ void traverse(char* pathname, uint32_t parentino)
                 char* buf = malloc(sb.blk_size);
                 while (remain > 0) {
                     uint32_t nxtBlk = sb.fst_free_data_blk++;
-                    addFAT(curBlk,nxtBlk);
+                    addFAT(curBlk, nxtBlk);
                     memset(buf, 0, sb.blk_size);
                     uint32_t curSize = (sb.blk_size > remain) ? remain : sb.blk_size;
-                    read(fd, buf, curSize);
+                    if (read(fd, buf, curSize) <= 0) assert(-1);
                     memcpy(fs_head + sb.data_head + sb.blk_size * curBlk, buf, curSize);
                     curBlk = nxtBlk;
                     remain -= curBlk;
