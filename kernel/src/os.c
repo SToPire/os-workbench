@@ -187,7 +187,7 @@ static void os_init()
 
     vfs->init();
 
-    kmt->create(pmm->alloc(sizeof(task_t)), "t1", vfs_test2, NULL);
+    //kmt->create(pmm->alloc(sizeof(task_t)), "t1", vfs_test2, NULL);
 }
 
 static void os_run()
