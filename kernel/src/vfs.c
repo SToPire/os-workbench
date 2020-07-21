@@ -132,19 +132,16 @@ void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
         readEntry(curBlk, e);
         curBlk = getNextFAT(curBlk);
         if (e->dir_entry.name[0] == 0) continue;
-        dinode_t* dinode = pmm->alloc(sizeof(dinode_t));
+        dinode_t dinode;
         sda->ops->read(sda, FS_OFFSET + sb.inode_head + sb.inode_size * e->dir_entry.inode, &dinode, sizeof(dinode_t));
-        printf("%s %u\n", e->dir_entry.name, dinode->stat.id);
+        printf("%s %u\n", e->dir_entry.name, dinode.stat.id);
 
         inode_t* newInode = pmm->alloc(sizeof(inode_t));
-        newInode->dInodeNum = dinode->stat.id;
-        newInode->firstBlock = dinode->firstBlock;
+        newInode->dInodeNum = dinode.stat.id;
+        newInode->firstBlock = dinode.firstBlock;
         strcpy(newInode->name, e->dir_entry.name);
         inodeInsert(curRoot, newInode);
 
-        // if(dinode->stat.type == T_DIR){
-        //     traverse_dir(newInode, dinode);
-        // }
     } while (curBlk != 0);
 }
 
