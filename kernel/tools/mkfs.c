@@ -90,7 +90,6 @@ void traverse(char* pathname, uint32_t parentino)
             }else{
                 sprintf(fullPath, "%s%s", pathname, dir_entry->d_name);
             }
-            printf("%s\n", fullPath);
             int fd = open(fullPath, O_RDWR);
             assert(fd > 0);
             struct stat statbuf;
