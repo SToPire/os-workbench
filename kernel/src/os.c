@@ -144,7 +144,6 @@ void vfs_test()
 
 void vfs_test2()
 {
-    printf("here");
     char s[128];
     memset(s, 0, 128);
     int v1 = vfs->open("a.c", 0);
