@@ -175,8 +175,8 @@ int main(int argc, char* argv[])
     sb.blk_size = 32U;
     sb.inode_size = 32U;
     sb.inode_head = sizeof(superblock_t);
-    sb.fat_head = sb.inode_head + 1024U;
-    sb.data_head = sb.fat_head + 1024U;
+    sb.fat_head = sb.inode_head + 10240U;
+    sb.data_head = sb.fat_head + 10240U;
     sb.fst_free_data_blk = 0;
     sb.fst_free_inode = 0;
 
