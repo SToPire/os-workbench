@@ -144,6 +144,7 @@ void vfs_test()
 
 void vfs_test2()
 {
+    printf("here");
     char s[128];
     memset(s, 0, 128);
     int v1 = vfs->open("a.c", 0);
@@ -187,7 +188,7 @@ static void os_init()
 
     vfs->init();
 
-    kmt->create(pmm->alloc(sizeof(task_t)), "t1", vfs_test, NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)), "t1", vfs_test2, NULL);
 }
 
 static void os_run()
