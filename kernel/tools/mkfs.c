@@ -136,6 +136,7 @@ void traverse(char* pathname, uint32_t parentino)
             memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
             lstBlk = newBlk;
         } else if (dir_entry->d_type == 4) {  // dir
+            printf("miao\n");
         }
     }
     memcpy(fs_head + sb.inode_head + sb.inode_size * dirInode.stat.id, (void*)(&dirInode), sizeof(dinode_t));
@@ -167,17 +168,6 @@ int main(int argc, char* argv[])
     sb.data_head = sb.fat_head + 1024U;
     sb.fst_free_data_blk = 0;
     sb.fst_free_inode = 0;
-
-    // memcpy(fs_head, (void*)(&sb), sizeof(sb));
-
-    // dinode_t rootInode;
-    // memset(&rootInode, 0, sizeof(rootInode));
-    // rootInode.stat.id = 0;
-    // rootInode.stat.type = T_DIR;
-    // rootInode.stat.size = 2*sizeof(struct ufs_dirent);
-    // rootInode.firstBlock = 0;
-    // rootInode.refCnt = 1;
-    // memcpy(fs_head + sb.inode_head, (void*)(&rootInode), sizeof(rootInode));
 
     memset(linkFile, -1, sizeof(linkFile));
     linkFileCnt = 0;
