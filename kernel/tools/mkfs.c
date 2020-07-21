@@ -145,14 +145,14 @@ void traverse(char* pathname, uint32_t parentino)
             memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
             lstBlk = newBlk;
 
-            dinode_t newDinode;
-            memset(&newDinode, 0, sizeof(newDinode));
-            newDinode.stat.id = d.inode;
-            newDinode.stat.size = 0;
-            newDinode.stat.type = T_DIR;
-            newDinode.refCnt = 1;
-            newDinode.firstBlock = sb.fst_free_data_blk++;
-            memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
+            // dinode_t newDinode;
+            // memset(&newDinode, 0, sizeof(newDinode));
+            // newDinode.stat.id = d.inode;
+            // newDinode.stat.size = 0;
+            // newDinode.stat.type = T_DIR;
+            // newDinode.refCnt = 1;
+            // newDinode.firstBlock = sb.fst_free_data_blk++;
+            // memcpy(fs_head + sb.inode_head + sb.inode_size * newDinode.stat.id, (void*)(&newDinode), sizeof(dinode_t));
 
             char fullPath[512];
             if (strcmp(pathname, "/") == 0) {
