@@ -119,7 +119,6 @@ void traverse(char* pathname, uint32_t parentino)
                 uint32_t remain = newDinode.stat.size;
                 char* buf = malloc(sb.blk_size);
                 while (remain > 0) {
-                    printf("SSSSSSS\n");
                     uint32_t nxtBlk = sb.fst_free_data_blk++;
                     addFAT(curBlk, nxtBlk);
                     memset(buf, 0, sb.blk_size);
@@ -127,7 +126,7 @@ void traverse(char* pathname, uint32_t parentino)
                     if (read(fd, buf, curSize) <= 0) assert(-1);
                     memcpy(fs_head + sb.data_head + sb.blk_size * curBlk, buf, curSize);
                     curBlk = nxtBlk;
-                    remain -= curBlk;
+                    remain -= curSize;
                 }
             } else if (dir_entry->d_type == 4) {  // dir
             }
