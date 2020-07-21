@@ -88,7 +88,6 @@ void traverse(char* pathname, uint32_t parentino)
             assert(fd > 0);
             struct stat statbuf;
             fstat(fd, &statbuf);
-            printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
 
             if (1 != statbuf.st_nlink) {
                 char linkFileFlag = 0;
