@@ -141,6 +141,7 @@ void traverse(char* pathname, uint32_t parentino)
             lstBlk = newBlk;
         } else if (dir_entry->d_type == 4) {  // dir
             d.inode = sb.fst_free_inode++;
+            printf("%d\n", d.inode);
             strcpy(d.name, dir_entry->d_name);
             memcpy(fs_head + sb.data_head + sb.blk_size * lstBlk, (void*)(&d), sizeof(struct ufs_dirent));
             lstBlk = newBlk;
