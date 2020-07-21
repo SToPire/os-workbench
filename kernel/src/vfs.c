@@ -142,9 +142,9 @@ void traverse_dir(inode_t* curRoot, dinode_t* curDinode)
         inodeInsert(curRoot, newInode);
 
         curBlk = getNextFAT(curBlk);
+    printf("here\n");
     } while (curBlk != 0);
 
-    printf("here\n");
 }
 
 void ufs_init()
