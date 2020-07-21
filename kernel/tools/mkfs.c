@@ -106,6 +106,7 @@ void traverse(char* pathname, uint32_t parentino)
                 printf("%s %d\n", dir_entry->d_name, (int)statbuf.st_size);
 
                 // TBD:link
+                printf("%d\n", statbuf.st_nlink);
                 dinode_t newDinode;
                 memset(&newDinode, 0, sizeof(newDinode));
                 newDinode.stat.id = newInodeNo;
