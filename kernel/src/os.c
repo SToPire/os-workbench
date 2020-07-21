@@ -147,7 +147,7 @@ void vfs_test2()
     char s[128];
     memset(s, 0, 128);
     int v1 = vfs->open("c.txt", 0);
-    vfs->read(v1, s, 10);
+    vfs->read(v1, s, 20);
     printf("%s\n", s);
 
     while(1)
