@@ -80,6 +80,7 @@ int vsprintf(char* out, const char* fmt, va_list ap)
                     for (i--; i; i--)
                         *outptr++ = tmp_num[i];
                     in_format = 0;
+                    d_negative_no_zero_padded_flag = 0;
                     break;
                 case 'u':  //unsigned
                     u = va_arg(ap, unsigned);

@@ -20,35 +20,22 @@ struct kvdb {
 };
 typedef struct kvdb kvdb_t;
 
-void To_End_of_DB(int fd)
-{
-    char tmp;
-    lseek(fd, -1, SEEK_END);
-    read(fd, &tmp, 1);
-    while (tmp != '\n') {
-        lseek(fd, -2, SEEK_CUR);
-        read(fd, &tmp, 1);
-    }
-}
-
 struct kvdb* kvdb_open(const char* filename)
 {
     int exist = 0;
     if (access(filename, F_OK) == 0) exist = 1;
     kvdb_t* db = malloc(sizeof(kvdb_t));
-    if ((db->fd = open(filename, O_CREAT | O_RDWR, S_IRWXU | S_IRWXG | S_IRWXO)) < 0) assert(0);
+    db->fd = open(filename, O_CREAT | O_RDWR, S_IRWXU | S_IRWXG | S_IRWXO);
     db->mutex = malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(db->mutex, NULL);
 
     if (!exist) {
-        char* tmp = malloc(entry_size);
-        tmp[0] = '!';
-        tmp[entry_size - 1] = '\n';
         lseek(db->fd, 0, SEEK_SET);
-        write(db->fd, tmp, entry_size);
+        write(db->fd, "!", 1);  //mark of log unready
+        lseek(db->fd, entry_size - 1, SEEK_SET);
+        write(db->fd, "\n", 1);
         fsync(db->fd);
         lseek(db->fd, 0, SEEK_SET);
-        free(tmp);
     }
     return db;
 }
@@ -65,7 +52,7 @@ void CheckAndRepair(kvdb_t* db)
     lseek(db->fd, 0, SEEK_SET);
     char t;
     read(db->fd, &t, 1);
-    if (t == 'M') {
+    if (t == 'M') {  //mark of log ready
         char* tmp = malloc(entry_size);
         char* tmp_key = malloc(key_size);
         char* tmp_value = malloc(value_size);
@@ -79,7 +66,7 @@ void CheckAndRepair(kvdb_t* db)
         while (tmp[cur] != '\n') tmp_value[tmp_ptr++] = tmp[cur++];
         tmp_value[tmp_ptr] = 0;
 
-        To_End_of_DB(db->fd);
+        lseek(db->fd, 0, SEEK_END);
         write(db->fd, tmp_key, strlen(tmp_key));
         write(db->fd, " ", 1);
         write(db->fd, tmp_value, strlen(tmp_value));
@@ -121,17 +108,12 @@ char* kvdb_get(struct kvdb* db, const char* key)
     pthread_mutex_lock(db->mutex);
     flock(db->fd, LOCK_EX);
 
-    CheckAndRepair(db);
-
     char* buf = malloc(entry_size);
     char* tmp_key = malloc(key_size);
     char* tmp_value = malloc(value_size);
     char* ret = NULL;
 
     off_t offset = lseek(db->fd, entry_size, SEEK_SET);
-    int len = read(db->fd, buf, entry_size), cur = 0;
-    while (len > 0 && buf[len - 1] != '\n') --len;
-
     while (1) {
         int cur = 0;
         memset(buf, 0, entry_size);

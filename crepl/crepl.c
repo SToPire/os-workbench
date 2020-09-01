@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 
         __pid_t pid = fork();
         if (pid == 0) {  // child process
-            //dup2(pipe_fd[1], STDERR_FILENO);
+            dup2(pipe_fd[1], STDERR_FILENO);
             if (sizeof(void*) == 8) //64bit
                 execvp("gcc", exec_argv_64);
             else //32bit
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 
             void* handle = dlopen(Soname, RTLD_LAZY);
             if (!handle) {
-                fprintf(stderr, "%s\n", dlerror());
+                //fprintf(stderr, "%s\n", dlerror());
                 exit(EXIT_FAILURE);
             }
 

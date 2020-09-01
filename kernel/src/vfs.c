@@ -6,7 +6,6 @@
 #define getFileFromFD(fd) ofiles[current->fds[fd]];
 #define NUM_OFILE 128
 file_t* ofiles[NUM_OFILE];
-spinlock_t BIGLCK;
 int cnt_ofile;
 
 /* ---------- Inode Operation ---------- */
@@ -169,7 +168,6 @@ void ufs_init()
 
 int ufs_write(int fd, void* buf, int count)
 {
-    kmt->spin_lock(&BIGLCK);
     file_t* file = getFileFromFD(fd);
     off_t offset = file->offset;
     uint32_t curBlk = file->inode->firstBlock;
@@ -220,15 +218,12 @@ int ufs_write(int fd, void* buf, int count)
         newDinode.stat.size = file->offset + writeCnt;
     file->offset += writeCnt;
     sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.inode_size * file->inode->dInodeNum, &newDinode, sizeof(dinode_t));
-    kmt->spin_unlock(&BIGLCK);
 
     return writeCnt;
 }
 
 int ufs_read(int fd, void* buf, int count)
 {
-    kmt->spin_lock(&BIGLCK);
-
     file_t* file = getFileFromFD(fd);
     struct ufs_stat* status = pmm->alloc(sizeof(struct ufs_stat));
     getStatFromDinode(file->inode->dInodeNum, status);
@@ -262,15 +257,11 @@ int ufs_read(int fd, void* buf, int count)
         }
     }
     file->offset += readCnt;
-    kmt->spin_unlock(&BIGLCK);
-
     return readCnt;
 }
 
 int ufs_close(int fd)
 {
-    kmt->spin_lock(&BIGLCK);
-
     ofiles[current->fds[fd]]->valid = 0;
     current->fds[fd] = -1;
     --cnt_ofile;
@@ -379,15 +370,11 @@ int ufs_open(const char* pathname, int flags)
         ++cnt_ofile;
         return newFile->fd;
     }
-    kmt->spin_unlock(&BIGLCK);
-
     return -1;
 }
 
 int ufs_lseek(int fd, int offset, int whence)
 {
-    kmt->spin_lock(&BIGLCK);
-
     file_t* file = getFileFromFD(fd);
     if (whence == SEEK_CUR) {
         file->offset = file->offset + offset;
@@ -402,15 +389,11 @@ int ufs_lseek(int fd, int offset, int whence)
     }
 
     assert(file->offset >= 0);
-    kmt->spin_unlock(&BIGLCK);
-
     return file->offset;
 }
 
 int ufs_link(const char* oldpath, const char* newpath)
 {
-    kmt->spin_lock(&BIGLCK);
-
     char absoluteOldpath[128], absoluteNewpath[128];
     if (oldpath[0] == '/')
         strcpy(absoluteOldpath, oldpath);
@@ -448,15 +431,12 @@ int ufs_link(const char* oldpath, const char* newpath)
     sda->ops->read(sda, FS_OFFSET + sb.inode_head + sb.inode_size * newInode->dInodeNum, &newDinode, sizeof(dinode_t));
     ++newDinode.refCnt;
     sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.inode_size * newInode->dInodeNum, &newDinode, sizeof(dinode_t));
-    kmt->spin_unlock(&BIGLCK);
 
     return 0;
 }
 
 int ufs_unlink(const char* pathname)
 {
-    kmt->spin_lock(&BIGLCK);
-
     char absolutePathname[128];
     if (pathname[0] == '/')
         strcpy(absolutePathname, pathname);
@@ -482,26 +462,18 @@ int ufs_unlink(const char* pathname)
     sda->ops->write(sda, FS_OFFSET + sb.inode_head + sb.inode_size * inode->dInodeNum, &newDinode, sizeof(dinode_t));
 
     inodeDelete(pinode, inode);
-    kmt->spin_unlock(&BIGLCK);
-
     return 0;
 }
 
 int ufs_fstat(int fd, struct ufs_stat* buf)
 {
-    kmt->spin_lock(&BIGLCK);
-
     file_t* file = getFileFromFD(fd);
     getStatFromDinode(file->inode->dInodeNum, buf);
-    kmt->spin_unlock(&BIGLCK);
-
     return 0;
 }
 
 int ufs_mkdir(const char* pathname)
 {
-    kmt->spin_lock(&BIGLCK);
-
     char absolutePathname[128];
     if (pathname[0] == '/')
         strcpy(absolutePathname, pathname);
@@ -574,15 +546,12 @@ int ufs_mkdir(const char* pathname)
     strcpy(e2.dir_entry.name, "..");
     writeEntry(newDinode->firstBlock, &e1);
     writeEntry(tmp, &e2);
-    kmt->spin_unlock(&BIGLCK);
 
     return 0;
 }
 
 int ufs_chdir(const char* path)
 {
-    kmt->spin_lock(&BIGLCK);
-
     char absolutePathname[128];
     if (path[0] == '/')
         strcpy(absolutePathname, path);
@@ -594,23 +563,17 @@ int ufs_chdir(const char* path)
         absolutePathname[strlen(absolutePathname)] = '\0';
     }
     strcpy(current->cwd, absolutePathname);
-    kmt->spin_unlock(&BIGLCK);
-
     return 0;
 }
 
 int ufs_dup(int fd)
 {
-    kmt->spin_lock(&BIGLCK);
-
     int free_fd = 0;
     for (; free_fd < 128; free_fd++) {
         if (current->fds[free_fd] == -1) break;
     }
     if (free_fd == 128) return -1;
     current->fds[free_fd] = current->fds[fd];
-    kmt->spin_unlock(&BIGLCK);
-
     return free_fd;
 }
 
